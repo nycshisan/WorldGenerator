@@ -1,0 +1,10 @@
+{
+  "map": {
+    "width": 1280,
+    "height": 960
+  },
+  "ui": {
+    "barHeight": 50,
+    "barSeparatorHeight": 2
+  }
+}
