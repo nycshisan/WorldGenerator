@@ -4,7 +4,8 @@
     "height": 960
   },
   "ui": {
-    "barHeight": 50,
-    "barSeparatorHeight": 2
+    "barHeight": 64,
+    "barSeparatorHeight": 2,
+    "font": "assets/PingFang.ttc"
   }
 }

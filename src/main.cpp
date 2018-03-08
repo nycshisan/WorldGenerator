@@ -12,9 +12,6 @@ int main() {
 
     Window window(width, height, barHeight);
 
-
-
-
     window.play();
 
     return 0;
