@@ -4,6 +4,10 @@
 
 #include "window.h"
 
+#include "../generator/generator.h"
+
+const static std::vector<std::pair<std::string, std::function<void(Window&)>>> _ButtonMaterials = {{"Save", SaveButtonResponder}, {"Next", NextButtonResponder}};
+
 Window::Window(unsigned int width, unsigned int height, unsigned int barHeight) : sf::RenderWindow(sf::VideoMode(width, height + 2 * barHeight), "") {
     setTitle(_defaultTitle);
     _width = width;
@@ -12,26 +16,44 @@ Window::Window(unsigned int width, unsigned int height, unsigned int barHeight) 
 
     const Configure &conf = Configure::SharedInstance();
 
+    _barSeparatorHeight = conf["ui"]["barSeparatorHeight"].GetUint();
+
     // Initialize bar separators
-    int barSeparatorHeight = conf["ui"]["barSeparatorHeight"].GetInt();
-    _barSeparator.setSize(sf::Vector2f(_width, barSeparatorHeight));
+    _barSeparator.setSize(sf::Vector2f(_width, _barSeparatorHeight));
 
     // Initialize hint label
+    int xOffset = _barHeight / 5;
     std::string font_fn(conf["ui"]["font"].GetString());
     _font.loadFromFile(font_fn);
 
     _hintLabel.setFont(_font);
 
-    auto hintCharacterSize = (unsigned int)((_barHeight - barSeparatorHeight) * 0.8);
+    auto hintCharacterSize = (unsigned int)((_barHeight - _barSeparatorHeight) * 0.8);
     _hintLabel.setCharacterSize(hintCharacterSize);
 
     _hintLabel.setFillColor(sf::Color::White);
 
-    _hintLabel.setPosition(0, _height);
+    _hintLabel.setPosition(xOffset, _height);
 
     _hintLabelContent = "Ready!";
 
     // Initialize panel
+    int buttonXOffset = xOffset;
+    int buttonXInterval = buttonXOffset * 2;
+    for (auto &material : _ButtonMaterials) {
+        Button button;
+        button.setFont(_font);
+        button.setLabel(material.first);
+        button.setResponder(material.second);
+
+        button.setColor(sf::Color::White);
+        auto buttonSize = sf::Vector2f(_barHeight * 2.4f, _barHeight * 0.6f);
+        button.setSize(buttonSize);
+        button.setPosition(sf::Vector2f(buttonXOffset, _height + _barHeight + _barSeparatorHeight / 2 + (_barHeight - buttonSize.y) / 2));
+        buttonXOffset += buttonSize.x + buttonXInterval;
+
+        _buttons.emplace_back(button);
+    }
 }
 
 void Window::play() {
@@ -40,6 +62,14 @@ void Window::play() {
         while (pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 close();
+            }
+            if (event.type == sf::Event::MouseButtonReleased) {
+                auto mouseEvent = event.mouseButton;
+                if (mouseEvent.button == sf::Mouse::Button::Left) {
+                    for (auto &button: _buttons) {
+                        button.respond(*this, mouseEvent.x, mouseEvent.y);
+                    }
+                }
             }
         }
 
@@ -65,7 +95,15 @@ void Window::_displayBar() {
 
     // Display panel
     for (auto &button : _buttons) {
-        button.update();
-        draw(button);
+        button.hover(*this);
+        button.drawTo(*this);
     }
+}
+
+void Window::setHintLabel(const std::string &content) {
+    _hintLabel.setString(content);
+}
+
+void Window::setHintLabelDone() {
+    _hintLabel.setString(_hintLabel.getString() + "Done!");
 }

@@ -6,6 +6,8 @@
 #define WORLDGENERATOR_WINDOW_H
 
 #include <vector>
+#include <utility>
+#include <functional>
 
 #include "SFML/Window.hpp"
 #include "SFML/Graphics.hpp"
@@ -16,7 +18,7 @@
 
 class Window : sf::RenderWindow {
     std::string _defaultTitle = "World Generator";
-    unsigned int _width, _height, _barHeight;
+    unsigned int _width, _height, _barHeight, _barSeparatorHeight;
 
     sf::RectangleShape _barSeparator;
 
@@ -31,6 +33,10 @@ class Window : sf::RenderWindow {
 
 public:
     Window(unsigned int width, unsigned int height, unsigned int barHeight);
+
+    void setHintLabel(const std::string &content);
+
+    void setHintLabelDone();
 
     void play();
 };
