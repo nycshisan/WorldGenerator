@@ -20,7 +20,8 @@ public:
     static Generator &SharedInstance();
 };
 
-void SaveButtonResponder(Window &window);
 void NextButtonResponder(Window &window);
+void RedoButtonResponder(Window &window);
+void SaveButtonResponder(Window &window);
 
 #endif //WORLDGENERATOR_GENERATOR_H

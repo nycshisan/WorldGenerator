@@ -4,8 +4,6 @@
 
 #include "generator.h"
 
-void SaveButtonResponder(Window &window) {}
-
 void NextButtonResponder(Window &window) {
     Generator &generator = Generator::SharedInstance();
     switch (generator._state) {
@@ -18,6 +16,12 @@ void NextButtonResponder(Window &window) {
             LOGERR("Invalid generator state!");
     }
 }
+
+void RedoButtonResponder(Window &window) {
+
+}
+
+void SaveButtonResponder(Window &window) {}
 
 Generator &Generator::SharedInstance() {
     static Generator instance;

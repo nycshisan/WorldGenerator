@@ -6,7 +6,11 @@
 
 #include "../generator/generator.h"
 
-const static std::vector<std::pair<std::string, std::function<void(Window&)>>> _ButtonMaterials = {{"Save", SaveButtonResponder}, {"Next", NextButtonResponder}};
+const static std::vector<std::pair<std::string, std::function<void(Window&)>>> _ButtonMaterials = {
+        {"Next", NextButtonResponder},
+        {"Redo", RedoButtonResponder},
+        {"Save", SaveButtonResponder}
+};
 
 Window::Window(unsigned int width, unsigned int height, unsigned int barHeight) : sf::RenderWindow(sf::VideoMode(width, height + 2 * barHeight), "") {
     setTitle(_defaultTitle);
@@ -38,8 +42,9 @@ Window::Window(unsigned int width, unsigned int height, unsigned int barHeight) 
     _hintLabelContent = "Ready!";
 
     // Initialize panel
+    auto buttonSize = sf::Vector2f(_barHeight * 2.4f, _barHeight * 0.6f);
     int buttonXOffset = xOffset;
-    int buttonXInterval = buttonXOffset * 2;
+    int buttonXInterval = (_width - (int)_ButtonMaterials.size() * (int)buttonSize.x - 2 * buttonXOffset) / ((int)_ButtonMaterials.size() - 1);
     for (auto &material : _ButtonMaterials) {
         Button button;
         button.setFont(_font);
@@ -47,7 +52,6 @@ Window::Window(unsigned int width, unsigned int height, unsigned int barHeight) 
         button.setResponder(material.second);
 
         button.setColor(sf::Color::White);
-        auto buttonSize = sf::Vector2f(_barHeight * 2.4f, _barHeight * 0.6f);
         button.setSize(buttonSize);
         button.setPosition(sf::Vector2f(buttonXOffset, _height + _barHeight + _barSeparatorHeight / 2 + (_barHeight - buttonSize.y) / 2));
         buttonXOffset += buttonSize.x + buttonXInterval;
