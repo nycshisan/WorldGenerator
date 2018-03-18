@@ -2,11 +2,14 @@
 // Created by Nycshisan on 2018/3/8.
 //
 
+#include <string>
+
 #include "window.h"
 
 #include "../generator/generator.h"
+#include "../conf/conf.h"
 
-const static std::vector<std::pair<std::string, std::function<void(Window&)>>> _ButtonMaterials = {
+const static std::vector<std::pair<std::string, std::function<void(Window&)>>> _ButtonMaterials = { // NOLINT
         {"Next", NextButtonResponder},
         {"Redo", RedoButtonResponder},
         {"Save", SaveButtonResponder}
@@ -14,11 +17,12 @@ const static std::vector<std::pair<std::string, std::function<void(Window&)>>> _
 
 Window::Window(unsigned int width, unsigned int height, unsigned int barHeight) : sf::RenderWindow(sf::VideoMode(width, height + 2 * barHeight), "") {
     setTitle(_defaultTitle);
+    setVerticalSyncEnabled(true);
     _width = width;
     _height = height;
     _barHeight = barHeight;
 
-    const Configure &conf = Configure::SharedInstance();
+    const Configure &conf = CONF;
 
     _barSeparatorHeight = conf["ui"]["barSeparatorHeight"].GetUint();
 
@@ -42,7 +46,7 @@ Window::Window(unsigned int width, unsigned int height, unsigned int barHeight) 
     _hintLabelContent = "Ready!";
 
     // Initialize panel
-    auto buttonSize = sf::Vector2f(_barHeight * 2.4f, _barHeight * 0.6f);
+    auto buttonSize = sf::Vector2f(_barHeight * 3.0f, _barHeight * 0.6f);
     int buttonXOffset = xOffset;
     int buttonXInterval = (_width - (int)_ButtonMaterials.size() * (int)buttonSize.x - 2 * buttonXOffset) / ((int)_ButtonMaterials.size() - 1);
     for (auto &material : _ButtonMaterials) {
@@ -61,6 +65,8 @@ Window::Window(unsigned int width, unsigned int height, unsigned int barHeight) 
 }
 
 void Window::play() {
+    NextButtonResponder(*this);
+    NextButtonResponder(*this);
     while (isOpen()) {
         sf::Event event = {};
         while (pollEvent(event)) {
@@ -77,10 +83,13 @@ void Window::play() {
             }
         }
 
+        _updateFPS();
+
         sf::Color backgroundColor(0, 0, 0);
         clear(backgroundColor);
 
         _displayBar();
+        _displayMap();
 
         display();
     }
@@ -104,10 +113,24 @@ void Window::_displayBar() {
     }
 }
 
-void Window::setHintLabel(const std::string &content) {
-    _hintLabel.setString(content);
+void Window::_displayMap() {
+    Generator::SharedInstance().display(*this);
 }
 
-void Window::setHintLabelDone() {
-    _hintLabel.setString(_hintLabel.getString() + "Done!");
+void Window::setHintLabel(const std::string &content) {
+    _hintLabelContent = content;
+}
+
+sf::Vector2u Window::getMapSize() {
+    return {_width, _height};
+}
+
+void Window::_updateFPS() {
+    float interval = _clock.restart().asSeconds();
+    float FPS = 1.0f / interval;
+    if (_updateFPSCounter == _updateFPSFrameInterval - 1) {
+        sprintf(_titleBuffer, "%s - FPS: %.1f", _defaultTitle, FPS);
+        setTitle(_titleBuffer);
+    }
+    _updateFPSCounter = (_updateFPSCounter + 1) % _updateFPSFrameInterval;
 }

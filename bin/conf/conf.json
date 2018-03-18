@@ -1,11 +1,16 @@
 {
   "map": {
-    "width": 1280,
-    "height": 720
+    "width": 1920,
+    "height": 1080
   },
   "ui": {
     "barHeight": 64,
     "barSeparatorHeight": 2,
-    "font": "assets/PingFang.ttc"
+    "font": "assets/PingFang.ttc",
+    "pointRadius": 2.0
+  },
+  "voronoi": {
+    "blockNumber": 10,
+    "padding": 10
   }
 }

@@ -19,4 +19,6 @@ public:
     static const Configure& SharedInstance();
 };
 
+#define CONF Configure::SharedInstance()
+
 #endif //WORLDGENERATOR_CONF_H

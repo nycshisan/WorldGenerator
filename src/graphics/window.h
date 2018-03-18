@@ -12,12 +12,10 @@
 #include "SFML/Window.hpp"
 #include "SFML/Graphics.hpp"
 
-#include "../conf/conf.h"
-#include "../misc/log.h"
 #include "button.h"
 
-class Window : sf::RenderWindow {
-    std::string _defaultTitle = "World Generator";
+class Window : public sf::RenderWindow {
+    char _defaultTitle[20] = "World Generator";
     unsigned int _width, _height, _barHeight, _barSeparatorHeight;
 
     sf::RectangleShape _barSeparator;
@@ -29,14 +27,21 @@ class Window : sf::RenderWindow {
 
     std::vector<Button> _buttons;
 
+    char _titleBuffer[40];
+
+    sf::Clock _clock;
+    int _updateFPSCounter = 0, _updateFPSFrameInterval = 10;
+    void _updateFPS();
+
     void _displayBar();
+    void _displayMap();
 
 public:
     Window(unsigned int width, unsigned int height, unsigned int barHeight);
 
-    void setHintLabel(const std::string &content);
+    sf::Vector2u getMapSize();
 
-    void setHintLabelDone();
+    void setHintLabel(const std::string &content);
 
     void play();
 };
