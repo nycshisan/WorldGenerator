@@ -487,7 +487,7 @@ Line::Line(const Point &pa, const Point &pb) {
         _horizontalY = pa.x;
         dx = std::signbit(dx) * _err;
     }
-    _k = dx / dy;
+    _k = dy / dx;
     _b = pa.y - pa.x * _k;
 }
 
@@ -528,7 +528,7 @@ Line Segment::midPerpendicular() {
         r._vertical = true;
         r._verticalX = pMid.x;
     } else {
-        float vk = 1.0f / lab._k;
+        float vk = -1.0f / lab._k;
         r = Line(pMid, vk);
     }
     return r;

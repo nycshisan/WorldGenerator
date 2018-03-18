@@ -21,7 +21,8 @@ class VoronoiDiagram {
 
     sf::CircleShape _pointShape;
 
-     VDDelaunayTriangleNetNode* triNetHead;
+    VDDelaunayTriangleNetNode* triNetHead;
+    std::vector<VDDelaunayTriangleNetNode*> _allocatedNodes;
 
 public:
     void init(unsigned int width, unsigned int height);

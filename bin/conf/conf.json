@@ -10,7 +10,7 @@
     "pointRadius": 2.0
   },
   "voronoi": {
-    "blockNumber": 10,
+    "blockNumber": 3000,
     "padding": 10
   }
 }

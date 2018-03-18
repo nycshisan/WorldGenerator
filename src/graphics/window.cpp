@@ -65,8 +65,6 @@ Window::Window(unsigned int width, unsigned int height, unsigned int barHeight) 
 }
 
 void Window::play() {
-    NextButtonResponder(*this);
-    NextButtonResponder(*this);
     while (isOpen()) {
         sf::Event event = {};
         while (pollEvent(event)) {

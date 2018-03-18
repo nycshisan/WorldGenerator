@@ -65,6 +65,7 @@ void Generator::display(Window &window) {
         case BlockCenters:
             vd.drawPointsToWindow(window); break;
         case DelaunayTriangles:
+            vd.drawPointsToWindow(window);
             vd.drawTrianglesToWindow(window); break;
         default:
             break;

@@ -47,14 +47,6 @@ struct VDDelaunayTriangleNetNode {
     };
 
 private:
-    ~VDDelaunayTriangleNetNode() {
-        for (auto &edge : edges) {
-            delete edge.adjcTri;
-            edge.adjcTri = nullptr;
-            edge.adjcTriEdgeId = -1;
-        }
-    };
-
     bool _visited = false;
     void _clearVisitFlag() {
         if (!_visited)
@@ -73,6 +65,8 @@ private:
         if (triangleContains(points[0], points[1], points[2], point))
             return this;
         for (auto &edge: edges) {
+            if (edge.adjcTri == nullptr)
+                continue;
             auto r = edge.adjcTri->_findContainingTriangle(point);
             if (r != nullptr)
                 return r;
@@ -85,23 +79,47 @@ private:
         return dist < exRadius;
     }
 
-    void _findAdjcInfluencedEdges(std::vector<std::pair<VDDelaunayTriangleNetNode*, Edge>> &result, const Point &point, int beginEdgeId) {
+    void _findAdjcInfluencedEdges(const Point &point, int beginEdgeId, std::set<VDDelaunayTriangleNetNode*> &tris, std::vector<VDDelaunayTriangleNetNode::Edge*> &edges) {
         _visited = true;
         for (int i = 0; i < 3; ++i) {
-            auto &edge = edges[(i + beginEdgeId) % 3];
+            auto &edge = this->edges[(i + beginEdgeId) % 3];
             auto adjcTri = edge.adjcTri;
             if (adjcTri == nullptr) {
-                result.emplace_back(std::pair<VDDelaunayTriangleNetNode*, Edge>(this, edge));
+                tris.insert(this);
+                edges.emplace_back(&edge);
             } else if (!adjcTri->_visited) {
                 if (!adjcTri->_exCircleContain(point)) {
-                    result.emplace_back(std::pair<VDDelaunayTriangleNetNode*, Edge>(this, edge));
+                    tris.insert(this);
+                    edges.emplace_back(&edge);
                 } else {
-                    adjcTri->_findAdjcInfluencedEdges(result, point, edge.adjcTriEdgeId);
+                    adjcTri->_findAdjcInfluencedEdges(point, edge.adjcTriEdgeId, tris, edges);
                 }
             }
         }
     }
 
+    bool _isBoundTriangle;
+
+    VDDelaunayTriangleNetNode* _removeBoundTriangle() {
+        if (_visited)
+            return nullptr;
+        _visited = true;
+        VDDelaunayTriangleNetNode *newHead = _isBoundTriangle ? nullptr : this;
+        for (auto &edge: edges) {
+            auto adjcTri = edge.adjcTri;
+            if (adjcTri != nullptr) {
+                if (_isBoundTriangle) {
+                    adjcTri->edges[edge.adjcTriEdgeId].adjcTri = nullptr;
+                    adjcTri->edges[edge.adjcTriEdgeId].adjcTriEdgeId = -1;
+                    edge.adjcTri = nullptr;
+                    edge.adjcTriEdgeId = -1;
+                }
+                auto r = adjcTri->_removeBoundTriangle();
+                newHead = r ? r : newHead;
+            }
+        }
+        return newHead;
+    }
 
     void _draw(Window &window) {
         if (_visited)
@@ -126,7 +144,7 @@ public:
     Point exCenter;
     float exRadius = 0;
 
-    VDDelaunayTriangleNetNode(int pointIdA, int pointIdB, int pointIdC, const std::vector<Point> &centers) {
+    VDDelaunayTriangleNetNode(int pointIdA, int pointIdB, int pointIdC, const std::vector<Point> &centers, int n) {
         points[0] = centers[pointIdA];
         points[1] = centers[pointIdB];
         points[2] = centers[pointIdC];
@@ -140,19 +158,19 @@ public:
         edges[2] = Edge(pointIdC, pointIdA);
         exCenter = triangleExCenter(points[0], points[1], points[2]);
         exRadius = pointDistance(exCenter, points[0]);
+
+        _isBoundTriangle = pointIdA >= n || pointIdB >= n || pointIdC >= n;
     }
 
-    VDDelaunayTriangleNetNode *findContainingTriangle(const Point &point) {
+    VDDelaunayTriangleNetNode* findContainingTriangle(const Point &point) {
         auto result = _findContainingTriangle(point);
         _clearVisitFlag();
         return result;
     }
 
-    std::vector<std::pair<VDDelaunayTriangleNetNode*, Edge>> findAdjcInfluencedEdges(const Point &point) {
-        std::vector<std::pair<VDDelaunayTriangleNetNode*, Edge>> result;
-        _findAdjcInfluencedEdges(result, point, 0);
+    void findAdjcInfluencedEdges(const Point &point, std::set<VDDelaunayTriangleNetNode*> &tris, std::vector<VDDelaunayTriangleNetNode::Edge*> &edges) {
+        _findAdjcInfluencedEdges(point, 0, tris, edges);
         _clearVisitFlag();
-        return result;
     }
 
     void link(VDDelaunayTriangleNetNode *anoTri, int edgeId, int anoEdgeId) {
@@ -162,20 +180,10 @@ public:
         anoTri->edges[anoEdgeId].adjcTriEdgeId = edgeId;
     }
 
-    void destroyNet() {
-        delete this;
-    }
-
-    void destroySelf() {
-        for (auto &edge : edges) {
-            if (edge.adjcTri != nullptr) {
-                edge.adjcTri->edges[edge.adjcTriEdgeId].adjcTri = nullptr;
-                edge.adjcTri->edges[edge.adjcTriEdgeId].adjcTriEdgeId = -1;
-            }
-            edge.adjcTri = nullptr;
-            edge.adjcTriEdgeId = -1;
-        }
-        destroyNet();
+    VDDelaunayTriangleNetNode* removeBoundTriangle() {
+        auto r = _removeBoundTriangle();
+        _clearVisitFlag();
+        return r;
     }
 
     void draw(Window &window) {
@@ -185,25 +193,35 @@ public:
 };
 
 void VoronoiDiagram::generateDelaunayTriangles() {
+    if (triNetHead != nullptr) {
+        for (auto ptr: _allocatedNodes)
+            delete ptr;
+        _allocatedNodes.clear();
+    }
+
     // Bowyer-Watson algorithm
     auto n = (int)_centers.size();
     _centers.emplace_back(0, 0);
     _centers.emplace_back(2 * _width, 0);
     _centers.emplace_back(0, 2 * _height);
-    triNetHead = new VDDelaunayTriangleNetNode(n, n + 1, n + 2, _centers);
+    triNetHead = new VDDelaunayTriangleNetNode(n, n + 1, n + 2, _centers, n);
+    _allocatedNodes.emplace_back(triNetHead);
 
     for (int i = 0; i < n; ++i) {
         auto center = _centers[i];
         auto containingTriangle = triNetHead->findContainingTriangle(center);
-        auto influencedEdges = containingTriangle->findAdjcInfluencedEdges(center);
+        std::set<VDDelaunayTriangleNetNode*> influencedTris;
+        std::vector<VDDelaunayTriangleNetNode::Edge*> influencedEdges;
+        containingTriangle->findAdjcInfluencedEdges(center, influencedTris, influencedEdges);
         std::vector<VDDelaunayTriangleNetNode*> newTris;
-        for (auto &pair: influencedEdges) {
-            auto &edge = pair.second;
-            auto *newTri = new VDDelaunayTriangleNetNode(edge.endpointId[0], edge.endpointId[1], i, _centers);
+        for (auto &edge: influencedEdges) {
+            auto *newTri = new VDDelaunayTriangleNetNode(edge->endpointId[0], edge->endpointId[1], i, _centers, n);
+            _allocatedNodes.emplace_back(newTri);
+            newTris.emplace_back(newTri);
             auto &newEdge = newTri->edges[0];
-            newEdge.adjcTri = edge.adjcTri;
-            newEdge.adjcTriEdgeId = edge.adjcTriEdgeId;
-            edge.adjcTri = nullptr; edge.adjcTriEdgeId = -1;
+            newEdge.adjcTri = edge->adjcTri;
+            newEdge.adjcTriEdgeId = edge->adjcTriEdgeId;
+            edge->adjcTri = nullptr; edge->adjcTriEdgeId = -1;
             if (newEdge.adjcTri != nullptr) {
                 newEdge.adjcTri->edges[newEdge.adjcTriEdgeId].adjcTri = newTri;
                 newEdge.adjcTri->edges[newEdge.adjcTriEdgeId].adjcTriEdgeId = 0;
@@ -225,16 +243,17 @@ void VoronoiDiagram::generateDelaunayTriangles() {
             tri->link(nextTri, 1, 2);
         }
 
-        std::set<VDDelaunayTriangleNetNode*> influencedTris;
-        for (auto &pair: influencedEdges) {
-            influencedTris.insert(pair.first);
-        }
         for (auto tri: influencedTris) {
-            tri->destroySelf();
+            if (triNetHead == tri) {
+                triNetHead = newTris[0];
+                break;
+            }
         }
     }
 
-    //triNetHead->destroyNet();
+    triNetHead = triNetHead->removeBoundTriangle();
+
+    _centers.pop_back(); _centers.pop_back(); _centers.pop_back();
 }
 
 void VoronoiDiagram::drawPointsToWindow(Window &window) {
