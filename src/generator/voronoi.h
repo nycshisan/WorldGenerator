@@ -7,14 +7,25 @@
 
 #include "delaunay.h"
 
+#include <vector>
+
 class VoronoiDiagram {
 public:
-    class VertexNode {
+    struct VertexNode {
+        std::vector<int> edgeIds;
+        Point pos;
 
+        VertexNode() = default;
+        explicit VertexNode(const Point &p);
     };
 
-    class EdgeNode {
+    struct EdgeNode {
+        Point endPoints[2];
+        int relatedCenterIds[2] = {-1, -1};
+        sf::Vertex vertex[2];
 
+        EdgeNode() = default;
+        EdgeNode(const Point &pa, const Point &pb);
     };
 
     typedef DelaunayTriangles::Output InputTris;
@@ -25,8 +36,15 @@ private:
     InputTris _tris;
     Output _diagram;
 
+    int _newEdgeId = 0;
+    sf::CircleShape _pointShape;
+
+    unsigned int _width, _height;
+
+    Line _boxEdge[4];
+
 public:
-    void init(InputCenters centers, InputTris tris);
+    void input(InputCenters centers, InputTris tris);
     void generate();
     Output output();
     void draw(Window &window);

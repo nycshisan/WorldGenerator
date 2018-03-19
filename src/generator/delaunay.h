@@ -6,6 +6,7 @@
 #define WORLDGENERATOR_DELAUNAY_H
 
 #include <set>
+#include <unordered_set>
 
 #include "../graphics/window.h"
 #include "centers.h"
@@ -31,12 +32,12 @@ public:
         NetNode *_findContainingTriangle(const Point &point);
         NetNode* findContainingTriangle(const Point &point);
 
-        void _findInfluenced(const Point &point, int beginEdgeId, std::set<NetNode *> &tris, std::vector<Edge *> &edges);
-        void findInfluenced(const Point &point, std::set<NetNode *> &tris, std::vector<Edge *> &edges);
+        void _findInfluenced(const Point &point, int beginEdgeId, std::set<NetNode*> &tris, std::vector<Edge*> &edges);
+        void findInfluenced(const Point &point, std::set<NetNode*> &tris, std::vector<Edge*> &edges);
 
         bool _isBoundTriangle;
-        NetNode *_removeBoundingTriangle();
-        NetNode *removeBoundingTriangle();
+        NetNode *_removeBoundingTriangle(std::vector<NetNode*> &boundingTris);
+        NetNode *removeBoundingTriangle(std::vector<NetNode*> &boundingTris);
 
         sf::Vertex _vertices[4];
         void _draw(Window &window);
@@ -55,16 +56,16 @@ public:
     };
 
     typedef BlockCenters::Output Input;
-    typedef NetNode* Output;
+    typedef std::unordered_set<NetNode*> Output;
 private:
     Input _centers;
-    Output triNetHead = nullptr;
+    Output _allocatedNodes;
 
-    std::vector<NetNode*> _allocatedNodes;
+    NetNode *_triNetHead = nullptr;
     void _deleteOldNodes();
 
 public:
-    void init(const Input &input);
+    void input(const Input &input);
     void generate();
     Output output();
     void draw(Window &window);

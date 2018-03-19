@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "conf/conf.h"
 #include "graphics/window.h"
 
@@ -9,5 +11,6 @@ int main() {
     Window window(width, height, barHeight);
 
     window.play();
+
     return 0;
 }

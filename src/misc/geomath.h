@@ -21,9 +21,8 @@ class Line {
     bool _vertical = false; float _verticalX;
     bool _horizontal = false; float _horizontalY;
 
-    Line() = default;
-
 public:
+    Line() = default;
     Line(const Point &pa, const Point &pb);
     Line(const Point &p, float k);
     Line(float k, float b);

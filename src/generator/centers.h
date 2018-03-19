@@ -22,7 +22,7 @@ private:
     sf::CircleShape _pointShape;
 
 public:
-    void init(unsigned int width, unsigned int height);
+    void input(unsigned int width, unsigned int height);
     void generate();
     Output output();
     void draw(Window &window);

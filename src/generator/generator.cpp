@@ -31,19 +31,19 @@ void Generator::NextButtonResponder(Window &window) {
     switch (generator._state) {
         case Ready:
             window.setHintLabel("Generated block centers.");
-            generator._blockCenters.init(window.getMapSize().x, window.getMapSize().y);
+            generator._blockCenters.input(window.getMapSize().x, window.getMapSize().y);
             generator._blockCenters.generate();
             break;
         case BlockCenters:
             window.setHintLabel("Generated Delaunay triangles.");
             generator._centers = generator._blockCenters.output();
-            generator._delaunayTriangles.init(generator._centers);
+            generator._delaunayTriangles.input(generator._centers);
             generator._delaunayTriangles.generate();
             break;
         case DelaunayTriangles:
             window.setHintLabel("Generated Voronoi diagram.");
             generator._tris = generator._delaunayTriangles.output();
-            generator._voronoiDiagram.init(generator._centers, generator._tris);
+            generator._voronoiDiagram.input(generator._centers, generator._tris);
             generator._voronoiDiagram.generate();
             break;
         default:

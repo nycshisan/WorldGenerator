@@ -8,7 +8,7 @@
 
 #include "../conf/conf.h"
 
-void BlockCenters::init(unsigned int width, unsigned int height) {
+void BlockCenters::input(unsigned int width, unsigned int height) {
     _width = width; _height = height;
     _pointShape.setRadius(CONF.getUIPointRadius());
 }
