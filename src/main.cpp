@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "conf/conf.h"
 #include "graphics/window.h"
 

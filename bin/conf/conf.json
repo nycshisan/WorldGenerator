@@ -10,7 +10,7 @@
     "pointRadius": 2.0
   },
   "centers": {
-    "number": 100,
+    "number": 20,
     "padding": 10
   }
 }

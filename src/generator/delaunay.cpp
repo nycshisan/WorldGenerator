@@ -24,20 +24,20 @@ void DelaunayTriangles::generate() {
         auto center = _centers[i];
         auto containingTriangle = triNetHead->findContainingTriangle(center);
         std::set<NetNode*> influencedTris;
-        std::vector<NetNode::Edge*> influencedEdges;
-        containingTriangle->findAdjcInfluencedEdges(center, influencedTris, influencedEdges);
+        std::vector<Edge*> influencedEdges;
+        containingTriangle->findInfluenced(center, influencedTris, influencedEdges);
         std::vector<NetNode*> newTris;
         for (auto &edge: influencedEdges) {
-            auto *newTri = new NetNode(edge->endpointId[0], edge->endpointId[1], i, _centers, n);
+            auto *newTri = new NetNode(edge->pid[0], edge->pid[1], i, _centers, n);
             _allocatedNodes.emplace_back(newTri);
             newTris.emplace_back(newTri);
             auto &newEdge = newTri->edges[0];
-            newEdge.adjcTri = edge->adjcTri;
-            newEdge.adjcTriEdgeId = edge->adjcTriEdgeId;
-            edge->adjcTri = nullptr; edge->adjcTriEdgeId = -1;
-            if (newEdge.adjcTri != nullptr) {
-                newEdge.adjcTri->edges[newEdge.adjcTriEdgeId].adjcTri = newTri;
-                newEdge.adjcTri->edges[newEdge.adjcTriEdgeId].adjcTriEdgeId = 0;
+            newEdge.nextTri = edge->nextTri;
+            newEdge.nextTriEdgeId = edge->nextTriEdgeId;
+            edge->nextTri = nullptr; edge->nextTriEdgeId = -1;
+            if (newEdge.nextTri != nullptr) {
+                newEdge.nextTri->edges[newEdge.nextTriEdgeId].nextTri = newTri;
+                newEdge.nextTri->edges[newEdge.nextTriEdgeId].nextTriEdgeId = 0;
             }
         }
 
@@ -52,8 +52,8 @@ void DelaunayTriangles::generate() {
             else
                 nextTri = newTris[j + 1];
 
-            tri->link(lastTri, 2, 1);
-            tri->link(nextTri, 1, 2);
+            tri->linkAnoTri(lastTri, 2, 1);
+            tri->linkAnoTri(nextTri, 1, 2);
         }
 
         for (auto tri: influencedTris) {
@@ -64,7 +64,7 @@ void DelaunayTriangles::generate() {
         }
     }
 
-    triNetHead = triNetHead->removeBoundTriangle();
+    triNetHead = triNetHead->removeBoundingTriangle();
 
     _centers.pop_back(); _centers.pop_back(); _centers.pop_back();
 }
@@ -90,9 +90,9 @@ DelaunayTriangles::~DelaunayTriangles() {
     _deleteOldNodes();
 }
 
-DelaunayTriangles::NetNode::Edge::Edge(int pointIdA, int pointIdB) {
-    endpointId[0] = pointIdA;
-    endpointId[1] = pointIdB;
+DelaunayTriangles::Edge::Edge(int pointIdA, int pointIdB) {
+    pid[0] = pointIdA;
+    pid[1] = pointIdB;
 }
 
 void DelaunayTriangles::NetNode::_clearVisitFlag() {
@@ -100,8 +100,8 @@ void DelaunayTriangles::NetNode::_clearVisitFlag() {
         return;
     _visited = false;
     for (auto &edge: edges) {
-        if (edge.adjcTri != nullptr)
-            edge.adjcTri->_clearVisitFlag();
+        if (edge.nextTri != nullptr)
+            edge.nextTri->_clearVisitFlag();
     }
 }
 
@@ -112,56 +112,49 @@ DelaunayTriangles::NetNode *DelaunayTriangles::NetNode::_findContainingTriangle(
     if (triangleContains(points[0], points[1], points[2], point))
         return this;
     for (auto &edge: edges) {
-        if (edge.adjcTri == nullptr)
+        if (edge.nextTri == nullptr)
             continue;
-        auto r = edge.adjcTri->_findContainingTriangle(point);
+        auto r = edge.nextTri->_findContainingTriangle(point);
         if (r != nullptr)
             return r;
     }
     return nullptr;
 }
 
-bool DelaunayTriangles::NetNode::_exCircleContain(const Point &point) {
-    float dist = pointDistance(point, exCenter);
-    return dist < exRadius;
-}
-
-void
-DelaunayTriangles::NetNode::_findAdjcInfluencedEdges(const Point &point, int beginEdgeId, std::set<NetNode *> &tris,
-                                                     std::vector<NetNode::Edge *> &edges) {
+void DelaunayTriangles::NetNode::_findInfluenced(const Point &point, int beginEdgeId, std::set<NetNode *> &tris, std::vector<Edge *> &edges) {
     _visited = true;
     for (int i = 0; i < 3; ++i) {
         auto &edge = this->edges[(i + beginEdgeId) % 3];
-        auto adjcTri = edge.adjcTri;
-        if (adjcTri == nullptr) {
+        auto nextTri = edge.nextTri;
+        if (nextTri == nullptr) {
             tris.insert(this);
             edges.emplace_back(&edge);
-        } else if (!adjcTri->_visited) {
-            if (!adjcTri->_exCircleContain(point)) {
+        } else if (!nextTri->_visited) {
+            if (pointDistance(point, nextTri->exCenter) > nextTri->exRadius) {
                 tris.insert(this);
                 edges.emplace_back(&edge);
             } else {
-                adjcTri->_findAdjcInfluencedEdges(point, edge.adjcTriEdgeId, tris, edges);
+                nextTri->_findInfluenced(point, edge.nextTriEdgeId, tris, edges);
             }
         }
     }
 }
 
-DelaunayTriangles::NetNode *DelaunayTriangles::NetNode::_removeBoundTriangle() {
+DelaunayTriangles::NetNode *DelaunayTriangles::NetNode::_removeBoundingTriangle() {
     if (_visited)
         return nullptr;
     _visited = true;
     NetNode *newHead = _isBoundTriangle ? nullptr : this;
     for (auto &edge: edges) {
-        auto adjcTri = edge.adjcTri;
-        if (adjcTri != nullptr) {
+        auto nextTri = edge.nextTri;
+        if (nextTri != nullptr) {
             if (_isBoundTriangle) {
-                adjcTri->edges[edge.adjcTriEdgeId].adjcTri = nullptr;
-                adjcTri->edges[edge.adjcTriEdgeId].adjcTriEdgeId = -1;
-                edge.adjcTri = nullptr;
-                edge.adjcTriEdgeId = -1;
+                nextTri->edges[edge.nextTriEdgeId].nextTri = nullptr;
+                nextTri->edges[edge.nextTriEdgeId].nextTriEdgeId = -1;
+                edge.nextTri = nullptr;
+                edge.nextTriEdgeId = -1;
             }
-            auto r = adjcTri->_removeBoundTriangle();
+            auto r = nextTri->_removeBoundingTriangle();
             newHead = r ? r : newHead;
         }
     }
@@ -173,12 +166,12 @@ void DelaunayTriangles::NetNode::_draw(Window &window) {
         return;
     _visited = true;
     for (auto &edge: edges) {
-        window.draw(vertices, 2, sf::Lines);
-        window.draw(vertices + 1, 2, sf::Lines);
-        window.draw(vertices + 2, 2, sf::Lines);
+        window.draw(_vertices, 2, sf::Lines);
+        window.draw(_vertices + 1, 2, sf::Lines);
+        window.draw(_vertices + 2, 2, sf::Lines);
 
-        if (edge.adjcTri != nullptr) {
-            edge.adjcTri->_draw(window);
+        if (edge.nextTri != nullptr) {
+            edge.nextTri->_draw(window);
         }
     }
 }
@@ -187,10 +180,10 @@ DelaunayTriangles::NetNode::NetNode(int pointIdA, int pointIdB, int pointIdC, co
     points[0] = centers[pointIdA];
     points[1] = centers[pointIdB];
     points[2] = centers[pointIdC];
-    vertices[0] = sf::Vertex(points[0]);
-    vertices[1] = sf::Vertex(points[1]);
-    vertices[2] = sf::Vertex(points[2]);
-    vertices[3] = sf::Vertex(points[0]);
+    _vertices[0] = sf::Vertex(points[0]);
+    _vertices[1] = sf::Vertex(points[1]);
+    _vertices[2] = sf::Vertex(points[2]);
+    _vertices[3] = sf::Vertex(points[0]);
 
     edges[0] = Edge(pointIdA, pointIdB);
     edges[1] = Edge(pointIdB, pointIdC);
@@ -207,21 +200,20 @@ DelaunayTriangles::NetNode *DelaunayTriangles::NetNode::findContainingTriangle(c
     return result;
 }
 
-void DelaunayTriangles::NetNode::findAdjcInfluencedEdges(const Point &point, std::set<NetNode *> &tris,
-                                                         std::vector<NetNode::Edge *> &edges) {
-    _findAdjcInfluencedEdges(point, 0, tris, edges);
+void DelaunayTriangles::NetNode::findInfluenced(const Point &point, std::set<NetNode *> &tris, std::vector<Edge *> &edges) {
+    _findInfluenced(point, 0, tris, edges);
     _clearVisitFlag();
 }
 
-void DelaunayTriangles::NetNode::link(DelaunayTriangles::NetNode *anoTri, int edgeId, int anoEdgeId) {
-    edges[edgeId].adjcTri = anoTri;
-    edges[edgeId].adjcTriEdgeId = anoEdgeId;
-    anoTri->edges[anoEdgeId].adjcTri = this;
-    anoTri->edges[anoEdgeId].adjcTriEdgeId = edgeId;
+void DelaunayTriangles::NetNode::linkAnoTri(DelaunayTriangles::NetNode *anoTri, int edgeId, int anoEdgeId) {
+    edges[edgeId].nextTri = anoTri;
+    edges[edgeId].nextTriEdgeId = anoEdgeId;
+    anoTri->edges[anoEdgeId].nextTri = this;
+    anoTri->edges[anoEdgeId].nextTriEdgeId = edgeId;
 }
 
-DelaunayTriangles::NetNode *DelaunayTriangles::NetNode::removeBoundTriangle() {
-    auto r = _removeBoundTriangle();
+DelaunayTriangles::NetNode *DelaunayTriangles::NetNode::removeBoundingTriangle() {
+    auto r = _removeBoundingTriangle();
     _clearVisitFlag();
     return r;
 }

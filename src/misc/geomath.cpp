@@ -22,7 +22,7 @@ bool triangleContains(const Point &pa, const Point &pb, const Point &pc, const P
     pVec /= pSum;
     data_t pA = pVec.x, pB = pVec.y, pC = pVec.z;
 
-    return !(pA < 0 || pB < 0 || pC < 0);
+    return !(pA < -0.01 || pB < -0.01 || pC < -0.01);
 }
 
 Point triangleExCenter(const Point &pa, const Point &pb, const Point &pc) {

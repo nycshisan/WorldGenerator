@@ -18,29 +18,28 @@ enum GeneratorState {
 };
 
 class Generator {
-    friend void NextButtonResponder(Window &window);
-    friend void RedoButtonResponder(Window &window);
-    friend void UndoButtonResponder(Window &window);
-    friend void SaveButtonResponder(Window &window);
-
     GeneratorState _state = Ready;
 
     void _nextState();
+    void _lastState();
 
     class BlockCenters _blockCenters;
     BlockCenters::Output _centers;
     class DelaunayTriangles _delaunayTriangles;
+    DelaunayTriangles::Output _tris;
+    class VoronoiDiagram _voronoiDiagram;
+    VoronoiDiagram::Output _vd;
 
 public:
 
     static Generator &SharedInstance();
 
     void display(Window &window);
-};
 
-void NextButtonResponder(Window &window);
-void RedoButtonResponder(Window &window);
-void UndoButtonResponder(Window &window);
-void SaveButtonResponder(Window &window);
+    static void NextButtonResponder(Window &window);
+    static void RedoButtonResponder(Window &window);
+    static void UndoButtonResponder(Window &window);
+    static void SaveButtonResponder(Window &window);
+};
 
 #endif //WORLDGENERATOR_GENERATOR_H

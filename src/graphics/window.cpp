@@ -10,10 +10,10 @@
 #include "../conf/conf.h"
 
 const static std::vector<std::pair<std::string, std::function<void(Window&)>>> _ButtonMaterials = { // NOLINT
-        {"Next", NextButtonResponder},
-        {"Redo", RedoButtonResponder},
-        {"Undo", UndoButtonResponder},
-        {"Save", SaveButtonResponder}
+        {"Next", Generator::NextButtonResponder},
+        {"Redo", Generator::RedoButtonResponder},
+        {"Undo", Generator::UndoButtonResponder},
+        {"Save", Generator::SaveButtonResponder},
 };
 
 Window::Window(unsigned int width, unsigned int height, unsigned int barHeight) : sf::RenderWindow(sf::VideoMode(width, height + 2 * barHeight), "") {
@@ -76,6 +76,15 @@ void Window::play() {
                     for (auto &button: _buttons) {
                         button.respond(*this, mouseEvent.x, mouseEvent.y);
                     }
+                }
+            }
+            if (event.type == sf::Event::KeyReleased) {
+                auto key = event.key;
+                if (key.code == sf::Keyboard::Key::Right) {
+                    Generator::NextButtonResponder(*this);
+                }
+                if (key.code == sf::Keyboard::Key::Left) {
+                    Generator::UndoButtonResponder(*this);
                 }
             }
         }

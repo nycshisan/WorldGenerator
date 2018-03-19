@@ -12,52 +12,46 @@
 
 class DelaunayTriangles {
 public:
-    struct NetNode {
-        struct Edge {
-            int endpointId[2] = {-1, -1};
-            NetNode *adjcTri = nullptr;
-            int adjcTriEdgeId = -1;
+    class NetNode;
+    struct Edge {
+        int pid[2] = {-1, -1};
+        NetNode *nextTri = nullptr;
+        int nextTriEdgeId = -1;
 
-            Edge() = default;
+        Edge() = default;
+        Edge(int pointIdA, int pointIdB);
+    };
 
-            Edge(int pointIdA, int pointIdB);
-        };
+    class NetNode {
+        friend class DelaunayTriangles;
 
-    private:
         bool _visited = false;
         void _clearVisitFlag();
 
         NetNode *_findContainingTriangle(const Point &point);
+        NetNode* findContainingTriangle(const Point &point);
 
-        bool _exCircleContain(const Point &point);
-
-        void _findAdjcInfluencedEdges(const Point &point, int beginEdgeId, std::set<NetNode*> &tris, std::vector<NetNode::Edge*> &edges);
+        void _findInfluenced(const Point &point, int beginEdgeId, std::set<NetNode *> &tris, std::vector<Edge *> &edges);
+        void findInfluenced(const Point &point, std::set<NetNode *> &tris, std::vector<Edge *> &edges);
 
         bool _isBoundTriangle;
+        NetNode *_removeBoundingTriangle();
+        NetNode *removeBoundingTriangle();
 
-        NetNode* _removeBoundTriangle();
-
+        sf::Vertex _vertices[4];
         void _draw(Window &window);
+        void draw(Window &window);
+
+        void linkAnoTri(NetNode *anoTri, int edgeId, int anoEdgeId);
+
+        NetNode(int pointIdA, int pointIdB, int pointIdC, const std::vector<Point> &centers, int n);
 
     public:
         Edge edges[3];
         Point points[3];
-        sf::Vertex vertices[4];
 
         Point exCenter;
         float exRadius = 0;
-
-        NetNode(int pointIdA, int pointIdB, int pointIdC, const std::vector<Point> &centers, int n);
-
-        NetNode* findContainingTriangle(const Point &point);
-
-        void findAdjcInfluencedEdges(const Point &point, std::set<NetNode*> &tris, std::vector<NetNode::Edge*> &edges);
-
-        void link(NetNode *anoTri, int edgeId, int anoEdgeId);
-
-        NetNode* removeBoundTriangle();
-
-        void draw(Window &window);
     };
 
     typedef BlockCenters::Output Input;
