@@ -4,10 +4,9 @@
 #include "graphics/window.h"
 
 int main() {
-    const Configure &conf = CONF;
-    unsigned int width = conf["map"]["width"].GetUint();
-    unsigned int height = conf["map"]["height"].GetUint();
-    unsigned int barHeight = conf["ui"]["barHeight"].GetUint();
+    unsigned int width = CONF.getMapWidth();
+    unsigned int height = CONF.getMapHeight();
+    unsigned int barHeight = CONF.getUIBarHeight();
 
     Window window(width, height, barHeight);
 

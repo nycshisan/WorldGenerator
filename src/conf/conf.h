@@ -17,6 +17,15 @@ class Configure : public rapidjson::Document {
 
 public:
     static const Configure& SharedInstance();
+
+    unsigned int getMapWidth() const;
+    unsigned int getMapHeight() const;
+    unsigned int getUIBarHeight() const;
+    unsigned int getUIBarSeparatorHeight() const;
+    std::string getUIFontFilename() const;
+    float getUIPointRadius() const;
+    int getCenterNumber() const;
+    int getCenterPadding() const;
 };
 
 #define CONF Configure::SharedInstance()

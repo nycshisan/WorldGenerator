@@ -9,8 +9,8 @@
     "font": "assets/PingFang.ttc",
     "pointRadius": 2.0
   },
-  "voronoi": {
-    "blockNumber": 3000,
+  "centers": {
+    "number": 100,
     "padding": 10
   }
 }

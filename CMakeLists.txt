@@ -10,5 +10,5 @@ link_libraries(libsfml-window.dylib libsfml-system.dylib libsfml-audio.dylib lib
 
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin)
 
-set(SOURCE_FILES src/main.cpp src/conf/conf.cpp src/conf/conf.h src/graphics/window.cpp src/graphics/window.h src/misc/log.h src/graphics/button.cpp src/graphics/button.h src/generator/generator.cpp src/generator/generator.h src/generator/voronoi.cpp src/generator/voronoi.h src/misc/geomath.cpp src/misc/geomath.h src/generator/centers.cpp src/generator/centers.h)
+set(SOURCE_FILES src/main.cpp src/conf/conf.cpp src/conf/conf.h src/graphics/window.cpp src/graphics/window.h src/misc/log.h src/graphics/button.cpp src/graphics/button.h src/generator/generator.cpp src/generator/generator.h src/generator/voronoi.cpp src/generator/voronoi.h src/misc/geomath.cpp src/misc/geomath.h src/generator/centers.cpp src/generator/centers.h src/generator/delaunay.cpp src/generator/delaunay.h)
 add_executable(WorldGenerator ${SOURCE_FILES})

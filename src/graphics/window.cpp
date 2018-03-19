@@ -12,6 +12,7 @@
 const static std::vector<std::pair<std::string, std::function<void(Window&)>>> _ButtonMaterials = { // NOLINT
         {"Next", NextButtonResponder},
         {"Redo", RedoButtonResponder},
+        {"Undo", UndoButtonResponder},
         {"Save", SaveButtonResponder}
 };
 
@@ -22,16 +23,14 @@ Window::Window(unsigned int width, unsigned int height, unsigned int barHeight) 
     _height = height;
     _barHeight = barHeight;
 
-    const Configure &conf = CONF;
-
-    _barSeparatorHeight = conf["ui"]["barSeparatorHeight"].GetUint();
+    _barSeparatorHeight = CONF.getUIBarSeparatorHeight();
 
     // Initialize bar separators
     _barSeparator.setSize(sf::Vector2f(_width, _barSeparatorHeight));
 
     // Initialize hint label
     int xOffset = _barHeight / 5;
-    std::string font_fn(conf["ui"]["font"].GetString());
+    std::string font_fn(CONF.getUIFontFilename());
     _font.loadFromFile(font_fn);
 
     _hintLabel.setFont(_font);

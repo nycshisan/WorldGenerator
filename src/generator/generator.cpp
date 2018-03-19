@@ -11,12 +11,14 @@ void NextButtonResponder(Window &window) {
     switch (generator._state) {
         case Ready:
             window.setHintLabel("Generated block centers.");
-            generator.vd.init(window.getMapSize().x, window.getMapSize().y);
-            generator.vd.generateCenters();
+            generator._blockCenters.init(window.getMapSize().x, window.getMapSize().y);
+            generator._blockCenters.generate();
+            generator._centers = generator._blockCenters.output();
             break;
         case BlockCenters:
             window.setHintLabel("Generated Delaunay triangles.");
-            generator.vd.generateDelaunayTriangles();
+            generator._delaunayTriangles.init(generator._centers);
+            generator._delaunayTriangles.generate();
             break;
         case DelaunayTriangles:
             window.setHintLabel("Generated Voronoi diagram.");
@@ -32,15 +34,19 @@ void RedoButtonResponder(Window &window) {
     switch (generator._state) {
         case Ready: break;
         case BlockCenters:
-            generator.vd.generateCenters(); break;
+            generator._blockCenters.generate(); break;
         case DelaunayTriangles:
-            generator.vd.generateDelaunayTriangles(); break;
+            generator._delaunayTriangles.generate(); break;
         default:
             LOGERR("Invalid generator state!");
     }
 }
+void UndoButtonResponder(Window &window) {
+
+}
 
 void SaveButtonResponder(Window &window) {}
+
 
 Generator &Generator::SharedInstance() {
     static Generator instance;
@@ -63,10 +69,9 @@ void Generator::_nextState() {
 void Generator::display(Window &window) {
     switch (_state) {
         case BlockCenters:
-            vd.drawPointsToWindow(window); break;
+            _blockCenters.draw(window); break;
         case DelaunayTriangles:
-            vd.drawPointsToWindow(window);
-            vd.drawTrianglesToWindow(window); break;
+            _delaunayTriangles.draw(window); break;
         default:
             break;
     }

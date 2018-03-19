@@ -7,6 +7,7 @@
 
 #include "../graphics/window.h"
 #include "centers.h"
+#include "delaunay.h"
 #include "voronoi.h"
 
 enum GeneratorState {
@@ -19,15 +20,18 @@ enum GeneratorState {
 class Generator {
     friend void NextButtonResponder(Window &window);
     friend void RedoButtonResponder(Window &window);
+    friend void UndoButtonResponder(Window &window);
     friend void SaveButtonResponder(Window &window);
 
     GeneratorState _state = Ready;
 
     void _nextState();
 
-    class BlockCenters blockCenters;
+    class BlockCenters _blockCenters;
+    BlockCenters::Output _centers;
+    class DelaunayTriangles _delaunayTriangles;
+
 public:
-    class VoronoiDiagram vd{};
 
     static Generator &SharedInstance();
 
@@ -36,6 +40,7 @@ public:
 
 void NextButtonResponder(Window &window);
 void RedoButtonResponder(Window &window);
+void UndoButtonResponder(Window &window);
 void SaveButtonResponder(Window &window);
 
 #endif //WORLDGENERATOR_GENERATOR_H
