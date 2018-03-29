@@ -40,6 +40,7 @@ public:
     static void RedoButtonResponder(Window &window);
     static void UndoButtonResponder(Window &window);
     static void SaveButtonResponder(Window &window);
+    static void LoadButtonResponder(Window &window);
 };
 
 #endif //WORLDGENERATOR_GENERATOR_H

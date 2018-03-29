@@ -57,21 +57,28 @@ void DelaunayTriangles::generate() {
         }
 
         for (auto tri: influencedTris) {
-            if (_triNetHead == tri) {
-                _triNetHead = newTris[0];
-            }
-            delete tri;
             _allocatedNodes.erase(_allocatedNodes.find(tri));
+            delete tri;
         }
+        _triNetHead = *_allocatedNodes.begin();
     }
 
-    std::vector<NetNode*> boundingTris;
-    _triNetHead = _triNetHead->removeBoundingTriangle(boundingTris);
-    for (auto tri: boundingTris) {
-        delete tri;
-        _allocatedNodes.erase(_allocatedNodes.find(tri));
+    for (auto iter = _allocatedNodes.begin(); iter != _allocatedNodes.end();) {
+        auto nextIter = iter; nextIter++;
+        auto tri = *iter;
+        if (tri->_isBoundTriangle) {
+           for (auto &edge: tri->edges) {
+               if (edge.nextTri != nullptr) {
+                   edge.nextTri->edges[edge.nextTriEdgeId].nextTri = nullptr;
+                   edge.nextTri->edges[edge.nextTriEdgeId].nextTriEdgeId = -1;
+               }
+           }
+           _allocatedNodes.erase(iter);
+        }
+        iter = nextIter;
     }
 
+    _triNetHead = *_allocatedNodes.begin();
     _centers.pop_back(); _centers.pop_back(); _centers.pop_back();
 }
 
@@ -80,7 +87,9 @@ DelaunayTriangles::Output DelaunayTriangles::output() {
 }
 
 void DelaunayTriangles::draw(Window &window) {
-    _triNetHead->draw(window);
+    for (auto &tri: _allocatedNodes) {
+        window.draw(tri->_vertices, 4, sf::Lines);
+    }
 }
 
 void DelaunayTriangles::_deleteOldNodes() {
@@ -157,52 +166,29 @@ void DelaunayTriangles::NetNode::findInfluenced(const Point &point, std::set<Net
     _clearVisitFlag();
 }
 
-DelaunayTriangles::NetNode *DelaunayTriangles::NetNode::_removeBoundingTriangle(std::vector<NetNode*> &boundingTris) {
+void DelaunayTriangles::NetNode::_removeBoundingTriangle(std::vector<NetNode*> &boundingTris) {
     if (_visited)
-        return nullptr;
+        return;
     _visited = true;
-    NetNode *newHead = this;
     if (_isBoundTriangle) {
-        newHead = nullptr;
         boundingTris.emplace_back(this);
     }
     for (auto &edge: edges) {
         auto nextTri = edge.nextTri;
         if (nextTri != nullptr) {
+            nextTri->_removeBoundingTriangle(boundingTris);
             if (_isBoundTriangle) {
                 nextTri->edges[edge.nextTriEdgeId].nextTri = nullptr;
                 nextTri->edges[edge.nextTriEdgeId].nextTriEdgeId = -1;
                 edge.nextTri = nullptr;
                 edge.nextTriEdgeId = -1;
             }
-            auto r = nextTri->_removeBoundingTriangle(boundingTris);
-            newHead = r ? r : newHead;
-        }
-    }
-    return newHead;
-}
-
-DelaunayTriangles::NetNode *DelaunayTriangles::NetNode::removeBoundingTriangle(std::vector<NetNode*> &boundingTris) {
-    auto r = _removeBoundingTriangle(boundingTris);
-    _clearVisitFlag();
-    return r;
-}
-
-void DelaunayTriangles::NetNode::_draw(Window &window) {
-    if (_visited)
-        return;
-    _visited = true;
-    for (auto &edge: edges) {
-        window.draw(_vertices, 4, sf::LineStrip);
-
-        if (edge.nextTri != nullptr) {
-            edge.nextTri->_draw(window);
         }
     }
 }
 
-void DelaunayTriangles::NetNode::draw(Window &window) {
-    _draw(window);
+void DelaunayTriangles::NetNode::removeBoundingTriangle(std::vector<NetNode*> &boundingTris) {
+    _removeBoundingTriangle(boundingTris);
     _clearVisitFlag();
 }
 

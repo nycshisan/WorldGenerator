@@ -108,7 +108,7 @@ DEF_VEC_DOT(4)
  * to ensure accordance in the matrix arithmetic.
  */
 
-// Matrix arithmetics
+// Matrix arithmetic
 #define DEF_MAT_PLUSMINUS(SIZE, OPER, FUNC_NAME) \
 ALWAYS_INLINE mat##SIZE operator OPER (const mat##SIZE &a, const mat##SIZE &b) { \
     mat##SIZE r; \

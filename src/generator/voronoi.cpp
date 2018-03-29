@@ -24,24 +24,6 @@ void VoronoiDiagram::generate() {
     _diagram.second.clear();
 
     for (auto tri: _tris) {
-        bool triContainExCenter = true;
-        bool isLongestEdge[3] = { false, false, false };
-//        if (tri->edges[0].nextTri == nullptr || tri->edges[1].nextTri == nullptr || tri->edges[2].nextTri == nullptr) {
-//            triContainExCenter = triangleContains(tri->points[0], tri->points[1], tri->points[2], tri->exCenter);
-//            int longestEdgeIndex = 0;
-//            float longestEdgeLength = 0;
-//            for (int i = 0; i < 3; ++i) {
-//                auto &edge = tri->edges[i];
-//                Point epa = _centers[edge.pid[0]], epb = _centers[edge.pid[1]];
-//                float dx = epa.x - epb.x, dy = epa.y - epb.y;
-//                float edgeLength = dx * dx + dy * dy;
-//                if (edgeLength > longestEdgeLength) {
-//                    longestEdgeIndex = i;
-//                    longestEdgeLength = edgeLength;
-//                }
-//            }
-//            isLongestEdge[longestEdgeIndex] = true;
-//        }
 
         for (int i = 0; i < 3; ++i) {
             auto &edge = tri->edges[i];
@@ -50,31 +32,22 @@ void VoronoiDiagram::generate() {
                 pb = edge.nextTri->exCenter;
             } else {
                 continue;
-                bool outTriExCenterAndLongestEdgeFlag = triContainExCenter * !isLongestEdge[i];
                 Point epa = _centers[edge.pid[0]], epb = _centers[edge.pid[1]];
                 float midX = (epa.x + epb.x) / 2.0f, midY = (epa.y + epb.y) / 2.0f;
                 Segment seg(epa, epb);
                 Line midPerpendicular = seg.midPerpendicular();
-                for (const auto &boxEdge : _boxEdge) {
-                    Point intersectPoint = midPerpendicular.intersect(boxEdge);
-                    if (intersectPoint.x < 0 || intersectPoint.y < 0 || intersectPoint.x > _width || intersectPoint.y > _height)
-                        continue;
-                    if ((intersectPoint.x - midX) * (midX - tri->exCenter.x) * outTriExCenterAndLongestEdgeFlag < 0 ||
-                        (intersectPoint.y - midY) * (midY - tri->exCenter.y) * outTriExCenterAndLongestEdgeFlag < 0)
-                        continue;
-                    pb = intersectPoint;
-                }
+
             }
 
             std::map<int, VertexNode> &vertexMap = _diagram.first;
             std::map<int, EdgeNode> &edgeMap = _diagram.second;
             edgeMap[_newEdgeId] = EdgeNode(pa, pb);
-            for (int i = 0; i < 2; ++i) {
-                int pointId = edge.pid[i];
+            for (int j = 0; j < 2; ++j) {
+                int pointId = edge.pid[j];
                 if (vertexMap.find(pointId) == vertexMap.end()) {
                     vertexMap[pointId] = VertexNode(_centers[pointId]);
                 }
-                edgeMap[_newEdgeId].relatedCenterIds[i] = pointId;
+                edgeMap[_newEdgeId].relatedCenterIds[j] = pointId;
                 vertexMap[pointId].edgeIds.emplace_back(_newEdgeId);
             }
 

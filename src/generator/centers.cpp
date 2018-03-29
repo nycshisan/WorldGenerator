@@ -39,3 +39,22 @@ void BlockCenters::draw(Window &window) {
         window.draw(_pointShape);
     }
 }
+
+void BlockCenters::save() {
+    std::ofstream outfile("logs/centers.txt");
+    for (auto &center: _centers) {
+        outfile << (int)center.x << " " << (int)center.y << std::endl;
+    }
+}
+
+void BlockCenters::load() {
+    std::ifstream infile("logs/centers.txt");
+    std::vector<Point> centers;
+    while (!infile.eof()) {
+        int x, y;
+        infile >> x >> y;
+        centers.emplace_back(Point(x, y));
+    }
+    centers.pop_back();
+    _centers = centers;
+}

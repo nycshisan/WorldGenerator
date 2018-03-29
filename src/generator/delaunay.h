@@ -36,12 +36,10 @@ public:
         void findInfluenced(const Point &point, std::set<NetNode*> &tris, std::vector<Edge*> &edges);
 
         bool _isBoundTriangle;
-        NetNode *_removeBoundingTriangle(std::vector<NetNode*> &boundingTris);
-        NetNode *removeBoundingTriangle(std::vector<NetNode*> &boundingTris);
+        void _removeBoundingTriangle(std::vector<NetNode*> &boundingTris);
+        void removeBoundingTriangle(std::vector<NetNode*> &boundingTris);
 
         sf::Vertex _vertices[4];
-        void _draw(Window &window);
-        void draw(Window &window);
 
         void linkAnoTri(NetNode *anoTri, int edgeId, int anoEdgeId);
 

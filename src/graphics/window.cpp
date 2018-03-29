@@ -14,6 +14,7 @@ const static std::vector<std::pair<std::string, std::function<void(Window&)>>> _
         {"Redo", Generator::RedoButtonResponder},
         {"Undo", Generator::UndoButtonResponder},
         {"Save", Generator::SaveButtonResponder},
+        {"Load", Generator::LoadButtonResponder}
 };
 
 Window::Window(unsigned int width, unsigned int height, unsigned int barHeight) : sf::RenderWindow(sf::VideoMode(width, height + 2 * barHeight), "") {
@@ -121,6 +122,10 @@ void Window::_displayBar() {
 
 void Window::_displayMap() {
     Generator::SharedInstance().display(*this);
+}
+
+std::string Window::getHintLabel() {
+    return _hintLabelContent;
 }
 
 void Window::setHintLabel(const std::string &content) {

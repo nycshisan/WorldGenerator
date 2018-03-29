@@ -26,6 +26,8 @@ public:
     void generate();
     Output output();
     void draw(Window &window);
+    void save();
+    void load();
 };
 
 #endif //WORLDGENERATOR_CENTERS_H

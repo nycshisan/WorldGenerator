@@ -6,26 +6,6 @@
 
 #include "../misc/log.h"
 
-#include <fstream>
-void saveCentersForDebug(std::vector<Point> points) {
-    std::ofstream outfile("logs/centers.txt");
-    for (auto &point: points) {
-        outfile << (int)point.x << " " << (int)point.y << std::endl;
-    }
-}
-
-std::vector<Point> loadCentersForDebug() {
-    std::ifstream infile("logs/centers.txt");
-    std::vector<Point> centers;
-    while (!infile.eof()) {
-        int x, y;
-        infile >> x >> y;
-        centers.emplace_back(Point(x, y));
-    }
-    centers.pop_back();
-    return centers;
-}
-
 void Generator::NextButtonResponder(Window &window) {
     Generator &generator = Generator::SharedInstance();
     switch (generator._state) {
@@ -71,7 +51,31 @@ void Generator::UndoButtonResponder(Window &window) {
     generator._lastState();
 }
 
-void Generator::SaveButtonResponder(Window &window) {}
+void Generator::SaveButtonResponder(Window &window) {
+    Generator &generator = Generator::SharedInstance();
+    switch (generator._state) {
+        case BlockCenters:
+            generator._blockCenters.save();
+            window.setHintLabel("Centers saved.");
+            break;
+        default:
+            window.setHintLabel("Can't save.");
+            break;
+    }
+}
+
+void Generator::LoadButtonResponder(Window &window) {
+    Generator &generator = Generator::SharedInstance();
+    switch (generator._state) {
+        case BlockCenters:
+            generator._blockCenters.load();
+            window.setHintLabel("Centers loaded.");
+            break;
+        default:
+            window.setHintLabel("Can't load.");
+            break;
+    }
+}
 
 
 Generator &Generator::SharedInstance() {
