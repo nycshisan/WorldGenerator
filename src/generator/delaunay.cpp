@@ -23,6 +23,7 @@ void DelaunayTriangles::generate() {
     for (int i = 0; i < n; ++i) {
         auto center = _centers[i];
         auto containingTriangle = _triNetHead->findContainingTriangle(center);
+        // `Influenced` triangles & edges means the triangles and edges constituting the cavity made by putting the newest center
         std::set<NetNode*> influencedTris;
         std::vector<Edge*> influencedEdges;
         containingTriangle->findInfluenced(center, influencedTris, influencedEdges);
@@ -63,22 +64,22 @@ void DelaunayTriangles::generate() {
         _triNetHead = *_allocatedNodes.begin();
     }
 
-    for (auto iter = _allocatedNodes.begin(); iter != _allocatedNodes.end();) {
-        auto nextIter = iter; nextIter++;
-        auto tri = *iter;
-        if (tri->_isBoundTriangle) {
-           for (auto &edge: tri->edges) {
-               if (edge.nextTri != nullptr) {
-                   edge.nextTri->edges[edge.nextTriEdgeId].nextTri = nullptr;
-                   edge.nextTri->edges[edge.nextTriEdgeId].nextTriEdgeId = -1;
-               }
-           }
-           _allocatedNodes.erase(iter);
-        }
-        iter = nextIter;
-    }
+//    for (auto iter = _allocatedNodes.begin(); iter != _allocatedNodes.end();) {
+//        auto nextIter = iter; nextIter++;
+//        auto tri = *iter;
+//        if (tri->_isBoundTriangle) {
+//           for (auto &edge: tri->edges) {
+//               if (edge.nextTri != nullptr) {
+//                   edge.nextTri->edges[edge.nextTriEdgeId].nextTri = nullptr;
+//                   edge.nextTri->edges[edge.nextTriEdgeId].nextTriEdgeId = -1;
+//               }
+//           }
+//           _allocatedNodes.erase(iter);
+//        }
+//        iter = nextIter;
+//    }
+//    _triNetHead = *_allocatedNodes.begin();
 
-    _triNetHead = *_allocatedNodes.begin();
     _centers.pop_back(); _centers.pop_back(); _centers.pop_back();
 }
 
@@ -88,7 +89,7 @@ DelaunayTriangles::Output DelaunayTriangles::output() {
 
 void DelaunayTriangles::draw(Window &window) {
     for (auto &tri: _allocatedNodes) {
-        window.draw(tri->_vertices, 4, sf::Lines);
+        window.draw(tri->_vertices, 4, sf::LineStrip);
     }
 }
 
@@ -144,16 +145,15 @@ DelaunayTriangles::NetNode *DelaunayTriangles::NetNode::findContainingTriangle(c
 
 void DelaunayTriangles::NetNode::_findInfluenced(const Point &point, int beginEdgeId, std::set<NetNode*> &tris, std::vector<Edge*> &edges) {
     _visited = true;
+    tris.insert(this); // Any triangle executing this function should be influenced due to the recursion condition.
     for (int i = 0; i < 3; ++i) {
         auto &edge = this->edges[(i + beginEdgeId) % 3];
         auto nextTri = edge.nextTri;
         if (nextTri == nullptr) {
-            tris.insert(this);
-            edges.emplace_back(&edge);
+            edges.emplace_back(&edge); // The outermost edge must be influenced.
         } else if (!nextTri->_visited) {
             if (pointDistance(point, nextTri->exCenter) > nextTri->exRadius) {
-                tris.insert(this);
-                edges.emplace_back(&edge);
+                edges.emplace_back(&edge); // Next triangle is not influenced, so the edge is influenced.
             } else {
                 nextTri->_findInfluenced(point, edge.nextTriEdgeId, tris, edges);
             }

@@ -95,8 +95,8 @@ void Window::play() {
         sf::Color backgroundColor(0, 0, 0);
         clear(backgroundColor);
 
-        _displayBar();
         _displayMap();
+        _displayBar();
 
         display();
     }
