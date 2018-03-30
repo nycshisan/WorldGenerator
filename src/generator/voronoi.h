@@ -5,6 +5,7 @@
 #ifndef WORLDGENERATOR_VORONOI_H
 #define WORLDGENERATOR_VORONOI_H
 
+#include "centers.h"
 #include "delaunay.h"
 
 #include <vector>

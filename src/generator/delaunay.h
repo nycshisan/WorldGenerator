@@ -29,15 +29,10 @@ public:
         bool _visited = false;
         void _clearVisitFlag();
 
-        NetNode *_findContainingTriangle(const Point &point);
-        NetNode* findContainingTriangle(const Point &point);
-
         void _findInfluenced(const Point &point, int beginEdgeId, std::set<NetNode*> &tris, std::vector<Edge*> &edges);
         void findInfluenced(const Point &point, std::set<NetNode*> &tris, std::vector<Edge*> &edges);
 
         bool _isBoundTriangle;
-        void _removeBoundingTriangle(std::vector<NetNode*> &boundingTris);
-        void removeBoundingTriangle(std::vector<NetNode*> &boundingTris);
 
         sf::Vertex _vertices[4];
 

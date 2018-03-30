@@ -10,7 +10,7 @@
 #include "SFML/Graphics.hpp"
 
 #include "../graphics/window.h"
-#include "../misc/geomath.h"
+#include "../misc/misc.h"
 
 class BlockCenters {
 public:

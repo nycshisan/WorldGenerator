@@ -5,6 +5,7 @@
 #include "delaunay.h"
 
 #include "../conf/conf.h"
+#include "../misc/misc.h"
 
 void DelaunayTriangles::input(const DelaunayTriangles::Input &input) {
     _centers = input;
@@ -14,15 +15,21 @@ void DelaunayTriangles::generate() {
     _deleteOldNodes();
     // Bowyer-Watson algorithm
     auto n = (int)_centers.size();
-    _centers.emplace_back(0, 0);
-    _centers.emplace_back(2 * CONF.getMapWidth(), 0);
-    _centers.emplace_back(0, 2 * CONF.getMapHeight());
+    int width = CONF.getMapWidth(), height = CONF.getMapHeight();
+    _centers.emplace_back(-width, -height);
+    _centers.emplace_back(3 * CONF.getMapWidth(), 0);
+    _centers.emplace_back(0, 3 * CONF.getMapHeight());
     _triNetHead = new NetNode(n, n + 1, n + 2, _centers, n);
     _allocatedNodes.insert(_triNetHead);
 
     for (int i = 0; i < n; ++i) {
         auto center = _centers[i];
-        auto containingTriangle = _triNetHead->findContainingTriangle(center);
+        NetNode *containingTriangle = nullptr;
+        for (auto tri: _allocatedNodes) {
+            if (triangleContains(tri->points[0], tri->points[1], tri->points[2], center)) {
+                containingTriangle = tri;
+            }
+        }
         // `Influenced` triangles & edges means the triangles and edges constituting the cavity made by putting the newest center
         std::set<NetNode*> influencedTris;
         std::vector<Edge*> influencedEdges;
@@ -64,22 +71,6 @@ void DelaunayTriangles::generate() {
         _triNetHead = *_allocatedNodes.begin();
     }
 
-//    for (auto iter = _allocatedNodes.begin(); iter != _allocatedNodes.end();) {
-//        auto nextIter = iter; nextIter++;
-//        auto tri = *iter;
-//        if (tri->_isBoundTriangle) {
-//           for (auto &edge: tri->edges) {
-//               if (edge.nextTri != nullptr) {
-//                   edge.nextTri->edges[edge.nextTriEdgeId].nextTri = nullptr;
-//                   edge.nextTri->edges[edge.nextTriEdgeId].nextTriEdgeId = -1;
-//               }
-//           }
-//           _allocatedNodes.erase(iter);
-//        }
-//        iter = nextIter;
-//    }
-//    _triNetHead = *_allocatedNodes.begin();
-
     _centers.pop_back(); _centers.pop_back(); _centers.pop_back();
 }
 
@@ -89,7 +80,8 @@ DelaunayTriangles::Output DelaunayTriangles::output() {
 
 void DelaunayTriangles::draw(Window &window) {
     for (auto &tri: _allocatedNodes) {
-        window.draw(tri->_vertices, 4, sf::LineStrip);
+        if (!tri->_isBoundTriangle)
+            window.draw(tri->_vertices, 4, sf::LineStrip);
     }
 }
 
@@ -121,28 +113,6 @@ void DelaunayTriangles::NetNode::_clearVisitFlag() {
     }
 }
 
-DelaunayTriangles::NetNode *DelaunayTriangles::NetNode::_findContainingTriangle(const Point &point) {
-    if (_visited)
-        return nullptr;
-    _visited = true;
-    if (triangleContains(points[0], points[1], points[2], point))
-        return this;
-    for (auto &edge: edges) {
-        if (edge.nextTri == nullptr)
-            continue;
-        auto r = edge.nextTri->_findContainingTriangle(point);
-        if (r != nullptr)
-            return r;
-    }
-    return nullptr;
-}
-
-DelaunayTriangles::NetNode *DelaunayTriangles::NetNode::findContainingTriangle(const Point &point) {
-    auto result = _findContainingTriangle(point);
-    _clearVisitFlag();
-    return result;
-}
-
 void DelaunayTriangles::NetNode::_findInfluenced(const Point &point, int beginEdgeId, std::set<NetNode*> &tris, std::vector<Edge*> &edges) {
     _visited = true;
     tris.insert(this); // Any triangle executing this function should be influenced due to the recursion condition.
@@ -163,32 +133,6 @@ void DelaunayTriangles::NetNode::_findInfluenced(const Point &point, int beginEd
 
 void DelaunayTriangles::NetNode::findInfluenced(const Point &point, std::set<NetNode*> &tris, std::vector<Edge*> &edges) {
     _findInfluenced(point, 0, tris, edges);
-    _clearVisitFlag();
-}
-
-void DelaunayTriangles::NetNode::_removeBoundingTriangle(std::vector<NetNode*> &boundingTris) {
-    if (_visited)
-        return;
-    _visited = true;
-    if (_isBoundTriangle) {
-        boundingTris.emplace_back(this);
-    }
-    for (auto &edge: edges) {
-        auto nextTri = edge.nextTri;
-        if (nextTri != nullptr) {
-            nextTri->_removeBoundingTriangle(boundingTris);
-            if (_isBoundTriangle) {
-                nextTri->edges[edge.nextTriEdgeId].nextTri = nullptr;
-                nextTri->edges[edge.nextTriEdgeId].nextTriEdgeId = -1;
-                edge.nextTri = nullptr;
-                edge.nextTriEdgeId = -1;
-            }
-        }
-    }
-}
-
-void DelaunayTriangles::NetNode::removeBoundingTriangle(std::vector<NetNode*> &boundingTris) {
-    _removeBoundingTriangle(boundingTris);
     _clearVisitFlag();
 }
 
