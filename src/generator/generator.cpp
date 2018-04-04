@@ -30,6 +30,7 @@ void Generator::NextButtonResponder(Window &window) {
             LOGERR("Invalid generator state!");
     }
     generator._nextState();
+    generator._setLabel(window);
 }
 
 void Generator::RedoButtonResponder(Window &window) {
@@ -51,6 +52,7 @@ void Generator::RedoButtonResponder(Window &window) {
 void Generator::UndoButtonResponder(Window &window) {
     Generator &generator = Generator::SharedInstance();
     generator._lastState();
+    generator._setLabel(window);
 }
 
 void Generator::SaveButtonResponder(Window &window) {
@@ -102,8 +104,6 @@ void Generator::_nextState() {
 
 void Generator::_lastState() {
     switch (_state) {
-        case Ready:
-            break;
         case BlockCenters:
             _state = Ready; break;
         case DelaunayTriangles:
@@ -112,6 +112,25 @@ void Generator::_lastState() {
             _state = DelaunayTriangles; break;
         case LloydRelaxation:
             _state = LloydRelaxation; break;
+        default:
+            break;
+    }
+}
+
+void Generator::_setLabel(Window &window) {
+    switch(_state) {
+        case Ready:
+            window.setHintLabel("Ready!");
+            break;
+        case BlockCenters:
+            window.setHintLabel("Generated block centers.");
+            break;
+        case DelaunayTriangles:
+            window.setHintLabel("Generated Delaunay triangles.");
+            break;
+        case VoronoiDiagram:
+            window.setHintLabel("Generated Voronoi diagram.");
+            break;
         default:
             break;
     }

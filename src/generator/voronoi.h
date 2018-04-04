@@ -41,7 +41,10 @@ private:
 
     unsigned int _width, _height;
 
-    Line _boxEdges[4];
+    Rectangle _box;
+
+    std::map<int, std::map<int, bool>> _existsEdges;
+    bool _existsEdge(int paId, int pbId);
 
 public:
     void input(InputCenters centers, InputTris tris);

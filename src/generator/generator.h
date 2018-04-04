@@ -23,13 +23,14 @@ class Generator {
 
     void _nextState();
     void _lastState();
+    void _setLabel(Window &window);
 
     class BlockCenters _blockCenters;
     BlockCenters::Output _centers;
     class DelaunayTriangles _delaunayTriangles;
     DelaunayTriangles::Output _tris;
     class VoronoiDiagram _voronoiDiagram;
-    VoronoiDiagram::Output _vd;
+    VoronoiDiagram::Output _vd{};
 
 public:
 

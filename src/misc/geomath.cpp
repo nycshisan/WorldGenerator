@@ -34,6 +34,27 @@ Point Triangle::getExCenter() {
     return lab.intersect(lac);
 }
 
+Line::Line(const Point &pa, const Point &pb) {
+    float dx = pa.x - pb.x, dy = pa.y - pb.y;
+    if (std::abs(dx) < _err) {
+        _vertical = true;
+        _verticalX = pa.x;
+        dy = std::signbit(dy) * _err;
+    }
+    else if (std::abs(dy) < _err) {
+        _horizontal = true;
+        _horizontalY = pa.y;
+        dx = std::signbit(dx) * _err;
+    }
+    _k = dy / dx;
+    _b = pa.y - pa.x * _k;
+}
+
+Line::Line(const Point &p, float k) {
+    _k = k;
+    _b = p.y - k * p.x;
+}
+
 Point Line::intersect(const Line &anoLine) {
     Point p;
     if (_horizontal) {
@@ -53,27 +74,6 @@ Point Line::intersect(const Line &anoLine) {
         p.y = yGivenX((p.x));
     }
     return p;
-}
-
-Line::Line(const Point &pa, const Point &pb) {
-    float dx = pa.x - pb.x, dy = pa.y - pb.y;
-    if (std::abs(dx) < _err) {
-        _vertical = true;
-        _verticalX = pa.y;
-        dy = std::signbit(dy) * _err;
-    }
-    else if (std::abs(dy) < _err) {
-        _horizontal = true;
-        _horizontalY = pa.x;
-        dx = std::signbit(dx) * _err;
-    }
-    _k = dy / dx;
-    _b = pa.y - pa.x * _k;
-}
-
-Line::Line(const Point &p, float k) {
-    _k = k;
-    _b = p.y - k * p.x;
 }
 
 float Line::yGivenX(float x) const {
@@ -102,6 +102,10 @@ Line Line::Vertical(float x) {
     return r;
 }
 
+Segment::Segment(const Point &pa, const Point &pb) : Line(pa, pb) {
+    _pa = pa; _pb = pb;
+}
+
 Line Segment::midPerpendicular() {
     Point pMid;
     pMid.x = (_pa.x + _pb.x) / 2.0f;
@@ -116,4 +120,34 @@ Line Segment::midPerpendicular() {
         r = Line(pMid, vk);
     }
     return r;
+}
+
+Rectangle::Rectangle(float left, float right, float top, float down) {
+    _left = left; _right = right;
+    _top = top; _down = down;
+    _edges[0] = Line(Point(_left, _top), Point(_right, _top));
+    _edges[1] = Line(Point(_right, _top), Point(_right, _down));
+    _edges[2] = Line(Point(_right, _down), Point(_left, _down));
+    _edges[3] = Line(Point(_left, _down), Point(_left, _top));
+}
+
+bool Rectangle::contains(const Point &p) {
+    return p.x >= _left && p.x <= _right && p.y >= _down && p.y <= _top;
+}
+
+Point Rectangle::intersects(const Point &pa, const Point &pb) {
+    Line lab(pa, pb);
+    sf::Vector2f vab = pa - pb;
+    for (auto edge: _edges) {
+        Point intersection = lab.intersect(edge);
+        if (contains(intersection)) {
+            sf::Vector2f vai = pa - intersection;
+            float dot = vab.x * vai.x + vab.y * vai.y;
+            if (dot >= 0) {
+                return intersection;
+            }
+        }
+    }
+    assert(false);
+    return {};
 }

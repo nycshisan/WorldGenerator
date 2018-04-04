@@ -51,12 +51,24 @@ public:
 
 class Segment : public Line {
     Point _pa, _pb;
+
 public:
-    Segment(const Point &pa, const Point &pb) : Line(pa, pb) {
-        _pa = pa; _pb = pb;
-    }
+    Segment(const Point &pa, const Point &pb);
 
     Line midPerpendicular();
+};
+
+class Rectangle {
+    float _left, _right, _top, _down;
+    Line _edges[4];
+
+public:
+
+    Rectangle() = default;
+    explicit Rectangle(float left, float right, float top, float down);
+
+    bool contains(const Point &p);
+    Point intersects(const Point &pa, const Point &pb);
 };
 
 #endif //WORLDGENERATOR_GEOMATH_H

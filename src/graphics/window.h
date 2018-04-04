@@ -41,7 +41,6 @@ public:
 
     sf::Vector2u getMapSize();
 
-    std::string getHintLabel();
     void setHintLabel(const std::string &content);
 
     void play();

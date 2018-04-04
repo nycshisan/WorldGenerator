@@ -57,7 +57,7 @@ Window::Window(unsigned int width, unsigned int height, unsigned int barHeight) 
 
         button.setColor(sf::Color::White);
         button.setSize(buttonSize);
-        button.setPosition(sf::Vector2f(buttonXOffset, _height + _barHeight + _barSeparatorHeight / 2 + (_barHeight - buttonSize.y) / 2));
+        button.setPosition(sf::Vector2f(buttonXOffset, _height + _barHeight + _barSeparatorHeight / 2.0f + (_barHeight - buttonSize.y) / 2.0f));
         buttonXOffset += buttonSize.x + buttonXInterval;
 
         _buttons.emplace_back(button);
@@ -86,6 +86,12 @@ void Window::play() {
                 }
                 if (key.code == sf::Keyboard::Key::Left) {
                     Generator::UndoButtonResponder(*this);
+                }
+                if (key.code == sf::Keyboard::Key::Up) {
+                    Generator::LoadButtonResponder(*this);
+                }
+                if (key.code == sf::Keyboard::Key::Down) {
+                    Generator::SaveButtonResponder(*this);
                 }
             }
         }
@@ -122,10 +128,6 @@ void Window::_displayBar() {
 
 void Window::_displayMap() {
     Generator::SharedInstance().display(*this);
-}
-
-std::string Window::getHintLabel() {
-    return _hintLabelContent;
 }
 
 void Window::setHintLabel(const std::string &content) {

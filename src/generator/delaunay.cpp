@@ -158,6 +158,3 @@ void DelaunayTriangles::NetNode::_linkAnoTri(DelaunayTriangles::NetNode *anoTri,
     anoTri->edges[anoEdgeId].nextTriEdgeId = edgeId;
 }
 
-bool DelaunayTriangles::NetNode::isBoundTriangle() {
-    return _isBoundTriangle;
-}

@@ -44,15 +44,13 @@ public:
 
         Point exCenter;
         float exRadius = 0;
-
-        bool isBoundTriangle();
     };
 
     typedef BlockCenters::Output Input;
     typedef std::unordered_set<NetNode*> Output;
 private:
-    Input _centers;
-    Output _allocatedNodes;
+    Input _centers{};
+    Output _allocatedNodes{};
 
     NetNode *_triNetHead = nullptr;
     void _deleteOldNodes();
