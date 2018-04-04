@@ -9,15 +9,28 @@
 
 #include "simd.h"
 
-typedef sf::Vector2f Point;
+class Point : public sf::Vector2f {
+public:
+    Point() = default;
+    Point(float x, float y);
 
-float pointDistance(Point pa, Point pb);
+    float distance(const Point &anoPoint) const;
+};
 
-bool triangleContains(const Point &pa, const Point &pb, const Point &pc, const Point &p);
+class Triangle {
+    data_t _containsError = -0.0001f; // Some input may cause problem if the error is 0. I do not know why...
+
+public:
+    Point points[3];
+
+    Triangle(const Point &pa, const Point &pb, const Point &pc);
+
+    bool contains(const Point &p);
+    Point getExCenter();
+};
 
 class Line {
-    friend class Segment;
-
+protected:
     float _err = 1e-3;
     float _k = 0.0f, _b = 0.0f;
     bool _vertical = false; float _verticalX = 0.0f;
@@ -31,6 +44,9 @@ public:
     Point intersect(const Line &anoLine);
     float yGivenX(float x) const;
     float xGivenY(float y) const;
+
+    static Line Horizontal(float y);
+    static Line Vertical(float x);
 };
 
 class Segment : public Line {
@@ -42,7 +58,5 @@ public:
 
     Line midPerpendicular();
 };
-
-Point triangleExCenter(const Point &pa, const Point &pb, const Point &pc);
 
 #endif //WORLDGENERATOR_GEOMATH_H

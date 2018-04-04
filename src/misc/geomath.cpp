@@ -6,25 +6,30 @@
 
 #include <cmath>
 
-float pointDistance(Point pa, Point pb) {
-    float xDist = pa.x - pb.x, yDist = pa.y - pb.y;
+Point::Point(float x, float y) : sf::Vector2f(x, y) {}
+
+float Point::distance(const Point &anoPoint) const {
+    float xDist = x - anoPoint.x, yDist = y - anoPoint.y;
     return xDist * xDist + yDist * yDist;
 }
 
-data_t triangleContainsError = -0.0001f; // Some input may cause problem if the error is 0. I do not know why...
-bool triangleContains(const Point &pa, const Point &pb, const Point &pc, const Point &p) {
-    mat3 pMat = {{{pa.x, pa.y, 1.0f},
-                  {pb.x, pb.y, 1.0f},
-                  {pc.x, pc.y, 1.0f}}};
+Triangle::Triangle(const Point &pa, const Point &pb, const Point &pc) {
+    points[0] = pa; points[1] = pb; points[2] = pc;
+}
+
+bool Triangle::contains(const Point &p) {
+    Point &pa = points[0], &pb = points[1], &pc = points[2];
+    mat3 pMat = {{{pa.x, pa.y, 1.0f}, {pb.x, pb.y, 1.0f}, {pc.x, pc.y, 1.0f}}};
     invert(pMat);
     vec3 posVec = {p.x, p.y, 1.0f};
     vec3 pVec = pMat * posVec;
     data_t pA = pVec.x, pB = pVec.y, pC = pVec.z;
 
-    return pA > triangleContainsError && pB > triangleContainsError && pC > triangleContainsError;
+    return pA > _containsError && pB > _containsError && pC > _containsError;
 }
 
-Point triangleExCenter(const Point &pa, const Point &pb, const Point &pc) {
+Point Triangle::getExCenter() {
+    Point &pa = points[0], &pb = points[1], &pc = points[2];
     Line lab = Segment(pa, pb).midPerpendicular(), lac = Segment(pa, pc).midPerpendicular();
     return lab.intersect(lac);
 }
@@ -83,19 +88,31 @@ float Line::xGivenY(float y) const {
     return (y - _b) / _k;
 }
 
+Line Line::Horizontal(float y) {
+    Line r;
+    r._horizontal = true;
+    r._horizontalY = y;
+    return r;
+}
+
+Line Line::Vertical(float x) {
+    Line r;
+    r._vertical = true;
+    r._verticalX = x;
+    return r;
+}
+
 Line Segment::midPerpendicular() {
     Point pMid;
     pMid.x = (_pa.x + _pb.x) / 2.0f;
     pMid.y = (_pa.y + _pb.y) / 2.0f;
-    Line lab = Line(_pa, _pb), r;
-    if (lab._vertical) {
-        r._horizontal = true;
-        r._horizontalY = pMid.y;
-    } else if (lab._horizontal) {
-        r._vertical = true;
-        r._verticalX = pMid.x;
+    Line r;
+    if (_vertical) {
+        r = Horizontal(pMid.y);
+    } else if (_horizontal) {
+        r = Vertical(pMid.x);
     } else {
-        float vk = -1.0f / lab._k;
+        float vk = -1.0f / _k;
         r = Line(pMid, vk);
     }
     return r;

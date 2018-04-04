@@ -8,7 +8,6 @@
 #include <set>
 #include <unordered_set>
 
-#include "../graphics/window.h"
 #include "centers.h"
 
 class DelaunayTriangles {
@@ -23,7 +22,7 @@ public:
         Edge(int pointIdA, int pointIdB);
     };
 
-    class NetNode {
+    class NetNode : public Triangle {
         friend class DelaunayTriangles;
 
         bool _visited = false;
@@ -36,16 +35,17 @@ public:
 
         sf::Vertex _vertices[4];
 
-        void linkAnoTri(NetNode *anoTri, int edgeId, int anoEdgeId);
+        void _linkAnoTri(NetNode *anoTri, int edgeId, int anoEdgeId);
 
         NetNode(int pointIdA, int pointIdB, int pointIdC, const std::vector<Point> &centers, int n);
 
     public:
         Edge edges[3];
-        Point points[3];
 
         Point exCenter;
         float exRadius = 0;
+
+        bool isBoundTriangle();
     };
 
     typedef BlockCenters::Output Input;

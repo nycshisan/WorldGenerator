@@ -5,7 +5,6 @@
 #include "delaunay.h"
 
 #include "../conf/conf.h"
-#include "../misc/misc.h"
 
 void DelaunayTriangles::input(const DelaunayTriangles::Input &input) {
     _centers = input;
@@ -26,10 +25,11 @@ void DelaunayTriangles::generate() {
         auto center = _centers[i];
         NetNode *containingTriangle = nullptr;
         for (auto tri: _allocatedNodes) {
-            if (triangleContains(tri->points[0], tri->points[1], tri->points[2], center)) {
-                containingTriangle = tri;
+            if (tri->contains(center)) {
+                containingTriangle = tri; break;
             }
         }
+        assert(containingTriangle != nullptr);
         // `Influenced` triangles & edges means the triangles and edges constituting the cavity made by putting the newest center
         std::set<NetNode*> influencedTris;
         std::vector<Edge*> influencedEdges;
@@ -60,8 +60,8 @@ void DelaunayTriangles::generate() {
             else
                 nextTri = newTris[j + 1];
 
-            tri->linkAnoTri(lastTri, 2, 1);
-            tri->linkAnoTri(nextTri, 1, 2);
+            tri->_linkAnoTri(lastTri, 2, 1);
+            tri->_linkAnoTri(nextTri, 1, 2);
         }
 
         for (auto tri: influencedTris) {
@@ -122,7 +122,7 @@ void DelaunayTriangles::NetNode::_findInfluenced(const Point &point, int beginEd
         if (nextTri == nullptr) {
             edges.emplace_back(&edge); // The outermost edge must be influenced.
         } else if (!nextTri->_visited) {
-            if (pointDistance(point, nextTri->exCenter) > nextTri->exRadius) {
+            if (point.distance(nextTri->exCenter) > nextTri->exRadius) {
                 edges.emplace_back(&edge); // Next triangle is not influenced, so the edge is influenced.
             } else {
                 nextTri->_findInfluenced(point, edge.nextTriEdgeId, tris, edges);
@@ -136,10 +136,7 @@ void DelaunayTriangles::NetNode::findInfluenced(const Point &point, std::set<Net
     _clearVisitFlag();
 }
 
-DelaunayTriangles::NetNode::NetNode(int pointIdA, int pointIdB, int pointIdC, const std::vector<Point> &centers, int n) {
-    points[0] = centers[pointIdA];
-    points[1] = centers[pointIdB];
-    points[2] = centers[pointIdC];
+DelaunayTriangles::NetNode::NetNode(int pointIdA, int pointIdB, int pointIdC, const std::vector<Point> &centers, int n) : Triangle(centers[pointIdA], centers[pointIdB], centers[pointIdC]) {
     _vertices[0] = sf::Vertex(points[0]);
     _vertices[1] = sf::Vertex(points[1]);
     _vertices[2] = sf::Vertex(points[2]);
@@ -148,15 +145,19 @@ DelaunayTriangles::NetNode::NetNode(int pointIdA, int pointIdB, int pointIdC, co
     edges[0] = Edge(pointIdA, pointIdB);
     edges[1] = Edge(pointIdB, pointIdC);
     edges[2] = Edge(pointIdC, pointIdA);
-    exCenter = triangleExCenter(points[0], points[1], points[2]);
-    exRadius = pointDistance(exCenter, points[0]);
+    exCenter = getExCenter();
+    exRadius = exCenter.distance(points[0]);
 
     _isBoundTriangle = pointIdA >= n || pointIdB >= n || pointIdC >= n;
 }
 
-void DelaunayTriangles::NetNode::linkAnoTri(DelaunayTriangles::NetNode *anoTri, int edgeId, int anoEdgeId) {
+void DelaunayTriangles::NetNode::_linkAnoTri(DelaunayTriangles::NetNode *anoTri, int edgeId, int anoEdgeId) {
     edges[edgeId].nextTri = anoTri;
     edges[edgeId].nextTriEdgeId = anoEdgeId;
     anoTri->edges[anoEdgeId].nextTri = this;
     anoTri->edges[anoEdgeId].nextTriEdgeId = edgeId;
+}
+
+bool DelaunayTriangles::NetNode::isBoundTriangle() {
+    return _isBoundTriangle;
 }

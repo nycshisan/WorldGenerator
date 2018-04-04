@@ -14,6 +14,7 @@ enum GeneratorState {
     Ready,
     BlockCenters,
     DelaunayTriangles,
+    LloydRelaxation,
     VoronoiDiagram,
 };
 

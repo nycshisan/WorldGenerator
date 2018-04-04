@@ -5,10 +5,10 @@
 #ifndef WORLDGENERATOR_VORONOI_H
 #define WORLDGENERATOR_VORONOI_H
 
+#include <vector>
+
 #include "centers.h"
 #include "delaunay.h"
-
-#include <vector>
 
 class VoronoiDiagram {
 public:
@@ -21,7 +21,6 @@ public:
     };
 
     struct EdgeNode {
-        Point endPoints[2];
         int relatedCenterIds[2] = {-1, -1};
         sf::Vertex vertex[2];
 
@@ -42,7 +41,7 @@ private:
 
     unsigned int _width, _height;
 
-    Line _boxEdge[4];
+    Line _boxEdges[4];
 
 public:
     void input(InputCenters centers, InputTris tris);

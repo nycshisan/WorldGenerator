@@ -42,6 +42,8 @@ void Generator::RedoButtonResponder(Window &window) {
             generator._delaunayTriangles.generate(); break;
         case VoronoiDiagram:
             generator._voronoiDiagram.generate(); break;
+//        case LloydRelaxation:
+//            generator._lloydRelaxation.generate(); break;
         default:
             LOGERR("Invalid generator state!");
     }
@@ -91,6 +93,8 @@ void Generator::_nextState() {
             _state = DelaunayTriangles; break;
         case DelaunayTriangles:
             _state = VoronoiDiagram; break;
+        case VoronoiDiagram:
+            _state = LloydRelaxation; break;
         default:
             break;
     }
@@ -106,6 +110,8 @@ void Generator::_lastState() {
             _state = BlockCenters; break;
         case VoronoiDiagram:
             _state = DelaunayTriangles; break;
+        case LloydRelaxation:
+            _state = LloydRelaxation; break;
         default:
             break;
     }
@@ -119,6 +125,8 @@ void Generator::display(Window &window) {
             _delaunayTriangles.draw(window); break;
         case VoronoiDiagram:
             _voronoiDiagram.draw(window); break;
+//        case LloydRelaxation:
+//            _lloydRelaxation.draw(window); break;
         default:
             break;
     }

@@ -12,10 +12,10 @@ void VoronoiDiagram::input(VoronoiDiagram::InputCenters centers, VoronoiDiagram:
     _pointShape.setRadius(CONF.getUIPointRadius());
     _width = CONF.getMapWidth(), _height = CONF.getMapHeight();
     Point boxVertexes[4] = { Point(0, 0), Point(0, _width), Point(_height, _width), Point(_height, 0) };
-    _boxEdge[0] = Line(boxVertexes[0], boxVertexes[1]);
-    _boxEdge[1] = Line(boxVertexes[1], boxVertexes[2]);
-    _boxEdge[2] = Line(boxVertexes[2], boxVertexes[3]);
-    _boxEdge[3] = Line(boxVertexes[3], boxVertexes[0]);
+    _boxEdges[0] = Line(boxVertexes[0], boxVertexes[1]);
+    _boxEdges[1] = Line(boxVertexes[1], boxVertexes[2]);
+    _boxEdges[2] = Line(boxVertexes[2], boxVertexes[3]);
+    _boxEdges[3] = Line(boxVertexes[3], boxVertexes[0]);
 }
 
 void VoronoiDiagram::generate() {
@@ -24,19 +24,28 @@ void VoronoiDiagram::generate() {
     _diagram.second.clear();
 
     for (auto tri: _tris) {
-
-        for (int i = 0; i < 3; ++i) {
-            auto &edge = tri->edges[i];
-            Point pa = tri->exCenter, pb;
-            if (edge.nextTri != nullptr) {
-                pb = edge.nextTri->exCenter;
-            } else {
+        for (auto &edge : tri->edges) {
+            if (edge.nextTri == nullptr) {
                 continue;
-                Point epa = _centers[edge.pid[0]], epb = _centers[edge.pid[1]];
-                float midX = (epa.x + epb.x) / 2.0f, midY = (epa.y + epb.y) / 2.0f;
-                Segment seg(epa, epb);
-                Line midPerpendicular = seg.midPerpendicular();
-
+            }
+            Point pa = tri->exCenter, pb = edge.nextTri->exCenter;
+            if (edge.nextTri->isBoundTriangle()) {
+                Line lab(pa, pb);
+                sf::Vector2f vab = pa - pb;
+                bool debugFlagAssertPBFound = false;
+                for (auto boxEdge: _boxEdges) {
+                    Point intersection = lab.intersect(boxEdge);
+                    if (intersection.x >= 0 && intersection.x <= _width && intersection.y >= 0 && intersection.y <= _height) {
+                        sf::Vector2f vai = pa - intersection;
+                        float dot = vab.x * vai.x + vab.y * vai.y;
+                        if (dot >= 0) {
+                            pb = intersection;
+                            debugFlagAssertPBFound = true;
+                            break;
+                        }
+                    }
+                }
+                assert(debugFlagAssertPBFound);
             }
 
             std::map<int, VertexNode> &vertexMap = _diagram.first;
@@ -76,6 +85,5 @@ VoronoiDiagram::VertexNode::VertexNode(const Point &p) {
 }
 
 VoronoiDiagram::EdgeNode::EdgeNode(const Point &pa, const Point &pb) {
-    endPoints[0] = pa; endPoints[1] = pb;
     vertex[0] = sf::Vertex(pa); vertex[1] = sf::Vertex(pb);
 }
