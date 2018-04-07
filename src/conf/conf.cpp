@@ -17,20 +17,20 @@ const Configure &Configure::SharedInstance() {
     return instance;
 }
 
-unsigned int Configure::getMapWidth() const {
-    return (*this)["map"]["width"].GetUint();
+int Configure::getMapWidth() const {
+    return (*this)["map"]["width"].GetInt();
 }
 
-unsigned int Configure::getMapHeight() const {
-    return (*this)["map"]["height"].GetUint();
+int Configure::getMapHeight() const {
+    return (*this)["map"]["height"].GetInt();
 }
 
-unsigned int Configure::getUIBarHeight() const {
-    return (*this)["ui"]["barHeight"].GetUint();
+int Configure::getUIBarHeight() const {
+    return (*this)["ui"]["barHeight"].GetInt();
 }
 
-unsigned int Configure::getUIBarSeparatorHeight() const {
-    return (*this)["ui"]["barSeparatorHeight"].GetUint();
+int Configure::getUIBarSeparatorHeight() const {
+    return (*this)["ui"]["barSeparatorHeight"].GetInt();
 }
 
 std::string Configure::getUIFontFilename() const {
@@ -47,5 +47,17 @@ int Configure::getCenterNumber() const {
 
 int Configure::getCenterPadding() const {
     return (*this)["centers"]["padding"].GetInt();
+}
+
+int Configure::getCenterSpan() const {
+    return (*this)["centers"]["span"].GetUint();
+}
+
+float Configure::getLloydFactor() const {
+    return (*this)["lloyd"]["factor"].GetFloat();
+}
+
+int Configure::getLloydIteration() const {
+    return (*this)["lloyd"]["iteration"].GetInt();
 }
 

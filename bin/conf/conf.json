@@ -10,10 +10,12 @@
     "pointRadius": 2.0
   },
   "centers": {
-    "number": 1000,
-    "padding": 10
+    "number": 2000,
+    "padding": 0,
+    "span": 3
   },
   "lloyd": {
-    "factor": 0.5
+    "factor": 1.0,
+    "iteration": 1
   }
 }

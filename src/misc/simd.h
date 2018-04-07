@@ -98,8 +98,8 @@ DECL_VEC_DOT(4)
 
 /*
  * Here are matrix definitions.
- * Always use 512-bit memory to store the martix regardless of the size of the matrix
- * to ensure accordance in the martix arithmetics.
+ * Always use 512-bit memory to store the matrix regardless of the size of the matrix
+ * to ensure accordance in the matrix arithmetic.
  */
 
 #define DEF_MAT(SIZE) \

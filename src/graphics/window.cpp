@@ -17,7 +17,7 @@ const static std::vector<std::pair<std::string, std::function<void(Window&)>>> _
         {"Load", Generator::LoadButtonResponder}
 };
 
-Window::Window(unsigned int width, unsigned int height, unsigned int barHeight) : sf::RenderWindow(sf::VideoMode(width, height + 2 * barHeight), "") {
+Window::Window(int width, int height, int barHeight) : sf::RenderWindow(sf::VideoMode((unsigned int)width, (unsigned int)(height + 2 * barHeight)), "") {
     setTitle(_defaultTitle);
     setVerticalSyncEnabled(true);
     _width = width;
@@ -134,7 +134,7 @@ void Window::setHintLabel(const std::string &content) {
     _hintLabelContent = content;
 }
 
-sf::Vector2u Window::getMapSize() {
+sf::Vector2i Window::getMapSize() {
     return {_width, _height};
 }
 

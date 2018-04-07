@@ -217,7 +217,7 @@ ALWAYS_INLINE void invert(mat2 &m) {
 }
 
 ALWAYS_INLINE void invert(mat3 &m) {
-    // Have not got a easy way for 3x3 matrix inversion, Use the algorithm for 4x4 matrixes.
+    // Have not got a easy way for 3x3 matrix inversion, Use the algorithm for 4x4 matrices.
 
     // Fill the fourth order
     static __m128 _row3 = {0, 0, 0, 1};

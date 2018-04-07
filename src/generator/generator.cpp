@@ -10,21 +10,23 @@ void Generator::NextButtonResponder(Window &window) {
     Generator &generator = Generator::SharedInstance();
     switch (generator._state) {
         case Ready:
-            window.setHintLabel("Generated block centers.");
             generator._blockCenters.input(window.getMapSize().x, window.getMapSize().y);
             generator._blockCenters.generate();
             break;
         case BlockCenters:
-            window.setHintLabel("Generated Delaunay triangles.");
             generator._centers = generator._blockCenters.output();
             generator._delaunayTriangles.input(generator._centers);
             generator._delaunayTriangles.generate();
             break;
         case DelaunayTriangles:
-            window.setHintLabel("Generated Voronoi diagram.");
             generator._tris = generator._delaunayTriangles.output();
             generator._voronoiDiagram.input(generator._centers, generator._tris);
             generator._voronoiDiagram.generate();
+            break;
+        case VoronoiDiagram:
+            generator._vd = generator._voronoiDiagram.output();
+            generator._lloydRelaxation.input(generator._vd);
+            generator._lloydRelaxation.generate();
             break;
         default:
             LOGERR("Invalid generator state!");
@@ -43,8 +45,8 @@ void Generator::RedoButtonResponder(Window &window) {
             generator._delaunayTriangles.generate(); break;
         case VoronoiDiagram:
             generator._voronoiDiagram.generate(); break;
-//        case LloydRelaxation:
-//            generator._lloydRelaxation.generate(); break;
+        case LloydRelaxation:
+            generator._lloydRelaxation.generate(); break;
         default:
             LOGERR("Invalid generator state!");
     }
@@ -111,7 +113,7 @@ void Generator::_lastState() {
         case VoronoiDiagram:
             _state = DelaunayTriangles; break;
         case LloydRelaxation:
-            _state = LloydRelaxation; break;
+            _state = VoronoiDiagram; break;
         default:
             break;
     }
@@ -131,6 +133,8 @@ void Generator::_setLabel(Window &window) {
         case VoronoiDiagram:
             window.setHintLabel("Generated Voronoi diagram.");
             break;
+        case LloydRelaxation:
+            window.setHintLabel("Done Lloyd relaxation.");
         default:
             break;
     }
@@ -144,8 +148,8 @@ void Generator::display(Window &window) {
             _delaunayTriangles.draw(window); break;
         case VoronoiDiagram:
             _voronoiDiagram.draw(window); break;
-//        case LloydRelaxation:
-//            _lloydRelaxation.draw(window); break;
+        case LloydRelaxation:
+            _lloydRelaxation.draw(window); break;
         default:
             break;
     }

@@ -16,7 +16,7 @@
 
 class Window : public sf::RenderWindow {
     char _defaultTitle[20] = "World Generator";
-    unsigned int _width, _height, _barHeight, _barSeparatorHeight;
+    int _width, _height, _barHeight, _barSeparatorHeight;
 
     sf::RectangleShape _barSeparator;
 
@@ -37,9 +37,9 @@ class Window : public sf::RenderWindow {
     void _displayMap();
 
 public:
-    Window(unsigned int width, unsigned int height, unsigned int barHeight);
+    Window(int width, int height, int barHeight);
 
-    sf::Vector2u getMapSize();
+    sf::Vector2i getMapSize();
 
     void setHintLabel(const std::string &content);
 

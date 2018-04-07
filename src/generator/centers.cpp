@@ -8,12 +8,16 @@
 
 #include "../conf/conf.h"
 
-void BlockCenters::input(unsigned int width, unsigned int height) {
+void BlockCenters::input(int width, int height) {
     _width = width; _height = height;
+    _span = CONF.getCenterSpan();
     _pointShape.setRadius(CONF.getUIPointRadius());
 }
 
 void BlockCenters::generate() {
+    unsigned char occupied[_width][_height];
+    std::memset(occupied, 0, _width * _height);
+
     int n = CONF.getCenterNumber();
     int padding = CONF.getCenterPadding();
 
@@ -22,10 +26,23 @@ void BlockCenters::generate() {
     std::uniform_int_distribution<> disX(padding, _width - padding), disY(padding, _height - padding);
 
     _centers.clear();
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < n;) {
         int x = disX(gen);
         int y = disY(gen);
+        for (int j = std::max(x - _span, 0); j <= std::min(x + _span, _width - 1); ++j) {
+            for (int k = std::max(y - _span, 0); k <= std::min(y + _span, _height - 1); ++k) {
+                if (occupied[j][k]) {
+                    continue;
+                }
+            }
+        }
         _centers.emplace_back(Point(x, y));
+        for (int j = std::max(x - _span, 0); j <= std::min(x + _span, _width - 1); ++j) {
+            for (int k = std::max(y - _span, 0); k <= std::min(y + _span, _height - 1); ++k) {
+                occupied[j][k] = 1;
+            }
+        }
+        ++i;
     }
 }
 
@@ -34,7 +51,7 @@ BlockCenters::Output BlockCenters::output() {
 }
 
 void BlockCenters::draw(Window &window) {
-    for (auto point : _centers) {
+    for (auto &point : _centers) {
         _pointShape.setPosition(point);
         window.draw(_pointShape);
     }

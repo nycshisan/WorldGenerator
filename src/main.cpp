@@ -4,9 +4,9 @@
 #include "graphics/window.h"
 
 int main() {
-    unsigned int width = CONF.getMapWidth();
-    unsigned int height = CONF.getMapHeight();
-    unsigned int barHeight = CONF.getUIBarHeight();
+    int width = CONF.getMapWidth();
+    int height = CONF.getMapHeight();
+    int barHeight = CONF.getUIBarHeight();
 
     Window window(width, height, barHeight);
 

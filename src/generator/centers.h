@@ -18,11 +18,12 @@ public:
 private:
     Output _centers;
 
-    unsigned int _width, _height;
+    int _width, _height;
+    int _span;
     sf::CircleShape _pointShape;
 
 public:
-    void input(unsigned int width, unsigned int height);
+    void input(int width, int height);
     void generate();
     Output output();
     void draw(Window &window);

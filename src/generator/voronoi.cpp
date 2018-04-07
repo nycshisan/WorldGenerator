@@ -50,7 +50,6 @@ void VoronoiDiagram::generate() {
             }
 
             if (_existsEdge(edge.pid[0], edge.pid[1])) {
-                LOGOUT("!!!");
                 continue;
             }
 

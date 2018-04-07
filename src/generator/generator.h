@@ -9,13 +9,14 @@
 #include "centers.h"
 #include "delaunay.h"
 #include "voronoi.h"
+#include "lloyd.h"
 
 enum GeneratorState {
     Ready,
     BlockCenters,
     DelaunayTriangles,
-    LloydRelaxation,
     VoronoiDiagram,
+    LloydRelaxation,
 };
 
 class Generator {
@@ -30,7 +31,9 @@ class Generator {
     class DelaunayTriangles _delaunayTriangles;
     DelaunayTriangles::Output _tris;
     class VoronoiDiagram _voronoiDiagram;
-    VoronoiDiagram::Output _vd{};
+    VoronoiDiagram::Output _vd;
+    class LloydRelaxation _lloydRelaxation;
+
 
 public:
 

@@ -39,7 +39,7 @@ private:
     int _newEdgeId = 0;
     sf::CircleShape _pointShape;
 
-    unsigned int _width, _height;
+    int _width, _height;
 
     Rectangle _box;
 

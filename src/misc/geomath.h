@@ -18,7 +18,7 @@ public:
 };
 
 class Triangle {
-    data_t _containsError = -0.0001f; // Some input may cause problem if the error is 0. I do not know why...
+    data_t _containsError = -0.001f; // Some input may cause problem if the error is 0. I do not know why...
 
 public:
     Point points[3];
