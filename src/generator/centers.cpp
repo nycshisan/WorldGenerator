@@ -5,6 +5,7 @@
 #include "centers.h"
 
 #include <random>
+#include <fstream>
 
 #include "../conf/conf.h"
 
@@ -29,12 +30,16 @@ void BlockCenters::generate() {
     for (int i = 0; i < n;) {
         int x = disX(gen);
         int y = disY(gen);
+        bool occupiedFlag = false;
         for (int j = std::max(x - _span, 0); j <= std::min(x + _span, _width - 1); ++j) {
             for (int k = std::max(y - _span, 0); k <= std::min(y + _span, _height - 1); ++k) {
                 if (occupied[j][k]) {
-                    continue;
+                    occupiedFlag = true;
                 }
             }
+        }
+        if (occupiedFlag) {
+            continue;
         }
         _centers.emplace_back(Point(x, y));
         for (int j = std::max(x - _span, 0); j <= std::min(x + _span, _width - 1); ++j) {
@@ -58,7 +63,7 @@ void BlockCenters::draw(Window &window) {
 }
 
 void BlockCenters::save() {
-    std::ofstream outfile("logs/centers.txt");
+    std::ofstream outfile("logs/centers.txt", std::ios_base::trunc);
     for (auto &center: _centers) {
         outfile << (int)center.x << " " << (int)center.y << std::endl;
     }

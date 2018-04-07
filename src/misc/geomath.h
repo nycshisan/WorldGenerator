@@ -68,7 +68,8 @@ public:
     explicit Rectangle(float left, float right, float top, float down);
 
     bool contains(const Point &p);
-    Point intersects(const Point &pa, const Point &pb);
+    Point intersectRay(const Point &pa, const Point &pb);
+    int intersectSegment(const Point &pa, const Point &pb, Point *intersections);
 };
 
 #endif //WORLDGENERATOR_GEOMATH_H

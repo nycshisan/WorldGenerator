@@ -5,6 +5,7 @@
 #include "delaunay.h"
 
 #include "../conf/conf.h"
+#include "generator.h"
 
 void DelaunayTriangles::input(const DelaunayTriangles::Input &input) {
     _centers = input;
@@ -29,7 +30,11 @@ void DelaunayTriangles::generate() {
                 containingTriangle = tri; break;
             }
         }
-        assert(containingTriangle != nullptr);
+        if (containingTriangle == nullptr) {
+            Generator::SharedInstance().SaveErrorData();
+            assert(0);
+            continue;
+        }
         // `Influenced` triangles & edges means the triangles and edges constituting the cavity made by putting the newest center
         std::set<NetNode*> influencedTris;
         std::vector<Edge*> influencedEdges;

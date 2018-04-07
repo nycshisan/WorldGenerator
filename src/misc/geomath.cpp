@@ -135,7 +135,7 @@ bool Rectangle::contains(const Point &p) {
     return p.x >= _left && p.x <= _right && p.y >= _down && p.y <= _top;
 }
 
-Point Rectangle::intersects(const Point &pa, const Point &pb) {
+Point Rectangle::intersectRay(const Point &pa, const Point &pb) {
     Line lab(pa, pb);
     sf::Vector2f vab = pa - pb;
     for (auto edge: _edges) {
@@ -150,4 +150,21 @@ Point Rectangle::intersects(const Point &pa, const Point &pb) {
     }
     assert(false);
     return {};
+}
+
+int Rectangle::intersectSegment(const Point &pa, const Point &pb, Point *intersections) {
+    int n = 0;
+    Line lab(pa, pb);
+    for (auto edge: _edges) {
+        Point intersection = lab.intersect(edge);
+        if (contains(intersection)) {
+            sf::Vector2f vai = pa - intersection;
+            sf::Vector2f vbi = pb - intersection;
+            float dot = vai.x * vbi.x + vai.y * vbi.y;
+            if (dot < 0) {
+                intersections[n++] = intersection;
+            }
+        }
+    }
+    return n;
 }

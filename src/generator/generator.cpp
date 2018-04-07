@@ -29,7 +29,7 @@ void Generator::NextButtonResponder(Window &window) {
             generator._lloydRelaxation.generate();
             break;
         default:
-            LOGERR("Invalid generator state!");
+            break;
     }
     generator._nextState();
     generator._setLabel(window);
@@ -153,4 +153,8 @@ void Generator::display(Window &window) {
         default:
             break;
     }
+}
+
+void Generator::SaveErrorData() {
+    _blockCenters.save();
 }

@@ -27,6 +27,7 @@ void VoronoiDiagram::generate() {
     _newEdgeId = 0;
     vertexMap.clear();
     edgeMap.clear();
+    _existsEdges.clear();
 
     for (int i = 0; i < _centers.size(); ++i) {
         vertexMap[i] = VertexNode(_centers[i]);
@@ -40,13 +41,17 @@ void VoronoiDiagram::generate() {
             Point pa = tri->exCenter, pb = edge.nextTri->exCenter;
             bool paInBox = _box.contains(pa), pbInBox = _box.contains(pb);
             if (!paInBox && !pbInBox) {
-                continue;
-            }
-            if (!paInBox || !pbInBox) {
+                Point intersections[4];
+                int intersectionNumber = _box.intersectSegment(pa, pb, intersections);
+                if (intersectionNumber == 0) {
+                    continue;
+                }
+                pa = intersections[0]; pb = intersections[1];
+            } else if (!paInBox || !pbInBox) {
                 if (pbInBox) {
                     std::swap(pa, pb);
                 }
-                pb = _box.intersects(pa, pb);
+                pb = _box.intersectRay(pa, pb);
             }
 
             if (_existsEdge(edge.pid[0], edge.pid[1])) {
