@@ -41,7 +41,7 @@ void VoronoiDiagram::generate() {
             Point pa = tri->exCenter, pb = edge.nextTri->exCenter;
             bool paInBox = _box.contains(pa), pbInBox = _box.contains(pb);
             if (!paInBox && !pbInBox) {
-                Point intersections[4];
+                Point intersections[2];
                 int intersectionNumber = _box.intersectSegment(pa, pb, intersections);
                 if (intersectionNumber == 0) {
                     continue;

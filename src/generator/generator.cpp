@@ -66,6 +66,7 @@ void Generator::SaveButtonResponder(Window &window) {
             break;
         default:
             window.setHintLabel("Can't save.");
+            generator.SaveErrorData();
             break;
     }
 }

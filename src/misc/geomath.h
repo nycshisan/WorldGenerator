@@ -10,15 +10,21 @@
 #include "simd.h"
 
 class Point : public sf::Vector2f {
+    constexpr static float _Error = 1e-4;
+
 public:
     Point() = default;
     Point(float x, float y);
+    explicit Point(const sf::Vector2f &v);
 
     float distance(const Point &anoPoint) const;
+
+    bool operator == (const Point &anoP);
+    bool operator != (const Point &anoP);
 };
 
 class Triangle {
-    data_t _containsError = -0.001f; // Some input may cause problem if the error is 0. I do not know why...
+    constexpr static data_t _ContainsError = -1e-3f; // Some input may cause problem if the error is 0. I do not know why...
 
 public:
     Point points[3];
@@ -62,8 +68,9 @@ class Rectangle {
     float _left, _right, _top, _down;
     Line _edges[4];
 
-public:
+    constexpr static float _Error = 1e-2;
 
+public:
     Rectangle() = default;
     explicit Rectangle(float left, float right, float top, float down);
 

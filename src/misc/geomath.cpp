@@ -6,11 +6,23 @@
 
 #include <cmath>
 
+#include "error.h"
+
 Point::Point(float x, float y) : sf::Vector2f(x, y) {}
+
+Point::Point(const sf::Vector2f &v) : sf::Vector2f(v) {}
 
 float Point::distance(const Point &anoPoint) const {
     float xDist = x - anoPoint.x, yDist = y - anoPoint.y;
     return xDist * xDist + yDist * yDist;
+}
+
+bool Point::operator==(const Point &anoP) {
+    return std::abs(x - anoP.x) < _Error && std::abs(y - anoP.y) < _Error;
+}
+
+bool Point::operator!=(const Point &anoP) {
+    return !((*this) == anoP);
 }
 
 Triangle::Triangle(const Point &pa, const Point &pb, const Point &pc) {
@@ -25,13 +37,15 @@ bool Triangle::contains(const Point &p) {
     vec3 pVec = pMat * posVec;
     data_t pA = pVec.x, pB = pVec.y, pC = pVec.z;
 
-    return pA > _containsError && pB > _containsError && pC > _containsError;
+    return pA > _ContainsError && pB > _ContainsError && pC > _ContainsError;
 }
 
 Point Triangle::getExCenter() {
     Point &pa = points[0], &pb = points[1], &pc = points[2];
     Line lab = Segment(pa, pb).midPerpendicular(), lac = Segment(pa, pc).midPerpendicular();
-    return lab.intersect(lac);
+    auto result = lab.intersect(lac);
+    assertWithSave(!isnan(result.x) && !isnan(result.y));
+    return result;
 }
 
 Line::Line(const Point &pa, const Point &pb) {
@@ -143,12 +157,12 @@ Point Rectangle::intersectRay(const Point &pa, const Point &pb) {
         if (contains(intersection)) {
             sf::Vector2f vai = pa - intersection;
             float dot = vab.x * vai.x + vab.y * vai.y;
-            if (dot >= 0) {
+            if (dot >= -_Error) {
                 return intersection;
             }
         }
     }
-    assert(false);
+    assertWithSave(false);
     return {};
 }
 
@@ -161,10 +175,11 @@ int Rectangle::intersectSegment(const Point &pa, const Point &pb, Point *interse
             sf::Vector2f vai = pa - intersection;
             sf::Vector2f vbi = pb - intersection;
             float dot = vai.x * vbi.x + vai.y * vbi.y;
-            if (dot < 0) {
+            if (dot <= _Error) {
                 intersections[n++] = intersection;
             }
         }
     }
+    assertWithSave(n == 0 || n == 2);
     return n;
 }

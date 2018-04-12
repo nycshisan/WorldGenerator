@@ -31,8 +31,8 @@ void DelaunayTriangles::generate() {
             }
         }
         if (containingTriangle == nullptr) {
-            Generator::SharedInstance().SaveErrorData();
-            assert(0);
+            SaveErrorData();
+            // assert(0);
             continue;
         }
         // `Influenced` triangles & edges means the triangles and edges constituting the cavity made by putting the newest center

@@ -8,5 +8,6 @@
 #include "simd.h"
 #include "geomath.h"
 #include "log.h"
+#include "error.h"
 
 #endif //WORLDGENERATOR_MISC_H

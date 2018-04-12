@@ -1,0 +1,14 @@
+//
+// Created by Nycshisan on 2018/4/8.
+//
+
+#ifndef WORLDGENERATOR_ERROR_H
+#define WORLDGENERATOR_ERROR_H
+
+#include <cassert>
+
+void SaveErrorData();
+
+#define assertWithSave(COND) do { if (!(COND)) { SaveErrorData(); assert(false); } } while (false)
+
+#endif //WORLDGENERATOR_ERROR_H

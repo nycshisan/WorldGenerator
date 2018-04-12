@@ -11,6 +11,7 @@ void LloydRelaxation::input(LloydRelaxation::Input vd) {
     _factor = CONF.getLloydFactor();
     _iteration = CONF.getLloydIteration();
     _pointShape.setRadius(CONF.getUIPointRadius());
+    _box = Rectangle(0, CONF.getMapWidth(), CONF.getMapHeight(), 0);
 }
 
 void LloydRelaxation::generate() {
@@ -28,11 +29,15 @@ void LloydRelaxation::generate() {
             Point centerVec(0, 0);
             for (auto edgeId: vertex.edgeIds) {
                 auto &edge = edgeMap[edgeId];
-                centerVec += edge.vertex[0].position;
+                for (auto &v : edge.vertex) {
+                    centerVec += v.position;
+                }
             }
-            centerVec /= float(vertex.edgeIds.size());
+
+            centerVec /= float(vertex.edgeIds.size() * 2);
             pos *= (1 - _factor);
             pos += centerVec * _factor;
+            assertWithSave(_box.contains(pos));
             centers.emplace_back(pos);
         }
 

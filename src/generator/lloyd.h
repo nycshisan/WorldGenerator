@@ -19,6 +19,8 @@ private:
     float _factor;
     int _iteration;
 
+    Rectangle _box;
+
     sf::CircleShape _pointShape;
 
 public:
