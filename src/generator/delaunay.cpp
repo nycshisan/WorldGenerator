@@ -30,11 +30,7 @@ void DelaunayTriangles::generate() {
                 containingTriangle = tri; break;
             }
         }
-        if (containingTriangle == nullptr) {
-            SaveErrorData();
-            // assert(0);
-            continue;
-        }
+        assertWithSave(containingTriangle != nullptr);
         // `Influenced` triangles & edges means the triangles and edges constituting the cavity made by putting the newest center
         std::set<NetNode*> influencedTris;
         std::vector<Edge*> influencedEdges;

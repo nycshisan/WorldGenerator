@@ -33,7 +33,7 @@ void VoronoiDiagram::generate() {
         vertexMap[i] = VertexNode(_centers[i]);
     }
 
-    for (auto tri: _tris) {
+    for (auto &tri: _tris) {
         for (auto &edge : tri->edges) {
             if (edge.nextTri == nullptr) {
                 continue;
@@ -67,6 +67,10 @@ void VoronoiDiagram::generate() {
 
             _newEdgeId++;
         }
+    }
+
+    for (auto &pair: vertexMap) {
+        assertWithSave(!pair.second.edgeIds.empty());
     }
 }
 

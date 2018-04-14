@@ -9,6 +9,6 @@
 
 void SaveErrorData();
 
-#define assertWithSave(COND) do { if (!(COND)) { SaveErrorData(); assert(false); } } while (false)
+#define assertWithSave(COND) do { if (!(COND)) { SaveErrorData(); assert(COND); } } while (false)
 
 #endif //WORLDGENERATOR_ERROR_H

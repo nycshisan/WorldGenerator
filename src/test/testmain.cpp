@@ -13,8 +13,8 @@ int main() {
 
     Window window(width, height, barHeight);
 
-    int testNumber = 100;
-    bool loadData = true;
+    int testNumber = 200;
+    bool loadData = false;
 
     for (int i = 1; i <= testNumber; ++i) {
         if (i % (testNumber / 100) == 0) {

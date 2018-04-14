@@ -25,6 +25,11 @@ bool Point::operator!=(const Point &anoP) {
     return !((*this) == anoP);
 }
 
+std::ostream &operator<<(std::ostream &os, const Point &p) {
+    os << p.x << " " << p.y;
+    return os;
+}
+
 Triangle::Triangle(const Point &pa, const Point &pb, const Point &pc) {
     points[0] = pa; points[1] = pb; points[2] = pc;
 }

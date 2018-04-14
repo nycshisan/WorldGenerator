@@ -23,8 +23,10 @@ public:
     bool operator != (const Point &anoP);
 };
 
+std::ostream& operator << (std::ostream &os, const Point &p);
+
 class Triangle {
-    constexpr static data_t _ContainsError = -1e-3f; // Some input may cause problem if the error is 0. I do not know why...
+    constexpr static data_t _ContainsError = -3e-5f; // Some input may cause problem if the error is 0. I do not know why...
 
 public:
     Point points[3];
@@ -68,7 +70,7 @@ class Rectangle {
     float _left, _right, _top, _down;
     Line _edges[4];
 
-    constexpr static float _Error = 1e-2;
+    constexpr static float _Error = 1e-3;
 
 public:
     Rectangle() = default;
