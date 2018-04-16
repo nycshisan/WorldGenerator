@@ -9,10 +9,9 @@
 
 #include "../conf/conf.h"
 
-void BlockCenters::input(int width, int height) {
-    _width = width; _height = height;
+void BlockCenters::input() {
+    _width = CONF.getMapWidth(); _height = CONF.getMapHeight();
     _span = CONF.getCenterSpan();
-    _pointShape.setRadius(CONF.getUIPointRadius());
 }
 
 void BlockCenters::generate() {
@@ -55,10 +54,9 @@ BlockCenters::Output BlockCenters::output() {
     return _centers;
 }
 
-void BlockCenters::draw(Window &window) {
+void BlockCenters::draw(Drawer &drawer) {
     for (auto &point : _centers) {
-        _pointShape.setPosition(point);
-        window.draw(_pointShape);
+        drawer.draw(point);
     }
 }
 

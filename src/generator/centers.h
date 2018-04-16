@@ -10,6 +10,7 @@
 #include "SFML/Graphics.hpp"
 
 #include "../graphics/window.h"
+#include "../graphics/drawer.h"
 #include "../misc/misc.h"
 
 class BlockCenters {
@@ -20,13 +21,12 @@ private:
 
     int _width, _height;
     int _span;
-    sf::CircleShape _pointShape;
 
 public:
-    void input(int width, int height);
+    void input();
     void generate();
     Output output();
-    void draw(Window &window);
+    void draw(Drawer &drawer);
     void save();
     void load();
 };

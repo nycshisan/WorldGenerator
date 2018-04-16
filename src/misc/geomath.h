@@ -9,7 +9,7 @@
 
 #include "simd.h"
 
-class Point : public sf::Vector2f {
+class Point: public sf::Vector2f {
     constexpr static float _Error = 1e-4;
 
 public:
@@ -41,10 +41,10 @@ class Line {
 protected:
     float _err = 1e-3;
     float _k = 0.0f, _b = 0.0f;
-    bool _vertical = false; float _verticalX = 0.0f;
-    bool _horizontal = false; float _horizontalY = 0.0f;
 
 public:
+    bool vertical = false; float verticalX = 0.0f;
+    bool horizontal = false; float horizontalY = 0.0f;
     Line() = default;
     Line(const Point &pa, const Point &pb);
     Line(const Point &p, float k);
@@ -79,6 +79,7 @@ public:
     bool contains(const Point &p);
     Point intersectRay(const Point &pa, const Point &pb);
     int intersectSegment(const Point &pa, const Point &pb, Point *intersections);
+    bool onEdge(const Point &p, Line &line);
 };
 
 #endif //WORLDGENERATOR_GEOMATH_H

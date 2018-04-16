@@ -15,30 +15,37 @@ bool VoronoiDiagram::_existsEdge(int paId, int pbId) {
 void VoronoiDiagram::input(VoronoiDiagram::InputCenters centers, VoronoiDiagram::InputTris tris) {
     _centers = std::move(centers);
     _tris = std::move(tris);
-    _pointShape.setRadius(CONF.getUIPointRadius());
     _width = CONF.getMapWidth(), _height = CONF.getMapHeight();
     _box = Rectangle(0, _width, _height, 0);
 }
 
 void VoronoiDiagram::generate() {
-    std::map<int, VertexNode> &vertexMap = _diagram.first;
+    std::map<int, CenterNode> &centerMap = _diagram.first;
     std::map<int, EdgeNode> &edgeMap = _diagram.second;
 
-    _newEdgeId = 0;
-    vertexMap.clear();
+    int newEdgeId = 0;
+    centerMap.clear();
     edgeMap.clear();
     _existsEdges.clear();
 
     for (int i = 0; i < _centers.size(); ++i) {
-        vertexMap[i] = VertexNode(_centers[i]);
+        centerMap[i] = CenterNode(_centers[i]);
     }
 
+    int newVertexId = 0;
     for (auto &tri: _tris) {
-        for (auto &edge : tri->edges) {
+        if (tri->id > newVertexId)
+            newVertexId = tri->id;
+    }
+    ++newVertexId;
+
+    for (auto &tri: _tris) {
+        for (auto &edge: tri->edges) {
             if (edge.nextTri == nullptr) {
                 continue;
             }
             Point pa = tri->exCenter, pb = edge.nextTri->exCenter;
+            int paId = tri->id, pbId = edge.nextTri->id;
             bool paInBox = _box.contains(pa), pbInBox = _box.contains(pb);
             if (!paInBox && !pbInBox) {
                 Point intersections[2];
@@ -47,29 +54,32 @@ void VoronoiDiagram::generate() {
                     continue;
                 }
                 pa = intersections[0]; pb = intersections[1];
+                paId = newVertexId++; pbId = newVertexId++;
             } else if (!paInBox || !pbInBox) {
                 if (pbInBox) {
                     std::swap(pa, pb);
+                    std::swap(paId, pbId);
                 }
                 pb = _box.intersectRay(pa, pb);
+                pbId = newVertexId++;
             }
 
             if (_existsEdge(edge.pid[0], edge.pid[1])) {
                 continue;
             }
 
-            edgeMap[_newEdgeId] = EdgeNode(pa, pb);
+            edgeMap[newEdgeId] = EdgeNode(pa, paId, pb, pbId);
             for (int j = 0; j < 2; ++j) {
                 int pointId = edge.pid[j];
-                edgeMap[_newEdgeId].relatedCenterIds[j] = pointId;
-                vertexMap[pointId].edgeIds.emplace_back(_newEdgeId);
+                edgeMap[newEdgeId].relatedCenterIds[j] = pointId;
+                centerMap[pointId].edgeIds.emplace_back(newEdgeId);
             }
 
-            _newEdgeId++;
+            newEdgeId++;
         }
     }
 
-    for (auto &pair: vertexMap) {
+    for (auto &pair: centerMap) {
         assertWithSave(!pair.second.edgeIds.empty());
     }
 }
@@ -78,21 +88,21 @@ VoronoiDiagram::Output VoronoiDiagram::output() {
     return _diagram;
 }
 
-void VoronoiDiagram::draw(Window &window) {
-    for (auto &vertex: _diagram.first) {
-        _pointShape.setPosition(vertex.second.pos);
-        window.draw(_pointShape);
+void VoronoiDiagram::draw(Drawer &drawer) {
+    for (auto &pair: _diagram.first) {
+        drawer.draw(pair.second.pos);
     }
 
-    for (auto &edge: _diagram.second) {
-        window.draw(edge.second.vertex, 2, sf::Lines);
+    for (auto &pair: _diagram.second) {
+        drawer.draw(pair.second.vertex[0], pair.second.vertex[1]);
     }
 }
 
-VoronoiDiagram::VertexNode::VertexNode(const Point &p) {
+VoronoiDiagram::CenterNode::CenterNode(const Point &p) {
     pos = p;
 }
 
-VoronoiDiagram::EdgeNode::EdgeNode(const Point &pa, const Point &pb) {
-    vertex[0] = sf::Vertex(pa); vertex[1] = sf::Vertex(pb);
+VoronoiDiagram::EdgeNode::EdgeNode(const Point &pa, int paId, const Point &pb, int pbId) {
+    vertex[0] = pa; vertex[1] = pb;
+    vertexIds[0] = paId; vertexIds[1] = pbId;
 }

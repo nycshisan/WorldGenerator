@@ -56,13 +56,13 @@ Point Triangle::getExCenter() {
 Line::Line(const Point &pa, const Point &pb) {
     float dx = pa.x - pb.x, dy = pa.y - pb.y;
     if (std::abs(dx) < _err) {
-        _vertical = true;
-        _verticalX = pa.x;
+        vertical = true;
+        verticalX = pa.x;
         dy = std::signbit(dy) * _err;
     }
     else if (std::abs(dy) < _err) {
-        _horizontal = true;
-        _horizontalY = pa.y;
+        horizontal = true;
+        horizontalY = pa.y;
         dx = std::signbit(dx) * _err;
     }
     _k = dy / dx;
@@ -76,18 +76,18 @@ Line::Line(const Point &p, float k) {
 
 Point Line::intersect(const Line &anoLine) {
     Point p;
-    if (_horizontal) {
-        p.x = anoLine.xGivenY(_horizontalY);
-        p.y = _horizontalY;
-    } else if (anoLine._horizontal) {
-        p.x = xGivenY(anoLine._horizontalY);
-        p.y = anoLine._horizontalY;
-    } else if (_vertical) {
-        p.x = _verticalX;
-        p.y = anoLine.yGivenX(_verticalX);
-    } else if (anoLine._vertical) {
-        p.x = anoLine._verticalX;
-        p.y = yGivenX(anoLine._verticalX);
+    if (horizontal) {
+        p.x = anoLine.xGivenY(horizontalY);
+        p.y = horizontalY;
+    } else if (anoLine.horizontal) {
+        p.x = xGivenY(anoLine.horizontalY);
+        p.y = anoLine.horizontalY;
+    } else if (vertical) {
+        p.x = verticalX;
+        p.y = anoLine.yGivenX(verticalX);
+    } else if (anoLine.vertical) {
+        p.x = anoLine.verticalX;
+        p.y = yGivenX(anoLine.verticalX);
     } else {
         p.x = (anoLine._b - _b) / (_k - anoLine._k);
         p.y = yGivenX((p.x));
@@ -96,28 +96,28 @@ Point Line::intersect(const Line &anoLine) {
 }
 
 float Line::yGivenX(float x) const {
-    if (_horizontal)
-        return _horizontalY;
+    if (horizontal)
+        return horizontalY;
     return _k * x + _b;
 }
 
 float Line::xGivenY(float y) const {
-    if (_vertical)
-        return _verticalX;
+    if (vertical)
+        return verticalX;
     return (y - _b) / _k;
 }
 
 Line Line::Horizontal(float y) {
     Line r;
-    r._horizontal = true;
-    r._horizontalY = y;
+    r.horizontal = true;
+    r.horizontalY = y;
     return r;
 }
 
 Line Line::Vertical(float x) {
     Line r;
-    r._vertical = true;
-    r._verticalX = x;
+    r.vertical = true;
+    r.verticalX = x;
     return r;
 }
 
@@ -130,9 +130,9 @@ Line Segment::midPerpendicular() {
     pMid.x = (_pa.x + _pb.x) / 2.0f;
     pMid.y = (_pa.y + _pb.y) / 2.0f;
     Line r;
-    if (_vertical) {
+    if (vertical) {
         r = Horizontal(pMid.y);
-    } else if (_horizontal) {
+    } else if (horizontal) {
         r = Vertical(pMid.x);
     } else {
         float vk = -1.0f / _k;
@@ -187,4 +187,14 @@ int Rectangle::intersectSegment(const Point &pa, const Point &pb, Point *interse
     }
     assertWithSave(n == 0 || n == 2);
     return n;
+}
+
+bool Rectangle::onEdge(const Point &p, Line &line) {
+    for (auto &edge: _edges) {
+        if ((edge.vertical && std::abs(edge.verticalX - p.x) < _Error) || (edge.horizontal && std::abs(edge.horizontalY - p.y) < _Error)) {
+            line = edge;
+            return true;
+        }
+    }
+    return false;
 }

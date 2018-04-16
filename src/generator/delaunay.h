@@ -37,9 +37,10 @@ public:
 
         void _linkAnoTri(NetNode *anoTri, int edgeId, int anoEdgeId);
 
-        NetNode(int pointIdA, int pointIdB, int pointIdC, const std::vector<Point> &centers, int n);
+        NetNode(int id, int pointIdA, int pointIdB, int pointIdC, const std::vector<Point> &centers, int n);
 
     public:
+        int id;
         Edge edges[3];
 
         Point exCenter;
@@ -59,7 +60,7 @@ public:
     void input(const Input &input);
     void generate();
     Output output();
-    void draw(Window &window);
+    void draw(Drawer &drawer);
 
     ~DelaunayTriangles();
 };

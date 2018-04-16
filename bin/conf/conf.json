@@ -16,6 +16,6 @@
   },
   "lloyd": {
     "factor": 0.6,
-    "iteration": 2
+    "iteration": 1
   }
 }

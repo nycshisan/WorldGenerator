@@ -13,13 +13,14 @@ void DelaunayTriangles::input(const DelaunayTriangles::Input &input) {
 
 void DelaunayTriangles::generate() {
     _deleteOldNodes();
+    int newNetNodeId = 0;
     // Bowyer-Watson algorithm
     auto n = (int)_centers.size();
     int width = CONF.getMapWidth(), height = CONF.getMapHeight();
     _centers.emplace_back(-width, -height);
     _centers.emplace_back(3 * CONF.getMapWidth(), 0);
     _centers.emplace_back(0, 3 * CONF.getMapHeight());
-    _triNetHead = new NetNode(n, n + 1, n + 2, _centers, n);
+    _triNetHead = new NetNode(newNetNodeId++, n, n + 1, n + 2, _centers, n);
     _allocatedNodes.insert(_triNetHead);
 
     for (int i = 0; i < n; ++i) {
@@ -37,7 +38,7 @@ void DelaunayTriangles::generate() {
         containingTriangle->findInfluenced(center, influencedTris, influencedEdges);
         std::vector<NetNode*> newTris;
         for (auto &edge: influencedEdges) {
-            auto *newTri = new NetNode(edge->pid[0], edge->pid[1], i, _centers, n);
+            auto *newTri = new NetNode(newNetNodeId++, edge->pid[0], edge->pid[1], i, _centers, n);
             _allocatedNodes.insert(newTri);
             newTris.emplace_back(newTri);
             auto &newEdge = newTri->edges[0];
@@ -79,10 +80,10 @@ DelaunayTriangles::Output DelaunayTriangles::output() {
     return _allocatedNodes;
 }
 
-void DelaunayTriangles::draw(Window &window) {
+void DelaunayTriangles::draw(Drawer &drawer) {
     for (auto &tri: _allocatedNodes) {
         if (!tri->_isBoundTriangle)
-            window.draw(tri->_vertices, 4, sf::LineStrip);
+            drawer.draw(*tri);
     }
 }
 
@@ -137,7 +138,9 @@ void DelaunayTriangles::NetNode::findInfluenced(const Point &point, std::set<Net
     _clearVisitFlag();
 }
 
-DelaunayTriangles::NetNode::NetNode(int pointIdA, int pointIdB, int pointIdC, const std::vector<Point> &centers, int n) : Triangle(centers[pointIdA], centers[pointIdB], centers[pointIdC]) {
+DelaunayTriangles::NetNode::NetNode(int id, int pointIdA, int pointIdB, int pointIdC, const std::vector<Point> &centers, int n) : Triangle(centers[pointIdA], centers[pointIdB], centers[pointIdC]) {
+    this->id = id;
+
     _vertices[0] = sf::Vertex(points[0]);
     _vertices[1] = sf::Vertex(points[1]);
     _vertices[2] = sf::Vertex(points[2]);

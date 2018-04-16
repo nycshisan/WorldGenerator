@@ -12,32 +12,30 @@
 
 class VoronoiDiagram {
 public:
-    struct VertexNode {
+    struct CenterNode {
         std::vector<int> edgeIds;
         Point pos;
 
-        VertexNode() = default;
-        explicit VertexNode(const Point &p);
+        CenterNode() = default;
+        explicit CenterNode(const Point &p);
     };
 
     struct EdgeNode {
         int relatedCenterIds[2] = {-1, -1};
-        sf::Vertex vertex[2];
+        Point vertex[2];
+        int vertexIds[2] = {-1, -1};
 
         EdgeNode() = default;
-        EdgeNode(const Point &pa, const Point &pb);
+        EdgeNode(const Point &pa, int paId, const Point &pb, int pbId);
     };
 
     typedef DelaunayTriangles::Output InputTris;
     typedef BlockCenters::Output InputCenters;
-    typedef std::pair<std::map<int, VertexNode>, std::map<int, EdgeNode>> Output;
+    typedef std::pair<std::map<int, CenterNode>, std::map<int, EdgeNode>> Output;
 private:
     InputCenters _centers;
     InputTris _tris;
     Output _diagram;
-
-    int _newEdgeId = 0;
-    sf::CircleShape _pointShape;
 
     int _width, _height;
 
@@ -50,7 +48,7 @@ public:
     void input(InputCenters centers, InputTris tris);
     void generate();
     Output output();
-    void draw(Window &window);
+    void draw(Drawer &drawer);
 };
 
 #endif //WORLDGENERATOR_VORONOI_H

@@ -13,6 +13,7 @@
 #include "SFML/Graphics.hpp"
 
 #include "button.h"
+#include "../misc/misc.h"
 
 class Window : public sf::RenderWindow {
     char _defaultTitle[20] = "World Generator";
@@ -38,8 +39,6 @@ class Window : public sf::RenderWindow {
 
 public:
     Window(int width, int height, int barHeight);
-
-    sf::Vector2i getMapSize();
 
     void setHintLabel(const std::string &content);
 

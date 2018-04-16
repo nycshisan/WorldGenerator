@@ -134,10 +134,6 @@ void Window::setHintLabel(const std::string &content) {
     _hintLabelContent = content;
 }
 
-sf::Vector2i Window::getMapSize() {
-    return {_width, _height};
-}
-
 void Window::_updateFPS() {
     float interval = _clock.restart().asSeconds();
     float FPS = 1.0f / interval;

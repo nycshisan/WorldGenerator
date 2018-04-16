@@ -10,31 +10,30 @@ void LloydRelaxation::input(LloydRelaxation::Input vd) {
     _inputVd = std::move(vd);
     _factor = CONF.getLloydFactor();
     _iteration = CONF.getLloydIteration();
-    _pointShape.setRadius(CONF.getUIPointRadius());
     _box = Rectangle(0, CONF.getMapWidth(), CONF.getMapHeight(), 0);
 }
 
 void LloydRelaxation::generate() {
     _relaxedVd = _inputVd;
 
-    auto &vertexMap = _relaxedVd.first;
+    auto &centerMap = _relaxedVd.first;
     auto &edgeMap = _relaxedVd.second;
 
     for (int i = 0; i < _iteration; ++i) {
         DelaunayTriangles::Input centers;
 
-        for (auto &pair: vertexMap) {
-            auto &vertex = pair.second;
-            Point pos = vertex.pos;
+        for (auto &pair: centerMap) {
+            auto &center = pair.second;
+            Point pos = center.pos;
             Point centerVec(0, 0);
-            for (auto edgeId: vertex.edgeIds) {
+            for (auto edgeId: center.edgeIds) {
                 auto &edge = edgeMap[edgeId];
                 for (auto &v : edge.vertex) {
-                    centerVec += v.position;
+                    centerVec += v;
                 }
             }
 
-            centerVec /= float(vertex.edgeIds.size() * 2);
+            centerVec /= float(center.edgeIds.size() * 2);
             pos *= (1 - _factor);
             pos += centerVec * _factor;
             assertWithSave(_box.contains(pos));
@@ -54,16 +53,15 @@ void LloydRelaxation::generate() {
 }
 
 LloydRelaxation::Output LloydRelaxation::output() {
-    return LloydRelaxation::Output();
+    return _relaxedVd;
 }
 
-void LloydRelaxation::draw(Window &window) {
-    for (auto &vertex: _relaxedVd.first) {
-        _pointShape.setPosition(vertex.second.pos);
-        window.draw(_pointShape);
+void LloydRelaxation::draw(Drawer &drawer) {
+    for (auto &pair: _relaxedVd.first) {
+        drawer.draw(pair.second.pos);
     }
 
-    for (auto &edge: _relaxedVd.second) {
-        window.draw(edge.second.vertex, 2, sf::Lines);
+    for (auto &pair: _relaxedVd.second) {
+        drawer.draw(pair.second.vertex[0], pair.second.vertex[1]);
     }
 }
