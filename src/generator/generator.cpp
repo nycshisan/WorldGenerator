@@ -34,7 +34,10 @@ void Generator::NextButtonResponder(Window &window) {
             generator._blocks.generate();
             break;
         case Blocks:
-
+            generator._blockInfos = generator._blocks.output();
+            generator._coast.input(generator._blockInfos);
+            generator._coast.generate();
+            break;
         default:
             break;
     }
@@ -56,6 +59,8 @@ void Generator::RedoButtonResponder(Window &window) {
             generator._lloydRelaxation.generate(); break;
         case Blocks:
             generator._blocks.generate(); break;
+        case Coast:
+            generator._coast.generate(); break;
         default:
             LOGERR("Invalid generator state!");
     }
@@ -175,7 +180,7 @@ void Generator::display(Window &window) {
         case Blocks:
             _blocks.draw(*_drawer); break;
         case Coast:
-
+            _coast.draw(*_drawer); break;
         default:
             break;
     }

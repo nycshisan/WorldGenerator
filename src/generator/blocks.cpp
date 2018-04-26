@@ -8,6 +8,8 @@
 
 void Blocks::input(Blocks::Input relaxedVd) {
     _relaxedVd = std::move(relaxedVd);
+    int width = CONF.getMapWidth(), height = CONF.getMapHeight();
+    _box = Rectangle(0, width, height, 0);
 }
 
 void Blocks::generate() {
@@ -23,6 +25,7 @@ void Blocks::generate() {
         // Initialize the block information
         auto &center = pair.second;
         auto blockInfo = std::make_shared<BlockInfo>(pair.first);
+        blockInfo->thisPtr = blockInfo;
         blockInfo->center = center.pos;
 
         for (auto edgeId: center.edgeIds) {
@@ -53,6 +56,8 @@ void Blocks::generate() {
             blockInfo->edges.emplace(edgeInfo);
             edgeInfo->relatedBlocks.emplace(blockInfo);
         }
+        blockInfo->addMarginEdge(_box);
+        blockInfo->calcArea();
         _blockInfos.emplace_back(blockInfo);
     }
 

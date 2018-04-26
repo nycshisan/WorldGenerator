@@ -25,6 +25,10 @@ int Configure::getMapHeight() const {
     return (*this)["map"]["height"].GetInt();
 }
 
+int Configure::getMapRandomSeed() const {
+    return (*this)["map"]["randomSeed"].GetInt();
+}
+
 int Configure::getUIBarHeight() const {
     return (*this)["ui"]["barHeight"].GetInt();
 }
@@ -61,3 +65,6 @@ int Configure::getLloydIteration() const {
     return (*this)["lloyd"]["iteration"].GetInt();
 }
 
+float Configure::getCoastOceanProportion() const {
+    return (*this)["coast"]["oceanProportion"].GetFloat();
+}

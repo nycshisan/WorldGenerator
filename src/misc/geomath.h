@@ -79,7 +79,7 @@ public:
     bool contains(const Point &p);
     Point intersectRay(const Point &pa, const Point &pb);
     int intersectSegment(const Point &pa, const Point &pb, Point *intersections);
-    bool onEdge(const Point &p, Line &line);
+    bool onEdge(const Point &p, Line &line) const;
 };
 
 #endif //WORLDGENERATOR_GEOMATH_H

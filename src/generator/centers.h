@@ -21,6 +21,7 @@ private:
 
     int _width, _height;
     int _span;
+    int _randomSeed;
 
 public:
     void input();

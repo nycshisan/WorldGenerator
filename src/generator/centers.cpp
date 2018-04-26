@@ -12,6 +12,7 @@
 void BlockCenters::input() {
     _width = CONF.getMapWidth(); _height = CONF.getMapHeight();
     _span = CONF.getCenterSpan();
+    _randomSeed = CONF.getMapRandomSeed();
 }
 
 void BlockCenters::generate() {
@@ -21,8 +22,7 @@ void BlockCenters::generate() {
     int n = CONF.getCenterNumber();
     int padding = CONF.getCenterPadding();
 
-    std::random_device rd;
-    std::mt19937 gen(rd());
+    std::mt19937 gen(_randomSeed);
     std::uniform_int_distribution<> disX(padding, _width - padding), disY(padding, _height - padding);
 
     _centers.clear();

@@ -33,8 +33,6 @@ public:
 
         bool _isBoundTriangle;
 
-        sf::Vertex _vertices[4];
-
         void _linkAnoTri(NetNode *anoTri, int edgeId, int anoEdgeId);
 
         NetNode(int id, int pointIdA, int pointIdB, int pointIdC, const std::vector<Point> &centers, int n);

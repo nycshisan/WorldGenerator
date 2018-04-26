@@ -36,14 +36,17 @@ class Generator {
     std::shared_ptr<Drawer> _drawer;
 
     class BlockCenters _blockCenters;
-    BlockCenters::Output _centers;
     class DelaunayTriangles _delaunayTriangles;
-    DelaunayTriangles::Output _tris;
     class VoronoiDiagram _voronoiDiagram;
-    VoronoiDiagram::Output _vd;
     class LloydRelaxation _lloydRelaxation;
-    LloydRelaxation::Output _relaxedVd;
     class Blocks _blocks;
+    class Coast _coast;
+
+    BlockCenters::Output _centers;
+    DelaunayTriangles::Output _tris;
+    VoronoiDiagram::Output _vd;
+    LloydRelaxation::Output _relaxedVd;
+    Blocks::Output _blockInfos;
 
 public:
     static Generator &SharedInstance();

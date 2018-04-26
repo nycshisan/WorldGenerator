@@ -20,6 +20,7 @@ public:
 
     int getMapWidth() const;
     int getMapHeight() const;
+    int getMapRandomSeed() const;
     int getUIBarHeight() const;
     int getUIBarSeparatorHeight() const;
     std::string getUIFontFilename() const;
@@ -29,6 +30,7 @@ public:
     int getCenterSpan() const;
     float getLloydFactor() const;
     int getLloydIteration() const;
+    float getCoastOceanProportion() const;
 };
 
 #define CONF Configure::SharedInstance()

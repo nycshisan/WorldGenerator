@@ -13,8 +13,6 @@ class Drawer {
 
     sf::CircleShape _pointShape;
 
-    Rectangle _box;
-
 public:
     explicit Drawer(Window *window);
 
@@ -23,6 +21,7 @@ public:
     void draw(const Triangle &tri);
     void draw(const BlockInfo &blockInfo);
     void draw(const BlockInfo &blockInfo, const sf::Color &color);
+    void draw(const EdgeInfo &edgeInfo);
 };
 
 #endif //WORLDGENERATOR_DRAWER_H

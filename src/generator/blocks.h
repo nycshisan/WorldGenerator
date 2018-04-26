@@ -14,13 +14,14 @@
 
 class Blocks {
 public:
-
     typedef LloydRelaxation::Output Input;
     typedef std::vector<std::shared_ptr<BlockInfo>> Output;
 
 private:
     Input _relaxedVd;
     Output _blockInfos;
+
+    Rectangle _box;
 
 public:
     void input(Input relaxedVd);

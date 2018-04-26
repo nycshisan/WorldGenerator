@@ -189,7 +189,7 @@ int Rectangle::intersectSegment(const Point &pa, const Point &pb, Point *interse
     return n;
 }
 
-bool Rectangle::onEdge(const Point &p, Line &line) {
+bool Rectangle::onEdge(const Point &p, Line &line) const {
     for (auto &edge: _edges) {
         if ((edge.vertical && std::abs(edge.verticalX - p.x) < _Error) || (edge.horizontal && std::abs(edge.horizontalY - p.y) < _Error)) {
             line = edge;

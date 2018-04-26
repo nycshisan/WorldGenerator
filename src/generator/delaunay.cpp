@@ -141,11 +141,6 @@ void DelaunayTriangles::NetNode::findInfluenced(const Point &point, std::set<Net
 DelaunayTriangles::NetNode::NetNode(int id, int pointIdA, int pointIdB, int pointIdC, const std::vector<Point> &centers, int n) : Triangle(centers[pointIdA], centers[pointIdB], centers[pointIdC]) {
     this->id = id;
 
-    _vertices[0] = sf::Vertex(points[0]);
-    _vertices[1] = sf::Vertex(points[1]);
-    _vertices[2] = sf::Vertex(points[2]);
-    _vertices[3] = sf::Vertex(points[0]);
-
     edges[0] = Edge(pointIdA, pointIdB);
     edges[1] = Edge(pointIdB, pointIdC);
     edges[2] = Edge(pointIdC, pointIdA);

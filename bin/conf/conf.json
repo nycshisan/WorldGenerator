@@ -1,7 +1,8 @@
 {
   "map": {
     "width": 1920,
-    "height": 1080
+    "height": 1080,
+    "randomSeed": 594438
   },
   "ui": {
     "barHeight": 64,
@@ -17,5 +18,8 @@
   "lloyd": {
     "factor": 0.6,
     "iteration": 1
+  },
+  "coast": {
+    "oceanProportion": 0.4
   }
 }
