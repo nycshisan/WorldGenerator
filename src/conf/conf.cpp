@@ -61,6 +61,10 @@ int Configure::getCenterSpan() const {
     return (*this)["centers"]["span"].GetUint();
 }
 
+bool Configure::getDelaunayShowBoundingTriangles() const {
+    return (*this)["delaunay"]["showBoundingTriangles"].GetBool();
+}
+
 float Configure::getLloydFactor() const {
     return (*this)["lloyd"]["factor"].GetFloat();
 }

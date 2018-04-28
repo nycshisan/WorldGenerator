@@ -30,6 +30,7 @@ public:
     int getCenterNumber() const;
     int getCenterPadding() const;
     int getCenterSpan() const;
+    bool getDelaunayShowBoundingTriangles() const;
     float getLloydFactor() const;
     int getLloydIteration() const;
     int getCoastContinentNumber() const;

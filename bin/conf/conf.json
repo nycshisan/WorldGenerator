@@ -2,7 +2,7 @@
   "map": {
     "width": 1920,
     "height": 1080,
-    "randomSeed": 594438
+    "randomSeed": 666233
   },
   "ui": {
     "barHeight": 64,
@@ -14,6 +14,9 @@
     "number": 10000,
     "padding": 3,
     "span": 3
+  },
+  "delaunay": {
+    "showBoundingTriangles": false
   },
   "lloyd": {
     "factor": 0.6,

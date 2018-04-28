@@ -36,13 +36,13 @@ Triangle::Triangle(const Point &pa, const Point &pb, const Point &pc) {
 
 bool Triangle::contains(const Point &p) {
     Point &pa = points[0], &pb = points[1], &pc = points[2];
-    mat3 pMat = {{{pa.x, pa.y, 1.0f}, {pb.x, pb.y, 1.0f}, {pc.x, pc.y, 1.0f}}};
+    mat2 pMat = {{{(pb.x - pa.x), (pb.y - pa.y)}, {(pc.x - pa.x), (pc.y - pa.y)}}};
     invert(pMat);
-    vec3 posVec = {p.x, p.y, 1.0f};
-    vec3 pVec = pMat * posVec;
-    data_t pA = pVec.x, pB = pVec.y, pC = pVec.z;
+    vec2 pVec = {(p.x - pa.x), (p.y - pa.y)};
+    vec2 cVec = pMat * pVec;
+    data_t cB = cVec.x, cC = cVec.y;
 
-    return pA > _ContainsError && pB > _ContainsError && pC > _ContainsError;
+    return cB > _ContainsError && cC > _ContainsError && cB + cC < 1.0f - _ContainsError;
 }
 
 Point Triangle::getExCenter() {

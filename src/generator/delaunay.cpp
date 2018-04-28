@@ -81,8 +81,9 @@ DelaunayTriangles::Output DelaunayTriangles::output() {
 }
 
 void DelaunayTriangles::draw(Drawer &drawer) {
+    bool showBoundingTriangles = CONF.getDelaunayShowBoundingTriangles();
     for (auto &tri: _allocatedNodes) {
-        if (!tri->_isBoundTriangle)
+        if (!tri->_isBoundingTriangle || showBoundingTriangles)
             drawer.draw(*tri);
     }
 }
@@ -147,7 +148,7 @@ DelaunayTriangles::NetNode::NetNode(int id, int pointIdA, int pointIdB, int poin
     exCenter = getExCenter();
     exRadius = exCenter.distance(points[0]);
 
-    _isBoundTriangle = pointIdA >= n || pointIdB >= n || pointIdC >= n;
+    _isBoundingTriangle = pointIdA >= n || pointIdB >= n || pointIdC >= n;
 }
 
 void DelaunayTriangles::NetNode::_linkAnoTri(DelaunayTriangles::NetNode *anoTri, int edgeId, int anoEdgeId) {

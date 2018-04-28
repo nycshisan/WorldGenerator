@@ -31,7 +31,7 @@ public:
         void _findInfluenced(const Point &point, int beginEdgeId, std::set<NetNode*> &tris, std::vector<Edge*> &edges);
         void findInfluenced(const Point &point, std::set<NetNode*> &tris, std::vector<Edge*> &edges);
 
-        bool _isBoundTriangle;
+        bool _isBoundingTriangle;
 
         void _linkAnoTri(NetNode *anoTri, int edgeId, int anoEdgeId);
 
