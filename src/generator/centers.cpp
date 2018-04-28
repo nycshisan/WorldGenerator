@@ -9,29 +9,29 @@
 
 #include "../conf/conf.h"
 
-void BlockCenters::input() {
-    _width = CONF.getMapWidth(); _height = CONF.getMapHeight();
-    _span = CONF.getCenterSpan();
-    _randomSeed = CONF.getMapRandomSeed();
-}
+void BlockCenters::input() {}
 
 void BlockCenters::generate() {
-    unsigned char occupied[_width][_height];
-    std::memset(occupied, 0, _width * _height);
+    int width = CONF.getMapWidth(), height = CONF.getMapHeight();
+    int span = CONF.getCenterSpan();
+    int randomSeed = CONF.getMapRandomSeed();
+
+    unsigned char occupied[width][height];
+    std::memset(occupied, 0, width * height);
 
     int n = CONF.getCenterNumber();
     int padding = CONF.getCenterPadding();
 
-    std::mt19937 gen(_randomSeed);
-    std::uniform_int_distribution<> disX(padding, _width - padding), disY(padding, _height - padding);
+    std::mt19937 gen(randomSeed);
+    std::uniform_int_distribution<> disX(padding, width - padding), disY(padding, height - padding);
 
     _centers.clear();
     for (int i = 0; i < n;) {
         int x = disX(gen);
         int y = disY(gen);
         bool occupiedFlag = false;
-        for (int j = std::max(x - _span, 0); j <= std::min(x + _span, _width - 1); ++j) {
-            for (int k = std::max(y - _span, 0); k <= std::min(y + _span, _height - 1); ++k) {
+        for (int j = std::max(x - span, 0); j <= std::min(x + span, width - 1); ++j) {
+            for (int k = std::max(y - span, 0); k <= std::min(y + span, height - 1); ++k) {
                 if (occupied[j][k]) {
                     occupiedFlag = true;
                 }
@@ -41,8 +41,8 @@ void BlockCenters::generate() {
             continue;
         }
         _centers.emplace_back(Point(x, y));
-        for (int j = std::max(x - _span, 0); j <= std::min(x + _span, _width - 1); ++j) {
-            for (int k = std::max(y - _span, 0); k <= std::min(y + _span, _height - 1); ++k) {
+        for (int j = std::max(x - span, 0); j <= std::min(x + span, width - 1); ++j) {
+            for (int k = std::max(y - span, 0); k <= std::min(y + span, height - 1); ++k) {
                 occupied[j][k] = 1;
             }
         }

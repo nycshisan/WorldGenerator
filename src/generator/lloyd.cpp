@@ -8,18 +8,19 @@
 
 void LloydRelaxation::input(LloydRelaxation::Input vd) {
     _inputVd = std::move(vd);
-    _factor = CONF.getLloydFactor();
-    _iteration = CONF.getLloydIteration();
-    _box = Rectangle(0, CONF.getMapWidth(), CONF.getMapHeight(), 0);
 }
 
 void LloydRelaxation::generate() {
+    float factor = CONF.getLloydFactor();
+    int iteration = CONF.getLloydIteration();
+    Rectangle box = Rectangle(0, CONF.getMapWidth(), CONF.getMapHeight(), 0);
+    
     _relaxedVd = _inputVd;
 
     auto &centerMap = _relaxedVd.first;
     auto &edgeMap = _relaxedVd.second;
 
-    for (int i = 0; i < _iteration; ++i) {
+    for (int i = 0; i < iteration; ++i) {
         DelaunayTriangles::Input centers;
 
         for (auto &pair: centerMap) {
@@ -34,9 +35,9 @@ void LloydRelaxation::generate() {
             }
 
             centerVec /= float(center.edgeIds.size() * 2);
-            pos *= (1 - _factor);
-            pos += centerVec * _factor;
-            assertWithSave(_box.contains(pos));
+            pos *= (1 - factor);
+            pos += centerVec * factor;
+            assertWithSave(box.contains(pos));
             centers.emplace_back(pos);
         }
 

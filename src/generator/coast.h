@@ -15,13 +15,6 @@ public:
 private:
     Input _blockInfos;
 
-    int _k; // Ocean blocks number
-    int _randomSeed;
-
-    std::mt19937 _gen;
-
-    void _findOceanBlocks(std::vector<int> &indices, int begin, int size, int k);
-
 public:
     void input(Input input);
     void generate();

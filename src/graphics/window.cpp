@@ -93,6 +93,9 @@ void Window::play() {
                 if (key.code == sf::Keyboard::Key::Down) {
                     Generator::SaveButtonResponder(*this);
                 }
+                if (key.code == sf::Keyboard::Key::R) {
+                    Generator::RedoButtonResponder(*this);
+                }
             }
         }
 

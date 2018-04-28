@@ -16,7 +16,9 @@ class Configure : public rapidjson::Document {
     Configure();
 
 public:
-    static const Configure& SharedInstance();
+    static Configure& SharedInstance();
+
+    void reload();
 
     int getMapWidth() const;
     int getMapHeight() const;
@@ -30,7 +32,10 @@ public:
     int getCenterSpan() const;
     float getLloydFactor() const;
     int getLloydIteration() const;
-    float getCoastOceanProportion() const;
+    int getCoastContinentNumber() const;
+    float getCoastOceanFactor() const;
+    float getCoastSeaFactor() const;
+    float getCoastNoiseInfluence() const;
 };
 
 #define CONF Configure::SharedInstance()

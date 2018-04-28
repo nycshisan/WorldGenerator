@@ -12,9 +12,13 @@ Configure::Configure() {
     ParseStream(isw);
 }
 
-const Configure &Configure::SharedInstance() {
+Configure &Configure::SharedInstance() {
     static Configure instance;
     return instance;
+}
+
+void Configure::reload() {
+    Configure::SharedInstance() = Configure();
 }
 
 int Configure::getMapWidth() const {
@@ -65,6 +69,19 @@ int Configure::getLloydIteration() const {
     return (*this)["lloyd"]["iteration"].GetInt();
 }
 
-float Configure::getCoastOceanProportion() const {
-    return (*this)["coast"]["oceanProportion"].GetFloat();
+int Configure::getCoastContinentNumber() const {
+    return (*this)["coast"]["continentNumber"].GetInt();
+}
+
+float Configure::getCoastOceanFactor() const {
+    return (*this)["coast"]["oceanFactor"].GetFloat();
+}
+
+float Configure::getCoastSeaFactor() const {
+    return (*this)["coast"]["seaFactor"].GetFloat();
+}
+
+
+float Configure::getCoastNoiseInfluence() const {
+    return (*this)["coast"]["noiseInfluence"].GetFloat();
 }

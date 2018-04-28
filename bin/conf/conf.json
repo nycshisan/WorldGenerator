@@ -11,7 +11,7 @@
     "pointRadius": 2.0
   },
   "centers": {
-    "number": 3000,
+    "number": 10000,
     "padding": 3,
     "span": 3
   },
@@ -20,6 +20,9 @@
     "iteration": 1
   },
   "coast": {
-    "oceanProportion": 0.4
+    "continentNumber": 5,
+    "oceanFactor": 0.7,
+    "seaFactor": 0.7,
+    "noiseInfluence": 4.0
   }
 }

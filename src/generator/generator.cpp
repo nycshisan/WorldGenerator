@@ -5,6 +5,7 @@
 #include "generator.h"
 
 #include "../misc/log.h"
+#include "../conf/conf.h"
 
 void Generator::NextButtonResponder(Window &window) {
     Generator &generator = Generator::SharedInstance();
@@ -46,6 +47,7 @@ void Generator::NextButtonResponder(Window &window) {
 }
 
 void Generator::RedoButtonResponder(Window &window) {
+    CONF.reload();
     Generator &generator = Generator::SharedInstance();
     switch (generator._state) {
         case Ready: break;

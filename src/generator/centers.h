@@ -19,10 +19,6 @@ public:
 private:
     Output _centers;
 
-    int _width, _height;
-    int _span;
-    int _randomSeed;
-
 public:
     void input();
     void generate();

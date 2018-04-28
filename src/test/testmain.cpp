@@ -6,7 +6,7 @@
 #include "../graphics/window.h"
 #include "../generator/generator.h"
 
-int main() {
+void testVD() {
     int width = CONF.getMapWidth();
     int height = CONF.getMapHeight();
     int barHeight = CONF.getUIBarHeight();
@@ -35,5 +35,7 @@ int main() {
 
     LOGOUT("OK!");
 
-    return 0;
+}
+
+int main() {
 }

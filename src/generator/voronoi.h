@@ -37,10 +37,6 @@ private:
     InputTris _tris;
     Output _diagram;
 
-    int _width, _height;
-
-    Rectangle _box;
-
     std::map<int, std::map<int, bool>> _existsEdges;
     bool _existsEdge(int paId, int pbId);
 

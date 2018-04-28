@@ -21,8 +21,6 @@ private:
     Input _relaxedVd;
     Output _blockInfos;
 
-    Rectangle _box;
-
 public:
     void input(Input relaxedVd);
     void generate();

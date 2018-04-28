@@ -16,11 +16,6 @@ private:
     Input _inputVd;
     Output _relaxedVd;
 
-    float _factor;
-    int _iteration;
-
-    Rectangle _box;
-
 public:
     void input(Input vd);
     void generate();

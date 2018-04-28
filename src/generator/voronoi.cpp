@@ -15,11 +15,12 @@ bool VoronoiDiagram::_existsEdge(int paId, int pbId) {
 void VoronoiDiagram::input(VoronoiDiagram::InputCenters centers, VoronoiDiagram::InputTris tris) {
     _centers = std::move(centers);
     _tris = std::move(tris);
-    _width = CONF.getMapWidth(), _height = CONF.getMapHeight();
-    _box = Rectangle(0, _width, _height, 0);
 }
 
 void VoronoiDiagram::generate() {
+    int width = CONF.getMapWidth(), height = CONF.getMapHeight();
+    Rectangle box = Rectangle(0, width, height, 0);
+
     std::map<int, CenterNode> &centerMap = _diagram.first;
     std::map<int, EdgeNode> &edgeMap = _diagram.second;
 
@@ -46,10 +47,10 @@ void VoronoiDiagram::generate() {
             }
             Point pa = tri->exCenter, pb = edge.nextTri->exCenter;
             int paId = tri->id, pbId = edge.nextTri->id;
-            bool paInBox = _box.contains(pa), pbInBox = _box.contains(pb);
+            bool paInBox = box.contains(pa), pbInBox = box.contains(pb);
             if (!paInBox && !pbInBox) {
                 Point intersections[2];
-                int intersectionNumber = _box.intersectSegment(pa, pb, intersections);
+                int intersectionNumber = box.intersectSegment(pa, pb, intersections);
                 if (intersectionNumber == 0) {
                     continue;
                 }
@@ -60,7 +61,7 @@ void VoronoiDiagram::generate() {
                     std::swap(pa, pb);
                     std::swap(paId, pbId);
                 }
-                pb = _box.intersectRay(pa, pb);
+                pb = box.intersectRay(pa, pb);
                 pbId = newVertexId++;
             }
 

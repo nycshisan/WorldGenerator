@@ -4,61 +4,108 @@
 
 #include "coast.h"
 
+#include <cmath>
+#include <limits>
+
 #include "../conf/conf.h"
 
 void Coast::input(Coast::Input input) {
     _blockInfos = std::move(input);
-    _k = int(CONF.getCenterNumber() * CONF.getCoastOceanProportion());
-    _randomSeed = CONF.getMapRandomSeed();
 }
 
 void Coast::generate() {
+    int randomSeed = CONF.getMapRandomSeed();
+    int continentNumber = CONF.getCoastContinentNumber();
+    float oceanFactor = CONF.getCoastOceanFactor();
+    float seaFactor = CONF.getCoastSeaFactor();
+    int width = CONF.getMapWidth(), height = CONF.getMapHeight();
+    float minContinentCenterDist = float(width * width + height * height) / (continentNumber * continentNumber);
+    float noiseInfluence = CONF.getCoastNoiseInfluence();
+
+    std::mt19937 rg(randomSeed);
     for (auto &blockInfo: _blockInfos) {
-        blockInfo->isOcean = false;
+        blockInfo->coastType = BlockInfo::CoastType::Land;
+        blockInfo->isContinentCenter = false;
     }
-    std::vector<int> blockIndices;
-    for (int i = 0; i < _blockInfos.size(); ++i) {
-        blockIndices.emplace_back(i);
+
+    std::set<std::shared_ptr<BlockInfo>, std::owner_less<std::shared_ptr<BlockInfo>>> continentCenters;
+    std::uniform_int_distribution<> dis(0, int(_blockInfos.size()) - 1);
+    while (continentCenters.size() < continentNumber) {
+        auto possibleCenter = _blockInfos[dis(rg)];
+        bool isValid = true;
+        for (auto &center: continentCenters) {
+            if (center->center.distance(possibleCenter->center) < minContinentCenterDist)
+                isValid = false;
+        }
+        if (isValid) {
+            possibleCenter->isContinentCenter = true;
+            continentCenters.emplace(possibleCenter);
+        }
     }
-    _gen = std::mt19937(_randomSeed);
-    _findOceanBlocks(blockIndices, 0, int(blockIndices.size()), _k);
+
+    for (auto &block: _blockInfos) {
+        auto pos = block->center;
+        float pn = NoiseGenerator::PerlinNoise(pos.x, pos.y);
+        float minDist1 = std::numeric_limits<float>::max(), minDist2 = std::numeric_limits<float>::max();
+        float maxDist = std::numeric_limits<float>::min();
+        for (auto &center: continentCenters) {
+            float dist = pos.distance(center->center);
+            if (dist < minDist1) {
+                minDist2 = minDist1;
+                minDist1 = dist;
+            } else if (dist < minDist2) {
+                minDist2 = dist;
+            }
+            if (dist > maxDist) {
+                maxDist = dist;
+            }
+        }
+        minDist1 /= minContinentCenterDist;
+        minDist2 /= minContinentCenterDist;
+        float noise;
+        if (continentNumber > 1)
+            noise = pn * (noiseInfluence + minDist1 - std::abs(minDist1 - minDist2)) / noiseInfluence;
+        else
+            noise = (pn * noiseInfluence + minDist1) / (noiseInfluence + 1.0f);
+        if (noise > oceanFactor)
+            block->coastType = BlockInfo::CoastType::Ocean;
+        else if (noise > seaFactor)
+            block->coastType = BlockInfo::CoastType::Sea;
+    }
+
+    for (auto &block: _blockInfos) {
+        if (block->coastType == BlockInfo::CoastType::Land) {
+            for (auto &edge: block->edges) {
+                for (auto &relatedBlock: edge->relatedBlocks) {
+                    if (relatedBlock.lock() != block->thisPtr.lock()) {
+                        if (relatedBlock.lock()->coastType == BlockInfo::CoastType::Ocean) {
+                            block->coastType = BlockInfo::CoastType::Sea;
+                        }
+                    }
+                }
+            }
+        };
+    }
 }
 
 void Coast::draw(Drawer &drawer) {
     for (auto &blockInfo: _blockInfos) {
-        if (blockInfo->isOcean) {
+        if (blockInfo->coastType == BlockInfo::CoastType::Ocean) {
             drawer.draw(*blockInfo, sf::Color::Blue);
+        }
+        sf::Color seaColor;
+        seaColor.a = (sf::Color::Blue.a + sf::Color::White.a) / (unsigned char)(2);
+        seaColor.g = (sf::Color::Blue.g + sf::Color::White.g) / (unsigned char)(2);
+        seaColor.b = (sf::Color::Blue.b + sf::Color::White.b) / (unsigned char)(2);
+        if (blockInfo->coastType == BlockInfo::CoastType::Sea) {
+
+            drawer.draw(*blockInfo, seaColor);
+        }
+        if (blockInfo->isContinentCenter) {
+            drawer.draw(*blockInfo, sf::Color::White);
         }
         for (auto &edgeInfo: blockInfo->edges) {
             drawer.draw((*edgeInfo));
-        }
-    }
-}
-
-void Coast::_findOceanBlocks(std::vector<int> &indices, int begin, int size, int k) {
-    if (size == 0)
-        return;
-    std::uniform_int_distribution<> dis(begin, begin + size - 1);
-    std::swap(indices[begin], indices[dis(_gen)]);
-    float pivot = _blockInfos[indices[begin]]->area;
-    int pivotPos = 0; // Also means there are how many blocks larger than the pivot
-    for (int i = 1; i < size; ++i) {
-        if (_blockInfos[indices[begin + i]]->area > pivot) {
-            ++pivotPos;
-            std::swap(indices[begin + pivotPos], indices[begin + i]);
-        }
-    }
-    std::swap(indices[begin], indices[begin + pivotPos]);
-    if (k < pivotPos) {
-        _findOceanBlocks(indices, begin, pivotPos, k);
-    } else {
-        for (int i = 0; i < pivotPos; ++i) {
-            _blockInfos[indices[i]]->isOcean = true;
-        }
-        if (k == pivotPos + 1) {
-            _blockInfos[indices[pivotPos]]->isOcean = true;
-        } else {
-            _findOceanBlocks(indices, begin + pivotPos + 1, size - pivotPos - 1, k - pivotPos - 1);
         }
     }
 }

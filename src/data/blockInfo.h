@@ -51,7 +51,11 @@ struct BlockInfo {
     float area = 0.0f;
 
     // Coast Infos
-    bool isOcean = false;
+    enum CoastType {
+        Land, Ocean, Sea, Unknown
+    };
+    CoastType coastType = Unknown;
+    bool isContinentCenter = false;
 
 
     explicit BlockInfo(unsigned int id): id(id) {}
