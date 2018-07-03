@@ -55,3 +55,7 @@ void Drawer::draw(const EdgeInfo &edgeInfo) {
     sf::Vertex vertexes[2] = { sf::Vertex((*edgeInfo.vertexes.begin())->pos), sf::Vertex((*edgeInfo.vertexes.rbegin())->pos) };
     _window->draw(vertexes, 2, sf::Lines);
 }
+
+void Drawer::commit() {
+
+}

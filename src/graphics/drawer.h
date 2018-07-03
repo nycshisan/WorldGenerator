@@ -13,6 +13,15 @@ class Drawer {
 
     sf::CircleShape _pointShape;
 
+    enum DrawBufferType {
+        PointBuf,
+        LineBuf,
+        TriangleBuf
+    };
+
+    int _drawBufSize = 128;
+    DrawBufferType _crtBufType;
+
 public:
     explicit Drawer(Window *window);
 
@@ -22,6 +31,8 @@ public:
     void draw(const BlockInfo &blockInfo);
     void draw(const BlockInfo &blockInfo, const sf::Color &color);
     void draw(const EdgeInfo &edgeInfo);
+
+    void commit();
 };
 
 #endif //WORLDGENERATOR_DRAWER_H

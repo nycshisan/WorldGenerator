@@ -27,6 +27,8 @@ void DelaunayTriangles::generate() {
         auto center = _centers[i];
         NetNode *containingTriangle = nullptr;
         for (auto tri: _allocatedNodes) {
+            if (center.x < tri->_minX || center.x > tri->_maxX || center.y < tri->_minY || center.y > tri->_maxY)
+                continue;
             if (tri->contains(center)) {
                 containingTriangle = tri; break;
             }
@@ -149,6 +151,10 @@ DelaunayTriangles::NetNode::NetNode(int id, int pointIdA, int pointIdB, int poin
     exRadius = exCenter.distance(points[0]);
 
     _isBoundingTriangle = pointIdA >= n || pointIdB >= n || pointIdC >= n;
+    auto minmaxX = std::minmax({ centers[pointIdA].x, centers[pointIdB].x, centers[pointIdC].x });
+    auto minmaxY = std::minmax({ centers[pointIdA].y, centers[pointIdB].y, centers[pointIdC].y });
+    _minX = minmaxX.first; _maxX = minmaxX.second;
+    _minY = minmaxY.first; _maxY = minmaxY.second;
 }
 
 void DelaunayTriangles::NetNode::_linkAnoTri(DelaunayTriangles::NetNode *anoTri, int edgeId, int anoEdgeId) {

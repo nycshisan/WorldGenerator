@@ -35,6 +35,8 @@ public:
 
         void _linkAnoTri(NetNode *anoTri, int edgeId, int anoEdgeId);
 
+        float _minX, _minY, _maxX, _maxY;
+
         NetNode(int id, int pointIdA, int pointIdB, int pointIdC, const std::vector<Point> &centers, int n);
 
     public:
