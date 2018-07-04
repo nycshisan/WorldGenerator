@@ -9,140 +9,148 @@
 #include "../generator/generator.h"
 #include "../conf/conf.h"
 
-const static std::vector<std::pair<std::string, std::function<void(Window&)>>> _ButtonMaterials = { // NOLINT
-        {"Next", Generator::NextButtonResponder},
-        {"Redo", Generator::RedoButtonResponder},
-        {"Undo", Generator::UndoButtonResponder},
-        {"Save", Generator::SaveButtonResponder},
-        {"Load", Generator::LoadButtonResponder}
-};
+namespace wg {
 
-Window::Window(int width, int height, int barHeight) : sf::RenderWindow(sf::VideoMode((unsigned int)width, (unsigned int)(height + 2 * barHeight)), "") {
-    setTitle(_defaultTitle);
-    setVerticalSyncEnabled(true);
-    _width = width;
-    _height = height;
-    _barHeight = barHeight;
+    const static std::vector<std::pair<std::string, std::function<void(Window &)>>> _ButtonMaterials = { // NOLINT
+            {"Next", Generator::NextButtonResponder},
+            {"Redo", Generator::RedoButtonResponder},
+            {"Undo", Generator::UndoButtonResponder},
+            {"Save", Generator::SaveButtonResponder},
+            {"Load", Generator::LoadButtonResponder}
+    };
 
-    _barSeparatorHeight = CONF.getUIBarSeparatorHeight();
+    Window::Window(int width, int height, int barHeight) : sf::RenderWindow(
+            sf::VideoMode((unsigned int) width, (unsigned int) (height + 2 * barHeight)), "") {
+        setTitle(_defaultTitle);
+        setVerticalSyncEnabled(true);
+        _width = width;
+        _height = height;
+        _barHeight = barHeight;
 
-    // Initialize bar separators
-    _barSeparator.setSize(sf::Vector2f(_width, _barSeparatorHeight));
+        _barSeparatorHeight = CONF.getUIBarSeparatorHeight();
 
-    // Initialize hint label
-    int xOffset = _barHeight / 5;
-    std::string font_fn(CONF.getUIFontFilename());
-    _font.loadFromFile(font_fn);
+        // Initialize bar separators
+        _barSeparator.setSize(sf::Vector2f(_width, _barSeparatorHeight));
 
-    _hintLabel.setFont(_font);
+        // Initialize hint label
+        int xOffset = _barHeight / 5;
+        std::string font_fn(CONF.getUIFontFilename());
+        _font.loadFromFile(font_fn);
 
-    auto hintCharacterSize = (unsigned int)((_barHeight - _barSeparatorHeight) * 0.8);
-    _hintLabel.setCharacterSize(hintCharacterSize);
+        _hintLabel.setFont(_font);
 
-    _hintLabel.setFillColor(sf::Color::White);
+        auto hintCharacterSize = (unsigned int) ((_barHeight - _barSeparatorHeight) * 0.8);
+        _hintLabel.setCharacterSize(hintCharacterSize);
 
-    _hintLabel.setPosition(xOffset, _height);
+        _hintLabel.setFillColor(sf::Color::White);
 
-    _hintLabelContent = "Ready!";
+        _hintLabel.setPosition(xOffset, _height);
 
-    // Initialize panel
-    auto buttonSize = sf::Vector2f(_barHeight * 3.0f, _barHeight * 0.6f);
-    int buttonXOffset = xOffset;
-    int buttonXInterval = (_width - (int)_ButtonMaterials.size() * (int)buttonSize.x - 2 * buttonXOffset) / ((int)_ButtonMaterials.size() - 1);
-    for (auto &material : _ButtonMaterials) {
-        Button button;
-        button.setFont(_font);
-        button.setLabel(material.first);
-        button.setResponder(material.second);
+        _hintLabelContent = "Ready!";
 
-        button.setColor(sf::Color::White);
-        button.setSize(buttonSize);
-        button.setPosition(sf::Vector2f(buttonXOffset, _height + _barHeight + _barSeparatorHeight / 2.0f + (_barHeight - buttonSize.y) / 2.0f));
-        buttonXOffset += buttonSize.x + buttonXInterval;
+        // Initialize panel
+        auto buttonSize = sf::Vector2f(_barHeight * 3.0f, _barHeight * 0.6f);
+        int buttonXOffset = xOffset;
+        int buttonXInterval = (_width - (int) _ButtonMaterials.size() * (int) buttonSize.x - 2 * buttonXOffset) /
+                              ((int) _ButtonMaterials.size() - 1);
+        for (auto &material : _ButtonMaterials) {
+            Button button;
+            button.setFont(_font);
+            button.setLabel(material.first);
+            button.setResponder(material.second);
 
-        _buttons.emplace_back(button);
+            button.setColor(sf::Color::White);
+            button.setSize(buttonSize);
+            button.setPosition(sf::Vector2f(buttonXOffset, _height + _barHeight + _barSeparatorHeight / 2.0f +
+                                                           (_barHeight - buttonSize.y) / 2.0f));
+            buttonXOffset += buttonSize.x + buttonXInterval;
+
+            _buttons.emplace_back(button);
+        }
     }
-}
 
-void Window::play() {
-    while (isOpen()) {
-        sf::Event event = {};
-        while (pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                close();
-            }
-            if (event.type == sf::Event::MouseButtonReleased) {
-                auto mouseEvent = event.mouseButton;
-                if (mouseEvent.button == sf::Mouse::Button::Left) {
-                    for (auto &button: _buttons) {
-                        button.respond(*this, mouseEvent.x, mouseEvent.y);
+    void Window::play() {
+        while (isOpen()) {
+            sf::Event event = {};
+            while (pollEvent(event)) {
+                if (event.type == sf::Event::Closed) {
+                    close();
+                }
+                if (event.type == sf::Event::MouseButtonReleased) {
+                    auto mouseEvent = event.mouseButton;
+                    if (mouseEvent.button == sf::Mouse::Button::Left) {
+                        for (auto &button: _buttons) {
+                            button.respond(*this, mouseEvent.x, mouseEvent.y);
+                        }
+                    }
+                }
+                if (event.type == sf::Event::KeyReleased) {
+                    auto key = event.key;
+                    if (key.code == sf::Keyboard::Key::Right) {
+                        Generator::NextButtonResponder(*this);
+                    }
+                    if (key.code == sf::Keyboard::Key::Left) {
+                        Generator::UndoButtonResponder(*this);
+                    }
+                    if (key.code == sf::Keyboard::Key::Up) {
+                        Generator::LoadButtonResponder(*this);
+                    }
+                    if (key.code == sf::Keyboard::Key::Down) {
+                        Generator::SaveButtonResponder(*this);
+                    }
+                    if (key.code == sf::Keyboard::Key::R) {
+                        Generator::RedoButtonResponder(*this);
                     }
                 }
             }
-            if (event.type == sf::Event::KeyReleased) {
-                auto key = event.key;
-                if (key.code == sf::Keyboard::Key::Right) {
-                    Generator::NextButtonResponder(*this);
-                }
-                if (key.code == sf::Keyboard::Key::Left) {
-                    Generator::UndoButtonResponder(*this);
-                }
-                if (key.code == sf::Keyboard::Key::Up) {
-                    Generator::LoadButtonResponder(*this);
-                }
-                if (key.code == sf::Keyboard::Key::Down) {
-                    Generator::SaveButtonResponder(*this);
-                }
-                if (key.code == sf::Keyboard::Key::R) {
-                    Generator::RedoButtonResponder(*this);
-                }
-            }
+
+            _updateFPS();
+
+            sf::Color backgroundColor(0, 0, 0);
+            clear(backgroundColor);
+
+            _displayMap();
+            _displayBar();
+
+
+            display();
         }
-
-        _updateFPS();
-
-        sf::Color backgroundColor(0, 0, 0);
-        clear(backgroundColor);
-
-        _displayMap();
-        _displayBar();
-
-        display();
     }
-}
 
-void Window::_displayBar() {
-    // Display separators
-    _barSeparator.setPosition(0, _height);
-    draw(_barSeparator);
-    _barSeparator.setPosition(0, _height + _barHeight);
-    draw(_barSeparator);
+    void Window::_displayBar() {
+        // Display separators
+        _barSeparator.setPosition(0, _height);
+        draw(_barSeparator);
+        _barSeparator.setPosition(0, _height + _barHeight);
+        draw(_barSeparator);
 
-    // Display hint label
-    _hintLabel.setString(_hintLabelContent);
-    draw(_hintLabel);
+        // Display hint label
+        _hintLabel.setString(_hintLabelContent);
+        draw(_hintLabel);
 
-    // Display panel
-    for (auto &button : _buttons) {
-        button.hover(*this);
-        button.drawTo(*this);
+        // Display panel
+        for (auto &button : _buttons) {
+            button.hover(*this);
+            button.drawTo(*this);
+        }
     }
-}
 
-void Window::_displayMap() {
-    Generator::SharedInstance().display(*this);
-}
-
-void Window::setHintLabel(const std::string &content) {
-    _hintLabelContent = content;
-}
-
-void Window::_updateFPS() {
-    float interval = _clock.restart().asSeconds();
-    float FPS = 1.0f / interval;
-    if (_updateFPSCounter == _updateFPSFrameInterval - 1) {
-        sprintf(_titleBuffer, "%s - FPS: %.1f", _defaultTitle, FPS);
-        setTitle(_titleBuffer);
+    void Window::_displayMap() {
+        Generator::SharedInstance().display(*this);
     }
-    _updateFPSCounter = (_updateFPSCounter + 1) % _updateFPSFrameInterval;
+
+    void Window::setHintLabel(const std::string &content) {
+        _hintLabelContent = content;
+    }
+
+    void Window::_updateFPS() {
+        float interval = _clock.restart().asSeconds();
+        float FPS = 1.0f / interval;
+        if (_updateFPSCounter == _updateFPSFrameInterval - 1) {
+            sprintf(_titleBuffer, "%s - FPS: %.1f", _defaultTitle, FPS);
+            setTitle(_titleBuffer);
+        }
+        _updateFPSCounter = (_updateFPSCounter + 1) % _updateFPSFrameInterval;
+    }
+
 }

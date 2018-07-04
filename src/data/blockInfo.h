@@ -11,57 +11,62 @@
 
 #include "../misc/misc.h"
 
-struct BlockInfo;
-struct EdgeInfo;
+namespace wg {
 
-struct VertexInfo {
-    unsigned int id;
+    struct BlockInfo;
+    struct EdgeInfo;
 
-    Point pos;
-    std::set<std::weak_ptr<BlockInfo>, std::owner_less<std::weak_ptr<BlockInfo>>> relatedBlocks;
-    std::set<std::weak_ptr<EdgeInfo>, std::owner_less<std::weak_ptr<EdgeInfo>>> relatedEdges;
+    struct VertexInfo {
+        unsigned int id;
 
-    bool isCorner = false;
+        wg::Point point;
+        std::set<std::weak_ptr<BlockInfo>, std::owner_less<std::weak_ptr<BlockInfo>>> relatedBlocks;
+        std::set<std::weak_ptr<EdgeInfo>, std::owner_less<std::weak_ptr<EdgeInfo>>> relatedEdges;
+
+        bool isCorner = false;
 
 
-    explicit VertexInfo(unsigned int id): id(id) {}
-};
-
-struct EdgeInfo {
-    unsigned int id;
-
-    std::set<std::weak_ptr<BlockInfo>, std::owner_less<std::weak_ptr<BlockInfo>>> relatedBlocks;
-    std::set<std::shared_ptr<VertexInfo>, std::owner_less<std::shared_ptr<VertexInfo>>> vertexes;
-
-    bool isMargin = false;
-
-    // Coast Infos
-
-    explicit EdgeInfo(unsigned int id): id(id) {}
-};
-
-struct BlockInfo {
-    unsigned int id;
-    std::weak_ptr<BlockInfo> thisPtr;
-
-    Point center;
-    std::set<std::shared_ptr<EdgeInfo>, std::owner_less<std::shared_ptr<EdgeInfo>>> edges;
-    std::set<std::weak_ptr<VertexInfo>, std::owner_less<std::weak_ptr<VertexInfo>>> vertexes;
-
-    float area = 0.0f;
-
-    // Coast Infos
-    enum CoastType {
-        Land, Ocean, Sea, Unknown
+        explicit VertexInfo(unsigned int id) : id(id) {}
     };
-    CoastType coastType = Unknown;
-    bool isContinentCenter = false;
+
+    struct EdgeInfo {
+        unsigned int id;
+
+        std::set<std::weak_ptr<BlockInfo>, std::owner_less<std::weak_ptr<BlockInfo>>> relatedBlocks;
+        std::set<std::shared_ptr<VertexInfo>, std::owner_less<std::shared_ptr<VertexInfo>>> vertexes;
+
+        bool isMargin = false;
+
+        // Coast Infos
+
+        explicit EdgeInfo(unsigned int id) : id(id) {}
+    };
+
+    struct BlockInfo {
+        unsigned int id;
+        std::weak_ptr<BlockInfo> thisPtr;
+
+        wg::Point center;
+        std::set<std::shared_ptr<EdgeInfo>, std::owner_less<std::shared_ptr<EdgeInfo>>> edges;
+        std::set<std::weak_ptr<VertexInfo>, std::owner_less<std::weak_ptr<VertexInfo>>> vertexes;
+
+        float area = 0.0f;
+
+        // Coast Infos
+        enum CoastType {
+            Land, Ocean, Sea, Unknown
+        };
+        CoastType coastType = Unknown;
+        bool isContinentCenter = false;
 
 
-    explicit BlockInfo(unsigned int id): id(id) {}
+        explicit BlockInfo(unsigned int id) : id(id) {}
 
-    void addMarginEdge(const Rectangle &box);
-    void calcArea();
-};
+        void addMarginEdge(const wg::Rectangle &box);
+
+        void calcArea();
+    };
+
+}
 
 #endif //WORLDGENERATOR_BLOCKINFO_H

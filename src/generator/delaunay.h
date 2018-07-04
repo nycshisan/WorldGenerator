@@ -10,59 +10,72 @@
 
 #include "centers.h"
 
-class DelaunayTriangles {
-public:
-    class NetNode;
-    struct Edge {
-        int pid[2] = {-1, -1};
-        NetNode *nextTri = nullptr;
-        int nextTriEdgeId = -1;
+namespace wg {
 
-        Edge() = default;
-        Edge(int pointIdA, int pointIdB);
-    };
+    class DelaunayTriangles {
+    public:
+        class NetNode;
 
-    class NetNode : public Triangle {
-        friend class DelaunayTriangles;
+        struct Edge {
+            int pid[2] = {-1, -1};
+            NetNode *nextTri = nullptr;
+            int nextTriEdgeId = -1;
 
-        bool _visited = false;
-        void _clearVisitFlag();
+            Edge() = default;
 
-        void _findInfluenced(const Point &point, int beginEdgeId, std::set<NetNode*> &tris, std::vector<Edge*> &edges);
-        void findInfluenced(const Point &point, std::set<NetNode*> &tris, std::vector<Edge*> &edges);
+            Edge(int pointIdA, int pointIdB);
+        };
 
-        bool _isBoundingTriangle;
+        class NetNode : public Triangle {
+            friend class DelaunayTriangles;
 
-        void _linkAnoTri(NetNode *anoTri, int edgeId, int anoEdgeId);
+            bool _visited = false;
 
-        float _minX, _minY, _maxX, _maxY;
+            void _clearVisitFlag();
 
-        NetNode(int id, int pointIdA, int pointIdB, int pointIdC, const std::vector<Point> &centers, int n);
+            void
+            _findInfluenced(const Point &point, int beginEdgeId, std::set<NetNode *> &tris, std::vector<Edge *> &edges);
+
+            void findInfluenced(const Point &point, std::set<NetNode *> &tris, std::vector<Edge *> &edges);
+
+            bool _isBoundingTriangle;
+
+            void _linkAnoTri(NetNode *anoTri, int edgeId, int anoEdgeId);
+
+            float _minX, _minY, _maxX, _maxY;
+
+            NetNode(int id, int pointIdA, int pointIdB, int pointIdC, const std::vector<Point> &centers, int n);
+
+        public:
+            int id;
+            Edge edges[3];
+
+            Point exCenter;
+            float exRadius = 0;
+        };
+
+        typedef BlockCenters::Output Input;
+        typedef std::unordered_set<NetNode *> Output;
+    private:
+        Input _centers{};
+        Output _allocatedNodes{};
+
+        NetNode *_triNetHead = nullptr;
+
+        void _deleteOldNodes();
 
     public:
-        int id;
-        Edge edges[3];
+        void input(const Input &input);
 
-        Point exCenter;
-        float exRadius = 0;
+        void generate();
+
+        Output output();
+
+        void prepareVertexes(Drawer &drawer);
+
+        ~DelaunayTriangles();
     };
 
-    typedef BlockCenters::Output Input;
-    typedef std::unordered_set<NetNode*> Output;
-private:
-    Input _centers{};
-    Output _allocatedNodes{};
-
-    NetNode *_triNetHead = nullptr;
-    void _deleteOldNodes();
-
-public:
-    void input(const Input &input);
-    void generate();
-    Output output();
-    void draw(Drawer &drawer);
-
-    ~DelaunayTriangles();
-};
+}
 
 #endif //WORLDGENERATOR_DELAUNAY_H

@@ -6,6 +6,10 @@
 
 #include "../generator/generator.h"
 
-void SaveErrorData() {
-    Generator::SharedInstance().SaveErrorData();
+namespace wg {
+
+    void SaveErrorData() {
+        Generator::SharedInstance().SaveErrorData();
+    }
+
 }

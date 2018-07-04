@@ -10,37 +10,41 @@
 #include "SFML/Graphics.hpp"
 #include "SFML/Window.hpp"
 
-class Window;
+namespace wg {
 
-typedef std::function<void(Window&)> ButtonResponder;
+    class Window;
 
-class Button : public sf::RectangleShape {
-    sf::Text _text;
+    typedef std::function<void(Window &)> ButtonResponder;
 
-    sf::Color _color, _invColor;
+    class Button : public sf::RectangleShape {
+        sf::Text _text;
 
-    ButtonResponder _responder;
+        sf::Color _color, _invColor;
 
-    bool _checkPosInButton(int x, int y);
+        ButtonResponder _responder;
 
-public:
-    void setFont(const sf::Font &font);
+        bool _checkPosInButton(int x, int y);
 
-    void setLabel(const std::string &label);
+    public:
+        void setFont(const sf::Font &font);
 
-    void setResponder(const ButtonResponder &responder);
+        void setLabel(const std::string &label);
 
-    void setSize(const sf::Vector2f &size);
+        void setResponder(const ButtonResponder &responder);
 
-    void setPosition(const sf::Vector2f &position);
+        void setSize(const sf::Vector2f &size);
 
-    void setColor(const sf::Color &color);
+        void setPosition(const sf::Vector2f &position);
 
-    void drawTo(sf::RenderWindow &window);
+        void setColor(const sf::Color &color);
 
-    void hover(const sf::Window &window);
+        void drawTo(sf::RenderWindow &window);
 
-    void respond(Window &window, int x, int y);
-};
+        void hover(const sf::Window &window);
+
+        void respond(Window &window, int x, int y);
+    };
+
+}
 
 #endif //WORLDGENERATOR_BUTTON_H

@@ -9,77 +9,98 @@
 
 #include "simd.h"
 
-class Point: public sf::Vector2f {
-    constexpr static float _Error = 1e-4;
+namespace wg {
 
-public:
-    Point() = default;
-    Point(float x, float y);
-    explicit Point(const sf::Vector2f &v);
+    class Point : public sf::Vector2f {
+        constexpr static float _Error = 1e-4;
 
-    float distance(const Point &anoPoint) const;
+    public:
+        Point() = default;
 
-    bool operator == (const Point &anoP);
-    bool operator != (const Point &anoP);
-};
+        Point(float x, float y);
 
-std::ostream& operator << (std::ostream &os, const Point &p);
+        explicit Point(const sf::Vector2f &v);
 
-class Triangle {
-    constexpr static data_t _ContainsError = -3e-5f; // Some input may cause problem if the error is 0. I do not know why...
+        float distance(const Point &anoPoint) const;
 
-public:
-    Point points[3];
+        bool operator==(const Point &anoP);
 
-    Triangle(const Point &pa, const Point &pb, const Point &pc);
+        bool operator!=(const Point &anoP);
 
-    bool contains(const Point &p);
-    Point getExCenter();
-};
+        sf::Vertex vertex;
+    };
 
-class Line {
-protected:
-    float _err = 1e-3;
-    float _k = 0.0f, _b = 0.0f;
+    std::ostream &operator<<(std::ostream &os, const Point &p);
 
-public:
-    bool vertical = false; float verticalX = 0.0f;
-    bool horizontal = false; float horizontalY = 0.0f;
-    Line() = default;
-    Line(const Point &pa, const Point &pb);
-    Line(const Point &p, float k);
+    class Triangle {
+        constexpr static data_t _ContainsError = -3e-5f; // Some input may cause problem if the error is 0. I do not know why...
 
-    Point intersect(const Line &anoLine);
-    float yGivenX(float x) const;
-    float xGivenY(float y) const;
+    public:
+        Point points[3];
 
-    static Line Horizontal(float y);
-    static Line Vertical(float x);
-};
+        Triangle(const Point &pa, const Point &pb, const Point &pc);
 
-class Segment : public Line {
-    Point _pa, _pb;
+        bool contains(const Point &p);
 
-public:
-    Segment(const Point &pa, const Point &pb);
+        Point getExCenter();
+    };
 
-    Line midPerpendicular();
-};
+    class Line {
+    protected:
+        float _err = 1e-3;
+        float _k = 0.0f, _b = 0.0f;
 
-class Rectangle {
-    float _left, _right, _top, _down;
-    Line _edges[4];
+    public:
+        bool vertical = false;
+        float verticalX = 0.0f;
+        bool horizontal = false;
+        float horizontalY = 0.0f;
 
-    constexpr static float _Error = 1e-3;
+        Line() = default;
 
-public:
-    Rectangle() = default;
-    explicit Rectangle(float left, float right, float top, float down);
+        Line(const Point &pa, const Point &pb);
 
-    bool contains(const Point &p);
-    Point intersectRay(const Point &pa, const Point &pb);
-    int intersectSegment(const Point &pa, const Point &pb, Point *intersections);
-    bool onEdge(const Point &p, Line &line) const;
-};
+        Line(const Point &p, float k);
 
+        Point intersect(const Line &anoLine);
+
+        float yGivenX(float x) const;
+
+        float xGivenY(float y) const;
+
+        static Line Horizontal(float y);
+
+        static Line Vertical(float x);
+    };
+
+    class Segment : public Line {
+        Point _pa, _pb;
+
+    public:
+        Segment(const Point &pa, const Point &pb);
+
+        Line midPerpendicular();
+    };
+
+    class Rectangle {
+        float _left, _right, _top, _down;
+        Line _edges[4];
+
+        constexpr static float _Error = 1e-3;
+
+    public:
+        Rectangle() = default;
+
+        explicit Rectangle(float left, float right, float top, float down);
+
+        bool contains(const Point &p);
+
+        Point intersectRay(const Point &pa, const Point &pb);
+
+        int intersectSegment(const Point &pa, const Point &pb, Point *intersections);
+
+        bool onEdge(const Point &p, Line &line) const;
+    };
+
+}
 #endif //WORLDGENERATOR_GEOMATH_H

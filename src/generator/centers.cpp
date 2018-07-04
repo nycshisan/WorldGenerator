@@ -9,72 +9,76 @@
 
 #include "../conf/conf.h"
 
-void BlockCenters::input() {}
+namespace wg {
 
-void BlockCenters::generate() {
-    int width = CONF.getMapWidth(), height = CONF.getMapHeight();
-    int span = CONF.getCenterSpan();
-    int randomSeed = CONF.getMapRandomSeed();
+    void BlockCenters::input() {}
 
-    unsigned char occupied[width][height];
-    std::memset(occupied, 0, width * height);
+    void BlockCenters::generate() {
+        int width = CONF.getMapWidth(), height = CONF.getMapHeight();
+        int span = CONF.getCenterSpan();
+        int randomSeed = CONF.getMapRandomSeed();
 
-    int n = CONF.getCenterNumber();
-    int padding = CONF.getCenterPadding();
+        unsigned char occupied[width][height];
+        std::memset(occupied, 0, width * height);
 
-    std::mt19937 gen(randomSeed);
-    std::uniform_int_distribution<> disX(padding, width - padding), disY(padding, height - padding);
+        int n = CONF.getCenterNumber();
+        int padding = CONF.getCenterPadding();
 
-    _centers.clear();
-    for (int i = 0; i < n;) {
-        int x = disX(gen);
-        int y = disY(gen);
-        bool occupiedFlag = false;
-        for (int j = std::max(x - span, 0); j <= std::min(x + span, width - 1); ++j) {
-            for (int k = std::max(y - span, 0); k <= std::min(y + span, height - 1); ++k) {
-                if (occupied[j][k]) {
-                    occupiedFlag = true;
+        std::mt19937 gen(randomSeed);
+        std::uniform_int_distribution<> disX(padding, width - padding), disY(padding, height - padding);
+
+        _centers.clear();
+        for (int i = 0; i < n;) {
+            int x = disX(gen);
+            int y = disY(gen);
+            bool occupiedFlag = false;
+            for (int j = std::max(x - span, 0); j <= std::min(x + span, width - 1); ++j) {
+                for (int k = std::max(y - span, 0); k <= std::min(y + span, height - 1); ++k) {
+                    if (occupied[j][k]) {
+                        occupiedFlag = true;
+                    }
                 }
             }
-        }
-        if (occupiedFlag) {
-            continue;
-        }
-        _centers.emplace_back(Point(x, y));
-        for (int j = std::max(x - span, 0); j <= std::min(x + span, width - 1); ++j) {
-            for (int k = std::max(y - span, 0); k <= std::min(y + span, height - 1); ++k) {
-                occupied[j][k] = 1;
+            if (occupiedFlag) {
+                continue;
             }
+            _centers.emplace_back(Point(x, y));
+            for (int j = std::max(x - span, 0); j <= std::min(x + span, width - 1); ++j) {
+                for (int k = std::max(y - span, 0); k <= std::min(y + span, height - 1); ++k) {
+                    occupied[j][k] = 1;
+                }
+            }
+            ++i;
         }
-        ++i;
     }
-}
 
-BlockCenters::Output BlockCenters::output() {
-    return _centers;
-}
-
-void BlockCenters::draw(Drawer &drawer) {
-    for (auto &point : _centers) {
-        drawer.draw(point);
+    BlockCenters::Output BlockCenters::output() {
+        return _centers;
     }
-}
 
-void BlockCenters::save() {
-    std::ofstream outfile("logs/centers.txt", std::ios_base::trunc);
-    for (auto &center: _centers) {
-        outfile << (int)center.x << " " << (int)center.y << std::endl;
+    void BlockCenters::prepareVertexes(Drawer &drawer) {
+        for (auto &point : _centers) {
+            drawer.appendVertex(sf::Points, point.vertex);
+        }
     }
-}
 
-void BlockCenters::load() {
-    std::ifstream infile("logs/centers.txt");
-    std::vector<Point> centers;
-    while (!infile.eof()) {
-        int x, y;
-        infile >> x >> y;
-        centers.emplace_back(Point(x, y));
+    void BlockCenters::save() {
+        std::ofstream outfile("logs/centers.txt", std::ios_base::trunc);
+        for (auto &center: _centers) {
+            outfile << (int) center.x << " " << (int) center.y << std::endl;
+        }
     }
-    centers.pop_back();
-    _centers = centers;
+
+    void BlockCenters::load() {
+        std::ifstream infile("logs/centers.txt");
+        std::vector<Point> centers;
+        while (!infile.eof()) {
+            int x, y;
+            infile >> x >> y;
+            centers.emplace_back(Point(x, y));
+        }
+        centers.pop_back();
+        _centers = centers;
+    }
+
 }

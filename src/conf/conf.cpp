@@ -4,88 +4,92 @@
 
 #include "conf.h"
 
-const std::string Configure::conf_fn = "conf/conf.json";
+namespace wg {
 
-Configure::Configure() {
-    std::ifstream ifs(conf_fn);
-    rapidjson::IStreamWrapper isw(ifs);
-    ParseStream(isw);
-}
+    const std::string Configure::conf_fn = "conf/conf.json";
 
-Configure &Configure::SharedInstance() {
-    static Configure instance;
-    return instance;
-}
+    Configure::Configure() {
+        std::ifstream ifs(conf_fn);
+        rapidjson::IStreamWrapper isw(ifs);
+        ParseStream(isw);
+    }
 
-void Configure::reload() {
-    Configure::SharedInstance() = Configure();
-}
+    Configure &Configure::SharedInstance() {
+        static Configure instance;
+        return instance;
+    }
 
-int Configure::getMapWidth() const {
-    return (*this)["map"]["width"].GetInt();
-}
+    void Configure::reload() {
+        Configure::SharedInstance() = Configure();
+    }
 
-int Configure::getMapHeight() const {
-    return (*this)["map"]["height"].GetInt();
-}
+    int Configure::getMapWidth() const {
+        return (*this)["map"]["width"].GetInt();
+    }
 
-int Configure::getMapRandomSeed() const {
-    return (*this)["map"]["randomSeed"].GetInt();
-}
+    int Configure::getMapHeight() const {
+        return (*this)["map"]["height"].GetInt();
+    }
 
-int Configure::getUIBarHeight() const {
-    return (*this)["ui"]["barHeight"].GetInt();
-}
+    int Configure::getMapRandomSeed() const {
+        return (*this)["map"]["randomSeed"].GetInt();
+    }
 
-int Configure::getUIBarSeparatorHeight() const {
-    return (*this)["ui"]["barSeparatorHeight"].GetInt();
-}
+    int Configure::getUIBarHeight() const {
+        return (*this)["ui"]["barHeight"].GetInt();
+    }
 
-std::string Configure::getUIFontFilename() const {
-    return (*this)["ui"]["font"].GetString();
-}
+    int Configure::getUIBarSeparatorHeight() const {
+        return (*this)["ui"]["barSeparatorHeight"].GetInt();
+    }
 
-float Configure::getUIPointRadius() const {
-    return (*this)["ui"]["pointRadius"].GetFloat();
-}
+    std::string Configure::getUIFontFilename() const {
+        return (*this)["ui"]["font"].GetString();
+    }
 
-int Configure::getCenterNumber() const {
-    return (*this)["centers"]["number"].GetInt();
-}
+    float Configure::getUIPointRadius() const {
+        return (*this)["ui"]["pointRadius"].GetFloat();
+    }
 
-int Configure::getCenterPadding() const {
-    return (*this)["centers"]["padding"].GetInt();
-}
+    int Configure::getCenterNumber() const {
+        return (*this)["centers"]["number"].GetInt();
+    }
 
-int Configure::getCenterSpan() const {
-    return (*this)["centers"]["span"].GetUint();
-}
+    int Configure::getCenterPadding() const {
+        return (*this)["centers"]["padding"].GetInt();
+    }
 
-bool Configure::getDelaunayShowBoundingTriangles() const {
-    return (*this)["delaunay"]["showBoundingTriangles"].GetBool();
-}
+    int Configure::getCenterSpan() const {
+        return (*this)["centers"]["span"].GetUint();
+    }
 
-float Configure::getLloydFactor() const {
-    return (*this)["lloyd"]["factor"].GetFloat();
-}
+    bool Configure::getDelaunayShowBoundingTriangles() const {
+        return (*this)["delaunay"]["showBoundingTriangles"].GetBool();
+    }
 
-int Configure::getLloydIteration() const {
-    return (*this)["lloyd"]["iteration"].GetInt();
-}
+    float Configure::getLloydFactor() const {
+        return (*this)["lloyd"]["factor"].GetFloat();
+    }
 
-int Configure::getCoastContinentNumber() const {
-    return (*this)["coast"]["continentNumber"].GetInt();
-}
+    int Configure::getLloydIteration() const {
+        return (*this)["lloyd"]["iteration"].GetInt();
+    }
 
-float Configure::getCoastOceanFactor() const {
-    return (*this)["coast"]["oceanFactor"].GetFloat();
-}
+    int Configure::getCoastContinentNumber() const {
+        return (*this)["coast"]["continentNumber"].GetInt();
+    }
 
-float Configure::getCoastSeaFactor() const {
-    return (*this)["coast"]["seaFactor"].GetFloat();
-}
+    float Configure::getCoastOceanFactor() const {
+        return (*this)["coast"]["oceanFactor"].GetFloat();
+    }
+
+    float Configure::getCoastSeaFactor() const {
+        return (*this)["coast"]["seaFactor"].GetFloat();
+    }
 
 
-float Configure::getCoastNoiseInfluence() const {
-    return (*this)["coast"]["noiseInfluence"].GetFloat();
+    float Configure::getCoastNoiseInfluence() const {
+        return (*this)["coast"]["noiseInfluence"].GetFloat();
+    }
+
 }

@@ -13,19 +13,28 @@
 #include "../graphics/drawer.h"
 #include "../misc/misc.h"
 
-class BlockCenters {
-public:
-    typedef std::vector<Point> Output;
-private:
-    Output _centers;
+namespace wg {
 
-public:
-    void input();
-    void generate();
-    Output output();
-    void draw(Drawer &drawer);
-    void save();
-    void load();
-};
+    class BlockCenters {
+    public:
+        typedef std::vector<Point> Output;
+    private:
+        Output _centers;
+
+    public:
+        void input();
+
+        void generate();
+
+        Output output();
+
+        void prepareVertexes(Drawer &drawer);
+
+        void save();
+
+        void load();
+    };
+
+}
 
 #endif //WORLDGENERATOR_CENTERS_H

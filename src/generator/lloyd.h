@@ -7,20 +7,27 @@
 
 #include "voronoi.h"
 
-class LloydRelaxation {
-public:
-    typedef VoronoiDiagram::Output Input;
-    typedef std::pair<std::map<int, VoronoiDiagram::CenterNode>, std::map<int, VoronoiDiagram::EdgeNode>> Output;
+namespace wg {
 
-private:
-    Input _inputVd;
-    Output _relaxedVd;
+    class LloydRelaxation {
+    public:
+        typedef VoronoiDiagram::Output Input;
+        typedef std::pair<std::map<int, VoronoiDiagram::CenterNode>, std::map<int, VoronoiDiagram::EdgeNode>> Output;
 
-public:
-    void input(Input vd);
-    void generate();
-    Output output();
-    void draw(Drawer &drawer);
-};
+    private:
+        Input _inputVd;
+        Output _relaxedVd;
+
+    public:
+        void input(const Input &vd);
+
+        void generate();
+
+        Output output();
+
+        void prepareVertexes(Drawer &drawer);
+    };
+
+}
 
 #endif //WORLDGENERATOR_LLOYD_H

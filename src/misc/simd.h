@@ -194,4 +194,6 @@ ALWAYS_INLINE void invert(mat3 &m);
 // Referenced: http://swiborg.com/download/dev/pdf/simd-inverse-of-4x4-matrix.pdf
 ALWAYS_INLINE void invert(mat4 &m);
 
+
+
 #endif //WORLDGENERATOR_SIMD_H

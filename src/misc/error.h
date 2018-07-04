@@ -7,7 +7,11 @@
 
 #include <cassert>
 
-void SaveErrorData();
+namespace wg {
+
+    void SaveErrorData();
+
+}
 
 #define assertWithSave(COND) do { if (!(COND)) { SaveErrorData(); assert(COND); } } while (false)
 

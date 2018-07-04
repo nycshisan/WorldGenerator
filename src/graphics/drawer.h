@@ -8,31 +8,25 @@
 #include "window.h"
 #include "../data/blockInfo.h"
 
-class Drawer {
-    Window *_window;
+namespace wg {
 
-    sf::CircleShape _pointShape;
+    class Drawer {
+        Window *_window;
 
-    enum DrawBufferType {
-        PointBuf,
-        LineBuf,
-        TriangleBuf
+        sf::CircleShape _pointShape;
+
+        sf::VertexArray _pointsBuf, _linesBuf, _trisBuf;
+
+    public:
+        explicit Drawer();
+
+        void setWindow(Window *window);
+
+        void clearVertexes();
+        void appendVertex(sf::PrimitiveType type, const sf::Vertex &vertex);
+        void commit();
     };
 
-    int _drawBufSize = 128;
-    DrawBufferType _crtBufType;
-
-public:
-    explicit Drawer(Window *window);
-
-    void draw(const Point &point);
-    void draw(const Point &point1, const Point &point2);
-    void draw(const Triangle &tri);
-    void draw(const BlockInfo &blockInfo);
-    void draw(const BlockInfo &blockInfo, const sf::Color &color);
-    void draw(const EdgeInfo &edgeInfo);
-
-    void commit();
-};
+}
 
 #endif //WORLDGENERATOR_DRAWER_H

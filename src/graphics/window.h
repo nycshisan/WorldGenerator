@@ -15,34 +15,40 @@
 #include "button.h"
 #include "../misc/misc.h"
 
-class Window : public sf::RenderWindow {
-    char _defaultTitle[20] = "World Generator";
-    int _width, _height, _barHeight, _barSeparatorHeight;
+namespace wg {
 
-    sf::RectangleShape _barSeparator;
+    class Window : public sf::RenderWindow {
+        char _defaultTitle[20] = "World Generator";
+        int _width, _height, _barHeight, _barSeparatorHeight;
 
-    sf::Font _font;
+        sf::RectangleShape _barSeparator;
 
-    sf::Text _hintLabel;
-    std::string _hintLabelContent;
+        sf::Font _font;
 
-    std::vector<Button> _buttons;
+        sf::Text _hintLabel;
+        std::string _hintLabelContent;
 
-    char _titleBuffer[40];
+        std::vector<Button> _buttons;
 
-    sf::Clock _clock;
-    int _updateFPSCounter = 0, _updateFPSFrameInterval = 10;
-    void _updateFPS();
+        char _titleBuffer[40];
 
-    void _displayBar();
-    void _displayMap();
+        sf::Clock _clock;
+        int _updateFPSCounter = 0, _updateFPSFrameInterval = 10;
 
-public:
-    Window(int width, int height, int barHeight);
+        void _updateFPS();
 
-    void setHintLabel(const std::string &content);
+        void _displayBar();
 
-    void play();
-};
+        void _displayMap();
+
+    public:
+        Window(int width, int height, int barHeight);
+
+        void setHintLabel(const std::string &content);
+
+        void play();
+    };
+
+}
 
 #endif //WORLDGENERATOR_WINDOW_H

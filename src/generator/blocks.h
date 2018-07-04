@@ -12,20 +12,32 @@
 
 #include "../data/blockInfo.h"
 
-class Blocks {
-public:
-    typedef LloydRelaxation::Output Input;
-    typedef std::vector<std::shared_ptr<BlockInfo>> Output;
+namespace wg {
 
-private:
-    Input _relaxedVd;
-    Output _blockInfos;
+    class BlocksDrawable {
+    protected:
+        void _prepareBlockVertexes(Drawer &drawer, const std::shared_ptr<BlockInfo> &blockInfo, const sf::Color &color);
+    };
 
-public:
-    void input(Input relaxedVd);
-    void generate();
-    Output output();
-    void draw(Drawer &drawer);
-};
+    class Blocks : protected BlocksDrawable {
+    public:
+        typedef LloydRelaxation::Output Input;
+        typedef std::vector<std::shared_ptr<BlockInfo>> Output;
+
+    private:
+        Input _relaxedVd;
+        Output _blockInfos;
+
+    public:
+        void input(const Input &relaxedVd);
+
+        void generate();
+
+        Output output();
+
+        void prepareVertexes(Drawer &drawer);
+    };
+
+}
 
 #endif //WORLDGENERATOR_BLOCKS_H

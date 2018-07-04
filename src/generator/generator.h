@@ -16,50 +16,54 @@
 #include "blocks.h"
 #include "coast.h"
 
-enum GeneratorState {
-    Ready,
-    BlockCenters,
-    DelaunayTriangles,
-    VoronoiDiagram,
-    LloydRelaxation,
-    Blocks,
-    Coast,
-};
+namespace wg {
 
-class Generator {
-    GeneratorState _state = Ready;
+    enum GeneratorState {
+        Ready,
+        BlockCenters,
+        DelaunayTriangles,
+        VoronoiDiagram,
+        LloydRelaxation,
+        Blocks,
+        Coast,
+    };
 
-    void _nextState();
-    void _lastState();
-    void _setLabel(Window &window);
+    class Generator {
+        GeneratorState _state = Ready;
 
-    std::shared_ptr<Drawer> _drawer;
+        void _nextState();
 
-    class BlockCenters _blockCenters;
-    class DelaunayTriangles _delaunayTriangles;
-    class VoronoiDiagram _voronoiDiagram;
-    class LloydRelaxation _lloydRelaxation;
-    class Blocks _blocks;
-    class Coast _coast;
+        void _lastState();
 
-    BlockCenters::Output _centers;
-    DelaunayTriangles::Output _tris;
-    VoronoiDiagram::Output _vd;
-    LloydRelaxation::Output _relaxedVd;
-    Blocks::Output _blockInfos;
+        void _setLabel(Window &window);
 
-public:
-    static Generator &SharedInstance();
+        Drawer _drawer;
 
-    void display(Window &window);
+        class BlockCenters _blockCenters;
+        class DelaunayTriangles _delaunayTriangles;
+        class VoronoiDiagram _voronoiDiagram;
+        class LloydRelaxation _lloydRelaxation;
+        class Blocks _blocks;
+        class Coast _coast;
 
-    static void NextButtonResponder(Window &window);
-    static void RedoButtonResponder(Window &window);
-    static void UndoButtonResponder(Window &window);
-    static void SaveButtonResponder(Window &window);
-    static void LoadButtonResponder(Window &window);
+    public:
+        static Generator &SharedInstance();
 
-    void SaveErrorData();
-};
+        void display(Window &window);
+
+        static void NextButtonResponder(Window &window);
+
+        static void RedoButtonResponder(Window &window);
+
+        static void UndoButtonResponder(Window &window);
+
+        static void SaveButtonResponder(Window &window);
+
+        static void LoadButtonResponder(Window &window);
+
+        void SaveErrorData();
+    };
+
+}
 
 #endif //WORLDGENERATOR_GENERATOR_H

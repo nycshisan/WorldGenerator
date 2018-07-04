@@ -9,16 +9,22 @@
 
 #include <random>
 
-class Coast {
-public:
-    typedef Blocks::Output Input;
-private:
-    Input _blockInfos;
+namespace wg {
 
-public:
-    void input(Input input);
-    void generate();
-    void draw(Drawer &drawer);
-};
+    class Coast : protected BlocksDrawable {
+    public:
+        typedef Blocks::Output Input;
+    private:
+        Input _blockInfos;
+
+    public:
+        void input(const Input &input);
+
+        void generate();
+
+        void prepareVertexes(Drawer &drawer);
+    };
+
+}
 
 #endif //WORLDGENERATOR_COAST_H
