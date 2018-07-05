@@ -24,7 +24,9 @@ namespace wg {
         float minContinentCenterDist = float(width * width + height * height) / (continentNumber * continentNumber);
         float noiseInfluence = CONF.getCoastNoiseInfluence();
 
-        std::mt19937 rg(randomSeed);
+        int rs = CONF.getCoastUseStaticRandomSeed() ? randomSeed : std::random_device()();
+
+        std::mt19937 rg(rs);
         for (auto &blockInfo: _blockInfos) {
             blockInfo->coastType = BlockInfo::CoastType::Land;
             blockInfo->isContinentCenter = false;
@@ -45,30 +47,29 @@ namespace wg {
             }
         }
 
+        std::vector<float> minDists;
+        float maxMinDist = std::numeric_limits<float>::min();
         for (auto &block: _blockInfos) {
             auto pos = block->center;
-            float pn = NoiseGenerator::PerlinNoise(pos.x, pos.y);
-            float minDist1 = std::numeric_limits<float>::max(), minDist2 = std::numeric_limits<float>::max();
-            float maxDist = std::numeric_limits<float>::min();
+            float minDist = std::numeric_limits<float>::max();
             for (auto &center: continentCenters) {
                 float dist = pos.distance(center->center);
-                if (dist < minDist1) {
-                    minDist2 = minDist1;
-                    minDist1 = dist;
-                } else if (dist < minDist2) {
-                    minDist2 = dist;
-                }
-                if (dist > maxDist) {
-                    maxDist = dist;
+                if (dist < minDist) {
+                    minDist = dist;
                 }
             }
-            minDist1 /= minContinentCenterDist;
-            minDist2 /= minContinentCenterDist;
+            if (minDist > maxMinDist) {
+                maxMinDist = minDist;
+            }
+            minDists.emplace_back(minDist);
+        }
+        for (int i = 0; i < minDists.size(); ++i) {
+            auto &block = _blockInfos[i];
+            auto pos = block->center;
+            float pn = NoiseGenerator::PerlinNoise(pos.x, pos.y);
             float noise;
-            if (continentNumber > 1)
-                noise = pn * (noiseInfluence + minDist1 - std::abs(minDist1 - minDist2)) / noiseInfluence;
-            else
-                noise = (pn * noiseInfluence + minDist1) / (noiseInfluence + 1.0f);
+            float minDistFactor = minDists[i] / maxMinDist;
+            noise = pn * noiseInfluence + minDistFactor * (1.0f - noiseInfluence);
             if (noise > oceanFactor)
                 block->coastType = BlockInfo::CoastType::Ocean;
             else if (noise > seaFactor)
@@ -92,19 +93,25 @@ namespace wg {
 
     void Coast::prepareVertexes(Drawer &drawer) {
         for (auto &blockInfo: _blockInfos) {
+            sf::Color oceanColor = sf::Color::Blue;
             if (blockInfo->coastType == BlockInfo::CoastType::Ocean) {
-                _prepareBlockVertexes(drawer, blockInfo, sf::Color::Blue);
+                _prepareBlockVertexes(drawer, blockInfo, oceanColor);
             }
-            sf::Color seaColor;
-            seaColor.a = (sf::Color::Blue.a + sf::Color::White.a) / (unsigned char) (2);
-            seaColor.g = (sf::Color::Blue.g + sf::Color::White.g) / (unsigned char) (2);
-            seaColor.b = (sf::Color::Blue.b + sf::Color::White.b) / (unsigned char) (2);
+
+            sf::Color seaColor = ColorBlend(sf::Color::White, sf::Color::Blue, 0.5);
             if (blockInfo->coastType == BlockInfo::CoastType::Sea) {
                 _prepareBlockVertexes(drawer, blockInfo, seaColor);
             }
+
+            sf::Color landColor = sf::Color(0x66, 0x33, 0x00);
+            if (blockInfo->coastType == BlockInfo::CoastType::Land) {
+                _prepareBlockVertexes(drawer, blockInfo, landColor);
+            }
+
             if (blockInfo->isContinentCenter) {
                 _prepareBlockVertexes(drawer, blockInfo, sf::Color::White);
             }
+
             for (auto &edgeInfo: blockInfo->edges) {
                 drawer.appendVertex(sf::Lines, (*edgeInfo->vertexes.begin())->point.vertex);
                 drawer.appendVertex(sf::Lines, (*edgeInfo->vertexes.rbegin())->point.vertex);

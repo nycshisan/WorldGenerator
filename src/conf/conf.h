@@ -48,6 +48,8 @@ namespace wg {
 
         int getLloydIteration() const;
 
+        bool getCoastUseStaticRandomSeed() const;
+
         int getCoastContinentNumber() const;
 
         float getCoastOceanFactor() const;

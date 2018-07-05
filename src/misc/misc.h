@@ -10,5 +10,6 @@
 #include "log.h"
 #include "error.h"
 #include "noise.h"
+#include "gfxmath.h"
 
 #endif //WORLDGENERATOR_MISC_H

@@ -75,6 +75,10 @@ namespace wg {
         return (*this)["lloyd"]["iteration"].GetInt();
     }
 
+    bool Configure::getCoastUseStaticRandomSeed() const {
+        return (*this)["coast"]["useStaticRandomSeed"].GetBool();
+    }
+
     int Configure::getCoastContinentNumber() const {
         return (*this)["coast"]["continentNumber"].GetInt();
     }
@@ -86,7 +90,6 @@ namespace wg {
     float Configure::getCoastSeaFactor() const {
         return (*this)["coast"]["seaFactor"].GetFloat();
     }
-
 
     float Configure::getCoastNoiseInfluence() const {
         return (*this)["coast"]["noiseInfluence"].GetFloat();
