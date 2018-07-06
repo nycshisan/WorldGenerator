@@ -12,9 +12,9 @@
 
 namespace wg {
 
-    class Window;
+    class MainWindow;
 
-    typedef std::function<void(Window &)> ButtonResponder;
+    typedef std::function<void(MainWindow &)> ButtonResponder;
 
     class Button : public sf::RectangleShape {
         sf::Text _text;
@@ -42,7 +42,7 @@ namespace wg {
 
         void hover(const sf::Window &window);
 
-        void respond(Window &window, int x, int y);
+        void respond(MainWindow &window, int x, int y);
     };
 
 }

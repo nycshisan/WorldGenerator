@@ -9,6 +9,8 @@
 
 #include <random>
 
+#include "config.h"
+
 namespace wg {
 
     class Coast : protected BlocksDrawable {
@@ -23,6 +25,8 @@ namespace wg {
         void generate();
 
         void prepareVertexes(Drawer &drawer);
+
+        void getConfigs(std::vector<std::shared_ptr<GeneratorConfig>> &configs);
     };
 
 }

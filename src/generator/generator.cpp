@@ -6,43 +6,49 @@
 
 #include "../misc/log.h"
 #include "../conf/conf.h"
+#include "../graphics/window.h"
+#include "../graphics/drawer.h"
 
 namespace wg {
 
-    void Generator::NextButtonResponder(Window &window) {
+    Generator::Generator() {
+        this->_drawer = std::make_shared<Drawer>();
+    }
+
+    void Generator::NextButtonResponder(MainWindow &window) {
         Generator &generator = Generator::SharedInstance();
-        if (generator._state != Coast)
-            generator._drawer.clearVertexes();
-        switch (generator._state) {
+        if (generator.state != Coast)
+            generator._drawer->clearVertexes();
+        switch (generator.state) {
             case Ready:
                 generator._blockCenters.input();
                 generator._blockCenters.generate();
-                generator._blockCenters.prepareVertexes(generator._drawer);
+                generator._blockCenters.prepareVertexes(*generator._drawer);
                 break;
-            case BlockCenters:
+            case Centers:
                 generator._delaunayTriangles.input(generator._blockCenters.output());
                 generator._delaunayTriangles.generate();
-                generator._delaunayTriangles.prepareVertexes(generator._drawer);
+                generator._delaunayTriangles.prepareVertexes(*generator._drawer);
                 break;
             case DelaunayTriangles:
                 generator._voronoiDiagram.input(generator._blockCenters.output(), generator._delaunayTriangles.output());
                 generator._voronoiDiagram.generate();
-                generator._voronoiDiagram.prepareVertexes(generator._drawer);
+                generator._voronoiDiagram.prepareVertexes(*generator._drawer);
                 break;
             case VoronoiDiagram:
                 generator._lloydRelaxation.input(generator._voronoiDiagram.output());
                 generator._lloydRelaxation.generate();
-                generator._lloydRelaxation.prepareVertexes(generator._drawer);
+                generator._lloydRelaxation.prepareVertexes(*generator._drawer);
                 break;
             case LloydRelaxation:
                 generator._blocks.input(generator._lloydRelaxation.output());
                 generator._blocks.generate();
-                generator._blocks.prepareVertexes(generator._drawer);
+                generator._blocks.prepareVertexes(*generator._drawer);
                 break;
             case Blocks:
                 generator._coast.input(generator._blocks.output());
                 generator._coast.generate();
-                generator._coast.prepareVertexes(generator._drawer);
+                generator._coast.prepareVertexes(*generator._drawer);
                 break;
             default:
                 break;
@@ -51,72 +57,54 @@ namespace wg {
         generator._setLabel(window);
     }
 
-    void Generator::RedoButtonResponder(Window &window) {
+    void Generator::RedoButtonResponder(MainWindow &window) {
         CONF.reload();
         Generator &generator = Generator::SharedInstance();
-        generator._drawer.clearVertexes();
-        switch (generator._state) {
-            case Ready:
-                break;
-            case BlockCenters:
-                generator._blockCenters.generate();
-                generator._blockCenters.prepareVertexes(generator._drawer);
-                break;
-            case DelaunayTriangles:
-                generator._delaunayTriangles.generate();
-                generator._delaunayTriangles.prepareVertexes(generator._drawer);
-                break;
-            case VoronoiDiagram:
-                generator._voronoiDiagram.generate();
-                generator._voronoiDiagram.prepareVertexes(generator._drawer);
-                break;
-            case LloydRelaxation:
-                generator._lloydRelaxation.generate();
-                generator._lloydRelaxation.prepareVertexes(generator._drawer);
-                break;
-            case Blocks:
-                generator._blocks.generate();
-                generator._blocks.prepareVertexes(generator._drawer);
-                break;
-            case Coast:
-                generator._coast.generate();
-                generator._coast.prepareVertexes(generator._drawer);
-                break;
-            default:
-                LOGERR("Invalid generator state!");
-        }
+        generator.redo();
     }
 
-    void Generator::UndoButtonResponder(Window &window) {
+    void Generator::UndoButtonResponder(MainWindow &window) {
         Generator &generator = Generator::SharedInstance();
         generator._lastState();
         RedoButtonResponder(window);
         generator._setLabel(window);
     }
 
-    void Generator::SaveButtonResponder(Window &window) {
+    void Generator::SaveButtonResponder(MainWindow &window) {
         Generator &generator = Generator::SharedInstance();
-        switch (generator._state) {
-            case BlockCenters:
+        switch (generator.state) {
+            case Centers:
                 generator._blockCenters.save();
                 window.setHintLabel("Centers saved.");
                 break;
             default:
                 window.setHintLabel("Can't save.");
-                generator.SaveErrorData();
+                generator.saveErrorData();
                 break;
         }
     }
 
-    void Generator::LoadButtonResponder(Window &window) {
+    void Generator::LoadButtonResponder(MainWindow &window) {
         Generator &generator = Generator::SharedInstance();
-        switch (generator._state) {
-            case BlockCenters:
+        switch (generator.state) {
+            case Centers:
                 generator._blockCenters.load();
                 window.setHintLabel("Centers loaded.");
                 break;
             default:
                 window.setHintLabel("Can't load.");
+                break;
+        }
+    }
+
+    void Generator::ConfigButtonResponder(MainWindow &window) {
+        Generator &generator = Generator::SharedInstance();
+        switch (generator.state) {
+            case Coast:
+                window.openConfigWindow(&generator);
+                break;
+            default:
+                window.setHintLabel("No visualizable configuration for this stage.");
                 break;
         }
     }
@@ -128,61 +116,63 @@ namespace wg {
     }
 
     void Generator::_nextState() {
-        switch (_state) {
+        switch (state) {
             case Ready:
-                _state = BlockCenters;
+                state = Centers;
                 break;
-            case BlockCenters:
-                _state = DelaunayTriangles;
+            case Centers:
+                state = DelaunayTriangles;
                 break;
             case DelaunayTriangles:
-                _state = VoronoiDiagram;
+                state = VoronoiDiagram;
                 break;
             case VoronoiDiagram:
-                _state = LloydRelaxation;
+                state = LloydRelaxation;
                 break;
             case LloydRelaxation:
-                _state = Blocks;
+                state = Blocks;
                 break;
             case Blocks:
-                _state = Coast;
+                state = Coast;
                 break;
             default:
                 break;
         }
+        _prepareConfigs();
     }
 
     void Generator::_lastState() {
-        switch (_state) {
-            case BlockCenters:
-                _state = Ready;
+        switch (state) {
+            case Centers:
+                state = Ready;
                 break;
             case DelaunayTriangles:
-                _state = BlockCenters;
+                state = Centers;
                 break;
             case VoronoiDiagram:
-                _state = DelaunayTriangles;
+                state = DelaunayTriangles;
                 break;
             case LloydRelaxation:
-                _state = VoronoiDiagram;
+                state = VoronoiDiagram;
                 break;
             case Blocks:
-                _state = LloydRelaxation;
+                state = LloydRelaxation;
                 break;
             case Coast:
-                _state = Blocks;
+                state = Blocks;
                 break;
             default:
                 break;
         }
+        _prepareConfigs();
     }
 
-    void Generator::_setLabel(Window &window) {
-        switch (_state) {
+    void Generator::_setLabel(MainWindow &window) {
+        switch (state) {
             case Ready:
                 window.setHintLabel("Ready!");
                 break;
-            case BlockCenters:
+            case Centers:
                 window.setHintLabel("Generated block centers.");
                 break;
             case DelaunayTriangles:
@@ -205,13 +195,58 @@ namespace wg {
         }
     }
 
-    void Generator::display(Window &window) {
-        _drawer.setWindow(&window);
-        _drawer.commit();
+    void Generator::display(MainWindow &window) {
+        _drawer->setWindow(&window);
+        _drawer->commit();
     }
 
-    void Generator::SaveErrorData() {
+    void Generator::saveErrorData() {
         _blockCenters.save();
+    }
+
+    void Generator::_prepareConfigs() {
+        configs.clear();
+        switch (state) {
+            case Coast:
+                _coast.getConfigs(configs);
+                break;
+            default:
+                break;
+        }
+    }
+
+    void Generator::redo() {
+        _drawer->clearVertexes();
+        switch (state) {
+            case Ready:
+                break;
+            case Centers:
+                _blockCenters.generate();
+                _blockCenters.prepareVertexes(*_drawer);
+                break;
+            case DelaunayTriangles:
+                _delaunayTriangles.generate();
+                _delaunayTriangles.prepareVertexes(*_drawer);
+                break;
+            case VoronoiDiagram:
+                _voronoiDiagram.generate();
+                _voronoiDiagram.prepareVertexes(*_drawer);
+                break;
+            case LloydRelaxation:
+                _lloydRelaxation.generate();
+                _lloydRelaxation.prepareVertexes(*_drawer);
+                break;
+            case Blocks:
+                _blocks.generate();
+                _blocks.prepareVertexes(*_drawer);
+                break;
+            case Coast:
+                _coast.generate();
+                _coast.prepareVertexes(*_drawer);
+                break;
+            default:
+                LOGERR("Invalid generator state!");
+        }
     }
 
 }

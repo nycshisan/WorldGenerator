@@ -34,7 +34,7 @@ namespace wg {
         };
 
         typedef DelaunayTriangles::Output InputTris;
-        typedef BlockCenters::Output InputCenters;
+        typedef Centers::Output InputCenters;
         typedef std::pair<std::map<int, CenterNode>, std::map<int, EdgeNode>> Output;
     private:
         InputCenters _centers;

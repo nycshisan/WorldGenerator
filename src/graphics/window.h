@@ -13,11 +13,19 @@
 #include "SFML/Graphics.hpp"
 
 #include "button.h"
+#include "configWindow.h"
 #include "../misc/misc.h"
 
 namespace wg {
 
-    class Window : public sf::RenderWindow {
+    class Generator;
+
+    class MainWindow : public sf::RenderWindow {
+        friend class ConfigWindow;
+
+        static constexpr int _BaseBarHeight = 32;
+        static constexpr int _BaseBarSeparatorHeight = 1;
+
         char _defaultTitle[20] = "World Generator";
         int _width, _height, _barHeight, _barSeparatorHeight;
 
@@ -41,12 +49,18 @@ namespace wg {
 
         void _displayMap();
 
+        void _displayConfigWindow();
+
+        ConfigWindow *configWindow = nullptr;
+
     public:
-        Window(int width, int height, int barHeight);
+        MainWindow(int width, int height);
 
         void setHintLabel(const std::string &content);
 
         void play();
+
+        void openConfigWindow(Generator *generator);
     };
 
 }

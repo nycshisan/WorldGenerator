@@ -54,7 +54,7 @@ namespace wg {
             float exRadius = 0;
         };
 
-        typedef BlockCenters::Output Input;
+        typedef Centers::Output Input;
         typedef std::unordered_set<NetNode *> Output;
     private:
         Input _centers{};

@@ -2,20 +2,20 @@
 // Created by Nycshisan on 2018/4/16.
 //
 
-#include <MacTypes.h>
+#include "window.h"
 #include "drawer.h"
 #include "../conf/conf.h"
 
 namespace wg {
 
     Drawer::Drawer() {
-        _pointShape.setRadius(CONF.getUIPointRadius());
+        _pointShape.setRadius(int(_BasePointRadius * CONF.getUIScale()));
         _pointsBuf.setPrimitiveType(sf::Points);
         _linesBuf.setPrimitiveType(sf::Lines);
         _trisBuf.setPrimitiveType(sf::Triangles);
     }
 
-    void Drawer::setWindow(Window *window) {
+    void Drawer::setWindow(MainWindow *window) {
         this->_window = window;
     }
 

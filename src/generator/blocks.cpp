@@ -5,6 +5,7 @@
 #include "blocks.h"
 
 #include "../conf/conf.h"
+#include "../graphics/drawer.h"
 
 namespace wg {
 

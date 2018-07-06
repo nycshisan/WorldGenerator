@@ -5,7 +5,7 @@
 #include "delaunay.h"
 
 #include "../conf/conf.h"
-#include "generator.h"
+#include "../graphics/drawer.h"
 
 namespace wg {
 

@@ -5,10 +5,6 @@
 #ifndef WORLDGENERATOR_GENERATOR_H
 #define WORLDGENERATOR_GENERATOR_H
 
-#include <memory>
-
-#include "../graphics/window.h"
-#include "../graphics/drawer.h"
 #include "centers.h"
 #include "delaunay.h"
 #include "voronoi.h"
@@ -16,11 +12,16 @@
 #include "blocks.h"
 #include "coast.h"
 
+#include "config.h"
+
 namespace wg {
+
+    class MainWindow;
+    class Drawer;
 
     enum GeneratorState {
         Ready,
-        BlockCenters,
+        Centers,
         DelaunayTriangles,
         VoronoiDiagram,
         LloydRelaxation,
@@ -29,39 +30,50 @@ namespace wg {
     };
 
     class Generator {
-        GeneratorState _state = Ready;
+
+        Generator();
 
         void _nextState();
 
         void _lastState();
 
-        void _setLabel(Window &window);
+        void _setLabel(MainWindow &window);
 
-        Drawer _drawer;
+        std::shared_ptr<Drawer> _drawer;
 
-        class BlockCenters _blockCenters;
+        class Centers _blockCenters;
         class DelaunayTriangles _delaunayTriangles;
         class VoronoiDiagram _voronoiDiagram;
         class LloydRelaxation _lloydRelaxation;
         class Blocks _blocks;
         class Coast _coast;
 
+        void _prepareConfigs();
+
     public:
+        GeneratorState state = Ready;
+
+        std::vector<std::shared_ptr<GeneratorConfig>> configs;
+
         static Generator &SharedInstance();
 
-        void display(Window &window);
+        void display(MainWindow &window);
 
-        static void NextButtonResponder(Window &window);
+        void redo();
 
-        static void RedoButtonResponder(Window &window);
+        void saveErrorData();
 
-        static void UndoButtonResponder(Window &window);
+        static void NextButtonResponder(MainWindow &window);
 
-        static void SaveButtonResponder(Window &window);
+        static void RedoButtonResponder(MainWindow &window);
 
-        static void LoadButtonResponder(Window &window);
+        static void UndoButtonResponder(MainWindow &window);
 
-        void SaveErrorData();
+        static void SaveButtonResponder(MainWindow &window);
+
+        static void LoadButtonResponder(MainWindow &window);
+
+        static void ConfigButtonResponder(MainWindow &window);
     };
 
 }

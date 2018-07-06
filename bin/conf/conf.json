@@ -1,32 +1,29 @@
 {
-  "map": {
-    "width": 2160,
-    "height": 1350,
-    "randomSeed": 666233
-  },
-  "ui": {
-    "barHeight": 64,
-    "barSeparatorHeight": 2,
-    "font": "assets/PingFang.ttc",
-    "pointRadius": 2.0
-  },
-  "centers": {
-    "number": 6000,
-    "padding": 3,
-    "span": 3
-  },
-  "delaunay": {
-    "showBoundingTriangles": false
-  },
-  "lloyd": {
-    "factor": 0.6,
-    "iteration": 1
-  },
-  "coast": {
-    "useStaticRandomSeed": false,
-    "continentNumber": 4,
-    "oceanFactor": 0.56,
-    "seaFactor": 0.53,
-    "noiseInfluence": 0.63
-  }
+    "map": {
+        "width": 2160,
+        "height": 1350,
+        "randomSeed": 666233
+    },
+    "ui": {
+        "scale": 2.0,
+        "font": "assets/PingFang.ttc"
+    },
+    "centers": {
+        "number": 1000,
+        "padding": 3,
+        "span": 3
+    },
+    "delaunay": {
+        "showBoundingTriangles": false
+    },
+    "lloyd": {
+        "factor": 0.6,
+        "iteration": 1
+    },
+    "coast": {
+        "continentNumber": 4,
+        "oceanFactor": 0.6699999570846558,
+        "seaFactor": 0.7099999785423279,
+        "noiseInfluence": 0.8199999928474426
+    }
 }

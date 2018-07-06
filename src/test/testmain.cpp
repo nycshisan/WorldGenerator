@@ -6,12 +6,13 @@
 #include "../graphics/window.h"
 #include "../generator/generator.h"
 
+using namespace wg;
+
 void testVD() {
     int width = CONF.getMapWidth();
     int height = CONF.getMapHeight();
-    int barHeight = CONF.getUIBarHeight();
 
-    Window window(width, height, barHeight);
+    MainWindow window(width, height);
 
     int testNumber = 200;
     bool loadData = false;
@@ -38,4 +39,21 @@ void testVD() {
 }
 
 int main() {
+    int width = CONF.getMapWidth();
+    int height = CONF.getMapHeight();
+
+    wg::MainWindow window(width, height);
+
+    wg::Generator::NextButtonResponder(window);
+    wg::Generator::NextButtonResponder(window);
+    wg::Generator::NextButtonResponder(window);
+    wg::Generator::NextButtonResponder(window);
+    wg::Generator::NextButtonResponder(window);
+    wg::Generator::NextButtonResponder(window);
+
+    wg::Generator::ConfigButtonResponder(window);
+
+    window.play();
+
+    return 0;
 }

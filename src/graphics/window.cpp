@@ -6,28 +6,30 @@
 
 #include "window.h"
 
-#include "../generator/generator.h"
 #include "../conf/conf.h"
+#include "../generator/generator.h"
 
 namespace wg {
 
-    const static std::vector<std::pair<std::string, std::function<void(Window &)>>> _ButtonMaterials = { // NOLINT
+    const static std::vector<std::pair<std::string, std::function<void(MainWindow &)>>> _ButtonMaterials = { // NOLINT
             {"Next", Generator::NextButtonResponder},
             {"Redo", Generator::RedoButtonResponder},
             {"Undo", Generator::UndoButtonResponder},
             {"Save", Generator::SaveButtonResponder},
-            {"Load", Generator::LoadButtonResponder}
+            {"Load", Generator::LoadButtonResponder},
+            {"Config", Generator::ConfigButtonResponder}
     };
 
-    Window::Window(int width, int height, int barHeight) : sf::RenderWindow(
-            sf::VideoMode((unsigned int) width, (unsigned int) (height + 2 * barHeight)), "") {
+    MainWindow::MainWindow(int width, int height) : sf::RenderWindow(
+            sf::VideoMode((unsigned int)width, (unsigned int)(height + _BaseBarHeight * CONF.getUIScale() * 2)), "") {
         setTitle(_defaultTitle);
         setVerticalSyncEnabled(true);
         _width = width;
         _height = height;
-        _barHeight = barHeight;
+        float uiScale = CONF.getUIScale();
+        _barHeight = int(_BaseBarHeight * uiScale);
 
-        _barSeparatorHeight = CONF.getUIBarSeparatorHeight();
+        _barSeparatorHeight = int(_BaseBarSeparatorHeight * uiScale);
 
         // Initialize bar separators
         _barSeparator.setSize(sf::Vector2f(_width, _barSeparatorHeight));
@@ -39,7 +41,7 @@ namespace wg {
 
         _hintLabel.setFont(_font);
 
-        auto hintCharacterSize = (unsigned int) ((_barHeight - _barSeparatorHeight) * 0.8);
+        auto hintCharacterSize = (unsigned int)((_barHeight - _barSeparatorHeight) * 0.8);
         _hintLabel.setCharacterSize(hintCharacterSize);
 
         _hintLabel.setFillColor(sf::Color::White);
@@ -69,7 +71,7 @@ namespace wg {
         }
     }
 
-    void Window::play() {
+    void MainWindow::play() {
         while (isOpen()) {
             sf::Event event = {};
             while (pollEvent(event)) {
@@ -112,12 +114,13 @@ namespace wg {
             _displayMap();
             _displayBar();
 
+            _displayConfigWindow();
 
             display();
         }
     }
 
-    void Window::_displayBar() {
+    void MainWindow::_displayBar() {
         // Display separators
         _barSeparator.setPosition(0, _height);
         draw(_barSeparator);
@@ -135,15 +138,15 @@ namespace wg {
         }
     }
 
-    void Window::_displayMap() {
+    void MainWindow::_displayMap() {
         Generator::SharedInstance().display(*this);
     }
 
-    void Window::setHintLabel(const std::string &content) {
+    void MainWindow::setHintLabel(const std::string &content) {
         _hintLabelContent = content;
     }
 
-    void Window::_updateFPS() {
+    void MainWindow::_updateFPS() {
         float interval = _clock.restart().asSeconds();
         float FPS = 1.0f / interval;
         if (_updateFPSCounter == _updateFPSFrameInterval - 1) {
@@ -151,6 +154,26 @@ namespace wg {
             setTitle(_titleBuffer);
         }
         _updateFPSCounter = (_updateFPSCounter + 1) % _updateFPSFrameInterval;
+    }
+
+    void MainWindow::openConfigWindow(Generator *generator) {
+        if (configWindow == nullptr) {
+            configWindow = new ConfigWindow(generator);
+            LOGOUT("Configuration window opened.");
+        }
+        configWindow->requestFocus();
+    }
+
+    void MainWindow::_displayConfigWindow() {
+        if (configWindow != nullptr) {
+            if (configWindow->isOpen()) {
+                configWindow->play();
+            } else {
+                LOGOUT("Configuration window closed.");
+                delete configWindow;
+                configWindow = nullptr;
+            }
+        }
     }
 
 }

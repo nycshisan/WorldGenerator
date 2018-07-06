@@ -8,18 +8,19 @@
 #include <fstream>
 
 #include "../conf/conf.h"
+#include "../graphics/drawer.h"
 
 namespace wg {
 
-    void BlockCenters::input() {}
+    void Centers::input() {}
 
-    void BlockCenters::generate() {
+    void Centers::generate() {
         int width = CONF.getMapWidth(), height = CONF.getMapHeight();
         int span = CONF.getCenterSpan();
         int randomSeed = CONF.getMapRandomSeed();
 
         unsigned char occupied[width][height];
-        std::memset(occupied, 0, width * height);
+        std::memset(occupied, 0, static_cast<size_t>(width * height));
 
         int n = CONF.getCenterNumber();
         int padding = CONF.getCenterPadding();
@@ -52,24 +53,24 @@ namespace wg {
         }
     }
 
-    BlockCenters::Output BlockCenters::output() {
+    Centers::Output Centers::output() {
         return _centers;
     }
 
-    void BlockCenters::prepareVertexes(Drawer &drawer) {
+    void Centers::prepareVertexes(Drawer &drawer) {
         for (auto &point : _centers) {
             drawer.appendVertex(sf::Points, point.vertex);
         }
     }
 
-    void BlockCenters::save() {
+    void Centers::save() {
         std::ofstream outfile("logs/centers.txt", std::ios_base::trunc);
         for (auto &center: _centers) {
             outfile << (int) center.x << " " << (int) center.y << std::endl;
         }
     }
 
-    void BlockCenters::load() {
+    void Centers::load() {
         std::ifstream infile("logs/centers.txt");
         std::vector<Point> centers;
         while (!infile.eof()) {

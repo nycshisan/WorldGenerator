@@ -5,6 +5,7 @@
 #include "lloyd.h"
 
 #include "../conf/conf.h"
+#include "../graphics/drawer.h"
 
 namespace wg {
 
@@ -43,12 +44,12 @@ namespace wg {
                 centers.emplace_back(pos);
             }
 
-            DelaunayTriangles delaunayTriangles;
+            class DelaunayTriangles delaunayTriangles;
             delaunayTriangles.input(centers);
             delaunayTriangles.generate();
             auto tris = delaunayTriangles.output();
 
-            VoronoiDiagram voronoiDiagram;
+            class VoronoiDiagram voronoiDiagram;
             voronoiDiagram.input(centers, tris);
             voronoiDiagram.generate();
             _relaxedVd = voronoiDiagram.output();

@@ -5,13 +5,18 @@
 #ifndef WORLDGENERATOR_DRAWER_H
 #define WORLDGENERATOR_DRAWER_H
 
-#include "window.h"
+#include <SFML/Graphics.hpp>
+
 #include "../data/blockInfo.h"
 
 namespace wg {
 
+    class MainWindow;
+
     class Drawer {
-        Window *_window;
+        static constexpr float _BasePointRadius = 1.0;
+
+        MainWindow *_window;
 
         sf::CircleShape _pointShape;
 
@@ -20,7 +25,7 @@ namespace wg {
     public:
         explicit Drawer();
 
-        void setWindow(Window *window);
+        void setWindow(MainWindow *window);
 
         void clearVertexes();
         void appendVertex(sf::PrimitiveType type, const sf::Vertex &vertex);

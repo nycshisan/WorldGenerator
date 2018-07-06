@@ -5,6 +5,7 @@
 #include "voronoi.h"
 
 #include "../conf/conf.h"
+#include "../graphics/drawer.h"
 
 namespace wg {
 

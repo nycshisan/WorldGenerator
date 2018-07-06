@@ -58,7 +58,7 @@ namespace wg {
         }
     }
 
-    void Button::respond(Window &window, int x, int y) {
+    void Button::respond(MainWindow &window, int x, int y) {
         if (_checkPosInButton(x, y)) {
             _responder(window);
         }

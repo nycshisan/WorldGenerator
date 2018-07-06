@@ -8,6 +8,9 @@
 #include <limits>
 
 #include "../conf/conf.h"
+#include "../graphics/drawer.h"
+
+#define UseStaticRandomSeed 1
 
 namespace wg {
 
@@ -24,7 +27,7 @@ namespace wg {
         float minContinentCenterDist = float(width * width + height * height) / (continentNumber * continentNumber);
         float noiseInfluence = CONF.getCoastNoiseInfluence();
 
-        int rs = CONF.getCoastUseStaticRandomSeed() ? randomSeed : std::random_device()();
+        int rs = UseStaticRandomSeed ? randomSeed : std::random_device()();
 
         std::mt19937 rg(rs);
         for (auto &blockInfo: _blockInfos) {
@@ -67,9 +70,8 @@ namespace wg {
             auto &block = _blockInfos[i];
             auto pos = block->center;
             float pn = NoiseGenerator::PerlinNoise(pos.x, pos.y);
-            float noise;
             float minDistFactor = minDists[i] / maxMinDist;
-            noise = pn * noiseInfluence + minDistFactor * (1.0f - noiseInfluence);
+            float noise = pn * noiseInfluence + minDistFactor * (1.0f - noiseInfluence);
             if (noise > oceanFactor)
                 block->coastType = BlockInfo::CoastType::Ocean;
             else if (noise > seaFactor)
@@ -117,6 +119,19 @@ namespace wg {
                 drawer.appendVertex(sf::Lines, (*edgeInfo->vertexes.rbegin())->point.vertex);
             }
         }
+    }
+
+    void Coast::getConfigs(std::vector<std::shared_ptr<GeneratorConfig>> &configs) {
+        std::shared_ptr<GeneratorConfig> config;
+        auto ofi = static_cast<int>(CONF.getCoastOceanFactor() * 100);
+        auto sfi = static_cast<int>(CONF.getCoastSeaFactor() * 100);
+        auto nii = static_cast<int>(CONF.getCoastNoiseInfluence() * 100);
+        config = std::make_shared<GeneratorConfigFloat>("Ocean Factor", 0, 100, ofi, 0.01, "/coast/oceanFactor");
+        configs.emplace_back(config);
+        config = std::make_shared<GeneratorConfigFloat>("Sea Factor", 0, 100, sfi, 0.01, "/coast/seaFactor");
+        configs.emplace_back(config);
+        config = std::make_shared<GeneratorConfigFloat>("Noise Influence", 0, 100, nii, 0.01, "/coast/noiseInfluence");
+        configs.emplace_back(config);
     }
 
 }

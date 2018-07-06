@@ -35,20 +35,12 @@ namespace wg {
         return (*this)["map"]["randomSeed"].GetInt();
     }
 
-    int Configure::getUIBarHeight() const {
-        return (*this)["ui"]["barHeight"].GetInt();
-    }
-
-    int Configure::getUIBarSeparatorHeight() const {
-        return (*this)["ui"]["barSeparatorHeight"].GetInt();
+    float Configure::getUIScale() const {
+        return (*this)["ui"]["scale"].GetFloat();
     }
 
     std::string Configure::getUIFontFilename() const {
         return (*this)["ui"]["font"].GetString();
-    }
-
-    float Configure::getUIPointRadius() const {
-        return (*this)["ui"]["pointRadius"].GetFloat();
     }
 
     int Configure::getCenterNumber() const {
@@ -73,10 +65,6 @@ namespace wg {
 
     int Configure::getLloydIteration() const {
         return (*this)["lloyd"]["iteration"].GetInt();
-    }
-
-    bool Configure::getCoastUseStaticRandomSeed() const {
-        return (*this)["coast"]["useStaticRandomSeed"].GetBool();
     }
 
     int Configure::getCoastContinentNumber() const {

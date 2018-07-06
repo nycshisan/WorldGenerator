@@ -6,9 +6,13 @@
 #define WORLDGENERATOR_CONF_H
 
 #include <fstream>
+#include <vector>
 
 #include "document.h"
 #include "istreamwrapper.h"
+#include "ostreamwrapper.h"
+#include "prettywriter.h"
+#include "pointer.h"
 
 namespace wg {
 
@@ -22,19 +26,29 @@ namespace wg {
 
         void reload();
 
+        template <typename T>
+        void save(const std::string &pointerPath, T value) {
+            rapidjson::Pointer pointer(pointerPath.c_str());
+            rapidjson::Value *vp = pointer.Get(*this);
+            assert(vp != nullptr);
+            vp->Set(value);
+
+            std::ofstream ofs(conf_fn);
+            rapidjson::OStreamWrapper osw(ofs);
+            rapidjson::PrettyWriter<rapidjson::OStreamWrapper> writer(osw);
+
+            Accept(writer);
+        }
+
         int getMapWidth() const;
 
         int getMapHeight() const;
 
         int getMapRandomSeed() const;
 
-        int getUIBarHeight() const;
-
-        int getUIBarSeparatorHeight() const;
+        float getUIScale() const;
 
         std::string getUIFontFilename() const;
-
-        float getUIPointRadius() const;
 
         int getCenterNumber() const;
 
@@ -47,8 +61,6 @@ namespace wg {
         float getLloydFactor() const;
 
         int getLloydIteration() const;
-
-        bool getCoastUseStaticRandomSeed() const;
 
         int getCoastContinentNumber() const;
 

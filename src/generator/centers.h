@@ -9,13 +9,13 @@
 
 #include "SFML/Graphics.hpp"
 
-#include "../graphics/window.h"
-#include "../graphics/drawer.h"
 #include "../misc/misc.h"
 
 namespace wg {
 
-    class BlockCenters {
+    class Drawer;
+
+    class Centers {
     public:
         typedef std::vector<Point> Output;
     private:

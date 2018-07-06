@@ -9,7 +9,7 @@
 namespace wg {
 
     void SaveErrorData() {
-        Generator::SharedInstance().SaveErrorData();
+        Generator::SharedInstance().saveErrorData();
     }
 
 }
