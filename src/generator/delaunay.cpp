@@ -140,7 +140,7 @@ namespace wg {
             if (nextTri == nullptr) {
                 edges.emplace_back(&edge); // The outermost edge must be influenced.
             } else if (!nextTri->_visited) {
-                if (point.distance(nextTri->exCenter) > nextTri->exRadius) {
+                if (point.squareDistance(nextTri->exCenter) > nextTri->exRadius) {
                     edges.emplace_back(&edge); // Next triangle is not influenced, so the edge is influenced.
                 } else {
                     nextTri->_findInfluenced(point, edge.nextTriEdgeId, tris, edges);
@@ -165,7 +165,7 @@ namespace wg {
         edges[1] = Edge(pointIdB, pointIdC);
         edges[2] = Edge(pointIdC, pointIdA);
         exCenter = getExCenter();
-        exRadius = exCenter.distance(points[0]);
+        exRadius = exCenter.squareDistance(points[0]);
 
         _isBoundingTriangle = pointIdA >= n || pointIdB >= n || pointIdC >= n;
         auto minmaxX = std::minmax({centers[pointIdA].x, centers[pointIdB].x, centers[pointIdC].x});

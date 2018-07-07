@@ -51,8 +51,6 @@ int main() {
     wg::Generator::NextButtonResponder(window);
     wg::Generator::NextButtonResponder(window);
 
-    wg::Generator::ConfigButtonResponder(window);
-
     window.play();
 
     return 0;

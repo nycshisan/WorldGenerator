@@ -4,6 +4,8 @@
 
 #include "blocks.h"
 
+#include <cmath>
+
 #include "../conf/conf.h"
 #include "../graphics/drawer.h"
 
@@ -97,5 +99,21 @@ namespace wg {
                 drawer.appendVertex(sf::Triangles, sf::Vertex(vertexInfo->point, color));
             }
         }
+    }
+
+    void BlocksDrawable::_prepareCoast(Drawer &drawer, const std::shared_ptr<EdgeInfo> &edgeInfo) {
+        Point pointA = (*edgeInfo->vertexes.begin())->point, pointB = (*edgeInfo->vertexes.rbegin())->point;
+        float length = std::sqrt(pointA.squareDistance(pointB));
+        float sin = (pointA.y - pointB.y) / length, cos = (pointA.x - pointB.x) / length;
+        Point ltp(pointB.x - _CoastThickness * sin, pointB.y + _CoastThickness * cos),
+                rtp(pointB.x + _CoastThickness * sin, pointB.y - _CoastThickness * cos),
+                lbp(pointA.x - _CoastThickness * sin, pointA.y + _CoastThickness * cos),
+                rbp(pointA.x + _CoastThickness * sin, pointA.y - _CoastThickness * cos);
+        drawer.appendVertex(sf::Triangles, ltp);
+        drawer.appendVertex(sf::Triangles, lbp);
+        drawer.appendVertex(sf::Triangles, rtp);
+        drawer.appendVertex(sf::Triangles, rtp);
+        drawer.appendVertex(sf::Triangles, lbp);
+        drawer.appendVertex(sf::Triangles, rbp);
     }
 }

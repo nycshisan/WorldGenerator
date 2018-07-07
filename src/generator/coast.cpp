@@ -24,7 +24,7 @@ namespace wg {
         float oceanFactor = CONF.getCoastOceanFactor();
         float seaFactor = CONF.getCoastSeaFactor();
         int width = CONF.getMapWidth(), height = CONF.getMapHeight();
-        float minContinentCenterDist = float(width * width + height * height) / (continentNumber * continentNumber);
+        float minContinentCenterDist = std::sqrtf(width * width + height * height) / (continentNumber * continentNumber);
         float noiseInfluence = CONF.getCoastNoiseInfluence();
 
         int rs = UseStaticRandomSeed ? randomSeed : std::random_device()();
@@ -41,7 +41,7 @@ namespace wg {
             auto possibleCenter = _blockInfos[dis(rg)];
             bool isValid = true;
             for (auto &center: continentCenters) {
-                if (center->center.distance(possibleCenter->center) < minContinentCenterDist)
+                if (center->center.squareDistance(possibleCenter->center) < minContinentCenterDist)
                     isValid = false;
             }
             if (isValid) {
@@ -56,7 +56,7 @@ namespace wg {
             auto pos = block->center;
             float minDist = std::numeric_limits<float>::max();
             for (auto &center: continentCenters) {
-                float dist = pos.distance(center->center);
+                float dist = pos.squareDistance(center->center);
                 if (dist < minDist) {
                     minDist = dist;
                 }
@@ -117,6 +117,22 @@ namespace wg {
             for (auto &edgeInfo: blockInfo->edges) {
                 drawer.appendVertex(sf::Lines, (*edgeInfo->vertexes.begin())->point.vertex);
                 drawer.appendVertex(sf::Lines, (*edgeInfo->vertexes.rbegin())->point.vertex);
+            }
+        }
+
+        for (auto &blockInfo: _blockInfos) {
+            if (blockInfo->coastType == BlockInfo::CoastType::Land) {
+                for (auto &edgeInfo: blockInfo->edges) {
+                    auto &relatedBlocks = edgeInfo->relatedBlocks;
+                    if (relatedBlocks.size() > 1) {
+                        for (auto &relatedBlock: relatedBlocks) {
+                            if (relatedBlock.lock() != blockInfo &&
+                                relatedBlock.lock()->coastType != BlockInfo::CoastType::Land) {
+                                _prepareCoast(drawer, edgeInfo);
+                            }
+                        }
+                    }
+                }
             }
         }
     }

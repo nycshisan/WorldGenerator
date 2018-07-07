@@ -18,7 +18,7 @@ namespace wg {
         this->vertex = sf::Vertex(v);
     }
 
-    float Point::distance(const Point &anoPoint) const {
+    float Point::squareDistance(const Point &anoPoint) const {
         float xDist = x - anoPoint.x, yDist = y - anoPoint.y;
         return xDist * xDist + yDist * yDist;
     }

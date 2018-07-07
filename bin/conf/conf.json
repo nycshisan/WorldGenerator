@@ -9,7 +9,7 @@
         "font": "assets/PingFang.ttc"
     },
     "centers": {
-        "number": 1000,
+        "number": 5000,
         "padding": 3,
         "span": 3
     },
@@ -22,8 +22,8 @@
     },
     "coast": {
         "continentNumber": 4,
-        "oceanFactor": 0.6699999570846558,
-        "seaFactor": 0.7099999785423279,
-        "noiseInfluence": 0.8199999928474426
+        "oceanFactor": 0.5699999928474426,
+        "seaFactor": 0.4699999988079071,
+        "noiseInfluence": 0.6599999666213989
     }
 }

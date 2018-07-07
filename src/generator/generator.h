@@ -27,6 +27,7 @@ namespace wg {
         LloydRelaxation,
         Blocks,
         Coast,
+        HeatDist
     };
 
     class Generator {

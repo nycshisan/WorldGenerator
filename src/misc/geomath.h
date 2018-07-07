@@ -21,7 +21,7 @@ namespace wg {
 
         explicit Point(const sf::Vector2f &v);
 
-        float distance(const Point &anoPoint) const;
+        float squareDistance(const Point &anoPoint) const;
 
         bool operator==(const Point &anoP);
 
