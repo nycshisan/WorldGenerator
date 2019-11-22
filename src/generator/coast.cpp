@@ -22,7 +22,7 @@ namespace wg {
         float oceanFactor = CONF.getCoastOceanFactor();
         float seaFactor = CONF.getCoastSeaFactor();
         int width = CONF.getMapWidth(), height = CONF.getMapHeight();
-        float minContinentCenterDist = std::sqrtf(width * width + height * height) / continentNumber;
+        float minContinentCenterDist = sqrtf(width * width + height * height) / continentNumber;
         float noiseInfluence = CONF.getCoastNoiseInfluence();
 
         std::mt19937 rg(randomSeed);

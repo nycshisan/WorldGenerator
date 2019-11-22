@@ -3,10 +3,18 @@ project(WorldGenerator)
 
 set(CMAKE_CXX_STANDARD 11)
 
-include_directories(lib/rapidjson1.1.0 lib/sfml2.4.2/include)
+include_directories(lib/rapidjson1.1.0)
 
-link_directories(lib/sfml2.4.2/lib)
-link_libraries(libsfml-window.dylib libsfml-system.dylib libsfml-audio.dylib libsfml-graphics.dylib libsfml-network.dylib)
+if (WIN32)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
+    include_directories(lib/win32/SFML-2.5.1/include)
+    link_directories(lib/win32/SFML-2.5.1/lib)
+    link_libraries(libsfml-audio.a libsfml-graphics.a libsfml-main.a libsfml-network.a libsfml-system.a libsfml-window.a)
+elseif (APPLE)
+    include_directories(lib/apple/sfml2.4.2/include)
+    link_directories(lib/apple/sfml2.4.2/lib)
+    link_libraries(libsfml-window.dylib libsfml-system.dylib libsfml-audio.dylib libsfml-graphics.dylib libsfml-network.dylib)
+endif()
 
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin)
 

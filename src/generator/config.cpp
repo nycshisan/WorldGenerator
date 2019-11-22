@@ -16,7 +16,7 @@ wg::GeneratorConfigFloat::GeneratorConfigFloat(const std::string &name, int min,
 }
 
 std::string wg::GeneratorConfigFloat::getValue() {
-    auto reservedDigitNumber = static_cast<int>(std::ceilf(std::log10f(1.f / _factor)));
+    auto reservedDigitNumber = static_cast<int>(ceilf(log10f(1.f / _factor)));
     std::string format = "%." + std::to_string(reservedDigitNumber) + "f";
     char buf[30];
     sprintf(buf, format.c_str(), _value * _factor);

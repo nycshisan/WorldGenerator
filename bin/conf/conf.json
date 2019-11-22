@@ -1,7 +1,7 @@
 {
     "map": {
-        "width": 2160,
-        "height": 1350,
+        "width": 1600,
+        "height": 900,
         "randomSeed": 666233
     },
     "ui": {
@@ -9,7 +9,7 @@
         "font": "assets/PingFang.ttc"
     },
     "centers": {
-        "number": 5000,
+        "number": 500,
         "padding": 3,
         "span": 3
     },

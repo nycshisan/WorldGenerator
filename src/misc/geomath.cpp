@@ -57,7 +57,7 @@ namespace wg {
         Point &pa = points[0], &pb = points[1], &pc = points[2];
         Line lab = Segment(pa, pb).midPerpendicular(), lac = Segment(pa, pc).midPerpendicular();
         auto result = lab.intersect(lac);
-        assertWithSave(!isnan(result.x) && !isnan(result.y));
+        assertWithSave(!std::isnan(result.x) && !std::isnan(result.y));
         return result;
     }
 
