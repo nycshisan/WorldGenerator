@@ -7,6 +7,10 @@
 
 #include "coast.h"
 
+namespace wg {
+    class HeatDist : protected BlocksDrawable {
 
+    };
+}
 
 #endif //WORLDGENERATOR_HEAT_H

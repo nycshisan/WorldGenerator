@@ -10,8 +10,6 @@
 #include "../conf/conf.h"
 #include "../graphics/drawer.h"
 
-#define UseStaticRandomSeed 1
-
 namespace wg {
 
     void Coast::input(const Input &input) {
@@ -24,12 +22,10 @@ namespace wg {
         float oceanFactor = CONF.getCoastOceanFactor();
         float seaFactor = CONF.getCoastSeaFactor();
         int width = CONF.getMapWidth(), height = CONF.getMapHeight();
-        float minContinentCenterDist = std::sqrtf(width * width + height * height) / (continentNumber * continentNumber);
+        float minContinentCenterDist = std::sqrtf(width * width + height * height) / continentNumber;
         float noiseInfluence = CONF.getCoastNoiseInfluence();
 
-        int rs = UseStaticRandomSeed ? randomSeed : std::random_device()();
-
-        std::mt19937 rg(rs);
+        std::mt19937 rg(randomSeed);
         for (auto &blockInfo: _blockInfos) {
             blockInfo->coastType = BlockInfo::CoastType::Land;
             blockInfo->isContinentCenter = false;
