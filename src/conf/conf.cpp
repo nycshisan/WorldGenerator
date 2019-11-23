@@ -35,6 +35,10 @@ namespace wg {
         return (*this)["map"]["randomSeed"].GetInt();
     }
 
+    int Configure::getUIUpdateFPSFrameInterval() const {
+        return (*this)["ui"]["updateFPSFrameInterval"].GetInt();
+    }
+
     float Configure::getUIScale() const {
         return (*this)["ui"]["scale"].GetFloat();
     }
@@ -52,7 +56,7 @@ namespace wg {
     }
 
     int Configure::getCenterSpan() const {
-        return (*this)["centers"]["span"].GetUint();
+        return (*this)["centers"]["span"].GetInt();
     }
 
     bool Configure::getDelaunayShowBoundingTriangles() const {
@@ -81,6 +85,14 @@ namespace wg {
 
     float Configure::getCoastNoiseInfluence() const {
         return (*this)["coast"]["noiseInfluence"].GetFloat();
+    }
+
+    unsigned Configure::getUIMapWidth() const {
+        return getMapWidth() / (*this)["ui"]["mapScaleInversion"].GetUint();
+    }
+
+    unsigned Configure::getUIMapHeight() const {
+        return getMapHeight() / (*this)["ui"]["mapScaleInversion"].GetUint();
     }
 
 }

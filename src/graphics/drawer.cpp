@@ -9,7 +9,7 @@
 namespace wg {
 
     Drawer::Drawer() {
-        _pointShape.setRadius(int(_BasePointRadius * CONF.getUIScale()));
+        _pointShape.setRadius(_BasePointRadius * CONF.getUIScale());
         _pointsBuf.setPrimitiveType(sf::Points);
         _linesBuf.setPrimitiveType(sf::Lines);
         _trisBuf.setPrimitiveType(sf::Triangles);

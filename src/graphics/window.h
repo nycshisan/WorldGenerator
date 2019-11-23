@@ -38,10 +38,10 @@ namespace wg {
 
         std::vector<Button> _buttons;
 
-        char _titleBuffer[40];
+        char _titleBuffer[40] = {};
 
         sf::Clock _clock;
-        int _updateFPSCounter = 0, _updateFPSFrameInterval = 10;
+        int _updateFPSCounter = 0, _updateFPSFrameInterval = 0;
 
         void _updateFPS();
 
@@ -61,6 +61,8 @@ namespace wg {
         void play();
 
         void openConfigWindow(Generator *generator);
+
+        static std::shared_ptr<MainWindow> MakeWindow();
     };
 
 }

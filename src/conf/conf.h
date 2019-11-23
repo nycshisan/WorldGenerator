@@ -46,6 +46,12 @@ namespace wg {
 
         int getMapRandomSeed() const;
 
+        unsigned getUIMapWidth() const;
+
+        unsigned getUIMapHeight() const;
+
+        int getUIUpdateFPSFrameInterval() const;
+
         float getUIScale() const;
 
         std::string getUIFontFilename() const;

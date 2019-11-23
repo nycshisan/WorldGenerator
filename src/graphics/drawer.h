@@ -16,7 +16,7 @@ namespace wg {
     class Drawer {
         static constexpr float _BasePointRadius = 1.0;
 
-        MainWindow *_window;
+        MainWindow *_window = nullptr;
 
         sf::CircleShape _pointShape;
 

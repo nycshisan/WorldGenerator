@@ -24,6 +24,7 @@ namespace wg {
             sf::VideoMode((unsigned int)width, (unsigned int)(height + _BaseBarHeight * CONF.getUIScale() * 2)), "") {
         setTitle(_defaultTitle);
         setVerticalSyncEnabled(true);
+        _updateFPSFrameInterval = CONF.getUIUpdateFPSFrameInterval();
         _width = width;
         _height = height;
         float uiScale = CONF.getUIScale();
@@ -174,6 +175,12 @@ namespace wg {
                 configWindow = nullptr;
             }
         }
+    }
+
+    std::shared_ptr<MainWindow> MainWindow::MakeWindow() {
+        int width = CONF.getUIMapWidth();
+        int height = CONF.getUIMapHeight();
+        return std::make_shared<MainWindow>(width, height);
     }
 
 }
