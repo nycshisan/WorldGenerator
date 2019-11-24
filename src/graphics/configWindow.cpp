@@ -12,7 +12,7 @@ bool wg::ConfigUIWidget::_FontLoaded = false;
 
 wg::ConfigWindow::ConfigWindow(wg::Generator *generator) : sf::RenderWindow(sf::VideoMode(
         (unsigned int)(_BaseConfigWindowWidth * CONF.getUIScale()),
-        (unsigned int)(CONF.getMapHeight() + MainWindow::_BaseBarHeight * CONF.getUIScale() * 2) / 2), "Config") {
+        (unsigned int)(CONF.getUIMapHeight() + MainWindow::_BaseBarHeight * CONF.getUIScale() * 2) / 2), "Config") {
     this->_generator = generator;
     this->_lastState = Ready;
 }

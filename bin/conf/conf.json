@@ -1,19 +1,19 @@
 {
     "map": {
-        "width": 1280000,
-        "height": 800000,
+        "width": 12800,
+        "height": 8000,
         "randomSeed": 48196648
     },
     "ui": {
-        "mapScaleInversion": 1000,
+        "mapScaleInversion": 10,
         "updateFPSFrameInterval": 30,
         "scale": 2.0,
         "font": "assets/PingFang.ttc"
     },
     "centers": {
-        "number": 100,
-        "padding": 3,
-        "span": 3
+        "number": 2000,
+        "padding": 50,
+        "span": 50
     },
     "delaunay": {
         "showBoundingTriangles": false

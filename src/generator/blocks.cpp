@@ -43,7 +43,7 @@ namespace wg {
                         int vertexId = edge.vertexIds[i];
                         if (initializedVertexInfos.count(vertexId) == 0) {
                             // Initialize the vertex information
-                            auto &vertex = edge.vertex[i];
+                            auto &vertex = edge.point[i];
                             auto newVertexInfo = std::make_shared<VertexInfo>(vertexId);
                             newVertexInfo->point = vertex;
                             initializedVertexInfos[vertexId] = newVertexInfo;
@@ -92,11 +92,14 @@ namespace wg {
 
     void BlocksDrawable::_prepareBlockVertexes(Drawer &drawer, const std::shared_ptr<BlockInfo> &blockInfo,
                                                const sf::Color &color) {
-        sf::Vertex v0 = sf::Vertex(blockInfo->center, color);
+        sf::Vertex v0 = blockInfo->center.vertex;
+        v0.color = color;
         for (auto &edgeInfo: blockInfo->edges) {
             drawer.appendVertex(sf::Triangles, v0);
             for (auto &vertexInfo: edgeInfo->vertexes) {
-                drawer.appendVertex(sf::Triangles, sf::Vertex(vertexInfo->point, color));
+                auto v = vertexInfo->point.vertex;
+                v.color = color;
+                drawer.appendVertex(sf::Triangles, v);
             }
         }
     }

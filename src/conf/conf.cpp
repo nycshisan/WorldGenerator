@@ -35,6 +35,10 @@ namespace wg {
         return (*this)["map"]["randomSeed"].GetInt();
     }
 
+    unsigned Configure::getUIMapScaleConversion() const {
+        return (*this)["ui"]["mapScaleInversion"].GetUint();
+    }
+
     int Configure::getUIUpdateFPSFrameInterval() const {
         return (*this)["ui"]["updateFPSFrameInterval"].GetInt();
     }
@@ -88,11 +92,11 @@ namespace wg {
     }
 
     unsigned Configure::getUIMapWidth() const {
-        return getMapWidth() / (*this)["ui"]["mapScaleInversion"].GetUint();
+        return getMapWidth() / getUIMapScaleConversion();
     }
 
     unsigned Configure::getUIMapHeight() const {
-        return getMapHeight() / (*this)["ui"]["mapScaleInversion"].GetUint();
+        return getMapHeight() / getUIMapScaleConversion();
     }
 
 }

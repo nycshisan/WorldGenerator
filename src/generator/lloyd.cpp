@@ -32,7 +32,7 @@ namespace wg {
                 Point centerVec(0, 0);
                 for (auto edgeId: center.edgeIds) {
                     auto &edge = edgeMap[edgeId];
-                    for (auto &v : edge.vertex) {
+                    for (auto &v : edge.point) {
                         centerVec += v;
                     }
                 }
@@ -66,8 +66,8 @@ namespace wg {
         }
 
         for (auto &pair: _relaxedVd.second) {
-            drawer.appendVertex(sf::Lines, pair.second.vertex[0]);
-            drawer.appendVertex(sf::Lines, pair.second.vertex[1]);
+            drawer.appendVertex(sf::Lines, pair.second.point[0].vertex);
+            drawer.appendVertex(sf::Lines, pair.second.point[1].vertex);
         }
     }
 

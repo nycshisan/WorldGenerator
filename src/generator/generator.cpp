@@ -74,8 +74,10 @@ namespace wg {
         Generator &generator = Generator::SharedInstance();
         switch (generator.state) {
             case Centers:
-                generator._blockCenters.save();
-                window.setHintLabel("Centers saved.");
+                if (generator._blockCenters.save())
+                    window.setHintLabel("Centers saved.");
+                else
+                    window.setHintLabel("Centers saving failed.");
                 break;
             default:
                 window.setHintLabel("Can't save.");
@@ -88,8 +90,10 @@ namespace wg {
         Generator &generator = Generator::SharedInstance();
         switch (generator.state) {
             case Centers:
-                generator._blockCenters.load();
-                window.setHintLabel("Centers loaded.");
+                if (generator._blockCenters.load())
+                    window.setHintLabel("Centers loaded.");
+                else
+                    window.setHintLabel("Centers loading failed.");
                 break;
             default:
                 window.setHintLabel("Can't load.");

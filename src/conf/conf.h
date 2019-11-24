@@ -46,6 +46,8 @@ namespace wg {
 
         int getMapRandomSeed() const;
 
+        unsigned getUIMapScaleConversion() const;
+
         unsigned getUIMapWidth() const;
 
         unsigned getUIMapHeight() const;

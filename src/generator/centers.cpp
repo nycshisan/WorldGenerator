@@ -19,9 +19,6 @@ namespace wg {
         int span = CONF.getCenterSpan();
         int randomSeed = CONF.getMapRandomSeed();
 
-        unsigned char occupied[width][height];
-        std::memset(occupied, 0, static_cast<size_t>(width * height));
-
         int n = CONF.getCenterNumber();
         int padding = CONF.getCenterPadding();
 
@@ -32,24 +29,17 @@ namespace wg {
         for (int i = 0; i < n;) {
             int x = disX(gen);
             int y = disY(gen);
-            bool occupiedFlag = false;
-            for (int j = std::max(x - span, 0); j <= std::min(x + span, width - 1); ++j) {
-                for (int k = std::max(y - span, 0); k <= std::min(y + span, height - 1); ++k) {
-                    if (occupied[j][k]) {
-                        occupiedFlag = true;
-                    }
+            bool occupiedFlag = true;
+            for (auto &point : _centers) {
+                if (abs(x - int(point.x)) <= span && abs(y - int(point.y)) <= span) {
+                    occupiedFlag = false;
+                    break;
                 }
             }
             if (occupiedFlag) {
-                continue;
+                _centers.emplace_back(Point(x, y));
+                ++i;
             }
-            _centers.emplace_back(Point(x, y));
-            for (int j = std::max(x - span, 0); j <= std::min(x + span, width - 1); ++j) {
-                for (int k = std::max(y - span, 0); k <= std::min(y + span, height - 1); ++k) {
-                    occupied[j][k] = 1;
-                }
-            }
-            ++i;
         }
     }
 
@@ -63,15 +53,18 @@ namespace wg {
         }
     }
 
-    void Centers::save() {
-        std::ofstream outfile("logs/centers.txt", std::ios_base::trunc);
+    bool Centers::save() {
+        std::ofstream outfile("logs/centers.txt");
+        if (!outfile.good()) return false;
         for (auto &center: _centers) {
             outfile << (int) center.x << " " << (int) center.y << std::endl;
         }
+        return true;
     }
 
-    void Centers::load() {
+    bool Centers::load() {
         std::ifstream infile("logs/centers.txt");
+        if (!infile.good()) return false;
         std::vector<Point> centers;
         while (!infile.eof()) {
             int x, y;
@@ -80,6 +73,7 @@ namespace wg {
         }
         centers.pop_back();
         _centers = centers;
+        return true;
     }
 
 }

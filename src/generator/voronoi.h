@@ -25,7 +25,7 @@ namespace wg {
 
         struct EdgeNode {
             int relatedCenterIds[2] = {-1, -1};
-            Point vertex[2];
+            Point point[2];
             int vertexIds[2] = {-1, -1};
 
             EdgeNode() = default;

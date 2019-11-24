@@ -30,9 +30,9 @@ namespace wg {
 
         void prepareVertexes(Drawer &drawer);
 
-        void save();
+        bool save();
 
-        void load();
+        bool load();
     };
 
 }

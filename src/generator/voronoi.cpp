@@ -24,8 +24,8 @@ namespace wg {
         int width = CONF.getMapWidth(), height = CONF.getMapHeight();
         Rectangle box = Rectangle(0, width, height, 0);
 
-        std::map<int, CenterNode> &centerMap = _diagram.first;
-        std::map<int, EdgeNode> &edgeMap = _diagram.second;
+        auto &centerMap = _diagram.first;
+        auto &edgeMap = _diagram.second;
 
         int newEdgeId = 0;
         centerMap.clear();
@@ -100,8 +100,8 @@ namespace wg {
         }
 
         for (auto &pair: _diagram.second) {
-            drawer.appendVertex(sf::Lines, pair.second.vertex[0]);
-            drawer.appendVertex(sf::Lines, pair.second.vertex[1]);
+            drawer.appendVertex(sf::Lines, pair.second.point[0].vertex);
+            drawer.appendVertex(sf::Lines, pair.second.point[1].vertex);
         }
     }
 
@@ -110,8 +110,8 @@ namespace wg {
     }
 
     VoronoiDiagram::EdgeNode::EdgeNode(const Point &pa, int paId, const Point &pb, int pbId) {
-        vertex[0] = pa;
-        vertex[1] = pb;
+        point[0] = pa;
+        point[1] = pb;
         vertexIds[0] = paId;
         vertexIds[1] = pbId;
     }

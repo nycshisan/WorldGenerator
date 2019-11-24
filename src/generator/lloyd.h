@@ -12,7 +12,7 @@ namespace wg {
     class LloydRelaxation {
     public:
         typedef VoronoiDiagram::Output Input;
-        typedef std::pair<std::map<int, VoronoiDiagram::CenterNode>, std::map<int, VoronoiDiagram::EdgeNode>> Output;
+        typedef VoronoiDiagram::Output Output;
 
     private:
         Input _inputVd;
