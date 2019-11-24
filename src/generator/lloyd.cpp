@@ -40,6 +40,7 @@ namespace wg {
                 centerVec /= float(center.edgeIds.size() * 2);
                 pos *= (1 - factor);
                 pos += centerVec * factor;
+                pos.resetUIPosition();
                 assertWithSave(box.contains(pos));
                 centers.emplace_back(pos);
             }

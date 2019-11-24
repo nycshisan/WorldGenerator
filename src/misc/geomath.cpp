@@ -13,9 +13,7 @@ namespace wg {
 
     Point::Point(float x, float y) : sf::Vector2f(x, y) {
         this->vertex = sf::Vertex(*this);
-        int mapScaleInversion = CONF.getUIMapScaleConversion();
-        this->vertex.position.x /= float(mapScaleInversion);
-        this->vertex.position.y /= float(mapScaleInversion);
+        resetUIPosition();
     }
 
     Point::Point(const sf::Vector2f &v) : sf::Vector2f(v) {
@@ -33,6 +31,12 @@ namespace wg {
 
     bool Point::operator!=(const Point &anoP) {
         return !((*this) == anoP);
+    }
+
+    void Point::resetUIPosition() {
+        int mapScaleInversion = CONF.getUIMapScaleConversion();
+        this->vertex.position.x = x / float(mapScaleInversion);
+        this->vertex.position.y = y / float(mapScaleInversion);
     }
 
     std::ostream &operator<<(std::ostream &os, const Point &p) {

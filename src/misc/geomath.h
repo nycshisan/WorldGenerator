@@ -28,6 +28,8 @@ namespace wg {
         bool operator!=(const Point &anoP);
 
         sf::Vertex vertex;
+
+        void resetUIPosition();
     };
 
     std::ostream &operator<<(std::ostream &os, const Point &p);
