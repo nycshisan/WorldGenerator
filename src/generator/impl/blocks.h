@@ -10,8 +10,8 @@
 #include <vector>
 #include <memory>
 
-#include "../data/blockInfo.h"
-#include "../conf/conf.h"
+#include "../../data/blockInfo.h"
+#include "../../conf/conf.h"
 
 namespace wg {
 
@@ -22,7 +22,7 @@ namespace wg {
         void _prepareCoast(Drawer &drawer, const std::shared_ptr<EdgeInfo> &edgeInfo);
     };
 
-    class Blocks : protected BlocksDrawable {
+    class Blocks : public GeneratorImpl, protected BlocksDrawable {
     public:
         typedef LloydRelaxation::Output Input;
         typedef std::vector<std::shared_ptr<BlockInfo>> Output;
@@ -32,13 +32,15 @@ namespace wg {
         Output _blockInfos;
 
     public:
-        void input(const Input &relaxedVd);
+        std::string getHintLabelText() override;
 
-        void generate();
+        void input(void* inputData) override;
 
-        Output output();
+        void generate() override;
 
-        void prepareVertexes(Drawer &drawer);
+        void* output() override;
+
+        void prepareVertexes(Drawer &drawer) override;
     };
 
 }

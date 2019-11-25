@@ -12,7 +12,7 @@ namespace wg {
 
     template<typename T>
     void _print(std::ostream &ostream, T &&arg) {
-        ostream << std::forward<T>(arg) << ' ';
+        ostream << std::forward<T>(arg);
     }
 
     template<typename... Args>
@@ -26,11 +26,8 @@ namespace wg {
         LOGIMPL(std::cout, std::forward<Args>(args)...);
     }
 
-    template<typename... Args>
-    void LOGERR(Args &&... args) {
-        LOGIMPL(std::cerr, std::forward<Args>(args)...);
-    }
-
 }
+
+#define LOG(args...) LOGOUT(__FILE__, ":", __LINE__, " \"", __func__, "\" ", args)
 
 #endif //WORLDGENERATOR_LOG_H

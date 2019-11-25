@@ -12,7 +12,7 @@
 
 namespace wg {
 
-    class DelaunayTriangles {
+    class DelaunayTriangles : public GeneratorImpl {
     public:
         class NetNode;
 
@@ -55,23 +55,25 @@ namespace wg {
         };
 
         typedef Centers::Output Input;
-        typedef std::unordered_set<NetNode *> Output;
-    private:
+        typedef std::pair<Input, std::unordered_set<NetNode *>> Output;
+    public:
         Input _centers{};
-        Output _allocatedNodes{};
+        Output _centersTris{};
 
         NetNode *_triNetHead = nullptr;
 
         void _deleteOldNodes();
 
     public:
-        void input(const Input &input);
+        std::string getHintLabelText() override;
 
-        void generate();
+        void input(void* inputData) override;
 
-        Output output();
+        void generate() override;
 
-        void prepareVertexes(Drawer &drawer);
+        void* output() override;
+
+        void prepareVertexes(Drawer &drawer) override;
 
         ~DelaunayTriangles();
     };

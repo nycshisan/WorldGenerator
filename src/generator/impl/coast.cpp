@@ -7,13 +7,18 @@
 #include <cmath>
 #include <limits>
 
-#include "../conf/conf.h"
-#include "../graphics/drawer.h"
+#include "../../conf/conf.h"
+#include "../../graphics/drawer.h"
+#include "../generator.h"
 
 namespace wg {
 
-    void Coast::input(const Input &input) {
-        _blockInfos = input;
+    Coast::Coast() {
+        this->hasConfigs = true;
+    }
+
+    void Coast::input(void* inputData) {
+        _blockInfos = *(Input*)inputData;
     }
 
     void Coast::generate() {
@@ -89,6 +94,10 @@ namespace wg {
         }
     }
 
+    void *Coast::output() {
+        return nullptr;
+    }
+
     void Coast::prepareVertexes(Drawer &drawer) {
         for (auto &blockInfo: _blockInfos) {
             sf::Color oceanColor = sf::Color::Blue;
@@ -133,17 +142,22 @@ namespace wg {
         }
     }
 
-    void Coast::getConfigs(std::vector<std::shared_ptr<GeneratorConfig>> &configs) {
+    void Coast::getConfigs(Generator &generator) {
+        auto &configs = generator.configs;
         std::shared_ptr<GeneratorConfig> config;
         auto ofi = static_cast<int>(CONF.getCoastOceanFactor() * 100);
         auto sfi = static_cast<int>(CONF.getCoastSeaFactor() * 100);
         auto nii = static_cast<int>(CONF.getCoastNoiseInfluence() * 100);
-        config = std::make_shared<GeneratorConfigFloat>("Ocean Factor", 0, 100, ofi, 0.01, "/coast/oceanFactor");
+        config = std::make_shared<GeneratorConfigFloat>("Ocean Factor", 0, 100, ofi, 0.01 + 1e-4, "/coast/oceanFactor");
         configs.emplace_back(config);
-        config = std::make_shared<GeneratorConfigFloat>("Sea Factor", 0, 100, sfi, 0.01, "/coast/seaFactor");
+        config = std::make_shared<GeneratorConfigFloat>("Sea Factor", 0, 100, sfi, 0.01 + 1e-4, "/coast/seaFactor");
         configs.emplace_back(config);
-        config = std::make_shared<GeneratorConfigFloat>("Noise Influence", 0, 100, nii, 0.01, "/coast/noiseInfluence");
+        config = std::make_shared<GeneratorConfigFloat>("Noise Influence", 0, 100, nii, 0.01 + 1e-4, "/coast/noiseInfluence");
         configs.emplace_back(config);
+    }
+
+    std::string Coast::getHintLabelText() {
+        return "Generated the coast.";
     }
 
 }

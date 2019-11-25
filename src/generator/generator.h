@@ -5,12 +5,14 @@
 #ifndef WORLDGENERATOR_GENERATOR_H
 #define WORLDGENERATOR_GENERATOR_H
 
-#include "centers.h"
-#include "delaunay.h"
-#include "voronoi.h"
-#include "lloyd.h"
-#include "blocks.h"
-#include "coast.h"
+#include <vector>
+
+#include "impl/centers.h"
+#include "impl/delaunay.h"
+#include "impl/voronoi.h"
+#include "impl/lloyd.h"
+#include "impl/blocks.h"
+#include "impl/coast.h"
 
 #include "config.h"
 
@@ -19,48 +21,46 @@ namespace wg {
     class MainWindow;
     class Drawer;
 
-    enum GeneratorState {
-        Ready,
-        Centers,
-        DelaunayTriangles,
-        VoronoiDiagram,
-        LloydRelaxation,
-        Blocks,
-        Coast,
-        HeatDist
-    };
-
     class Generator {
-
         Generator();
-
-        void _nextState();
-
-        void _lastState();
 
         void _setLabel(MainWindow &window);
 
         std::shared_ptr<Drawer> _drawer;
 
-        class Centers _blockCenters;
-        class DelaunayTriangles _delaunayTriangles;
-        class VoronoiDiagram _voronoiDiagram;
-        class LloydRelaxation _lloydRelaxation;
-        class Blocks _blocks;
-        class Coast _coast;
+        std::vector<std::shared_ptr<GeneratorImpl>> impls;
 
         void _prepareConfigs();
 
     public:
-        GeneratorState state = Ready;
+        struct State {
+            static const int Ready = -1;
+            static const int Centers = 0;
+            static const int DelaunayTriangles = 1;
+            static const int VoronoiDiagram = 2;
+            static const int LloydRelaxation = 3;
+            static const int Blocks = 4;
+            static const int Coast = 5;
+        };
 
-        std::vector<std::shared_ptr<GeneratorConfig>> configs;
+        int state = State::Ready;
+
+        typedef std::vector<std::shared_ptr<GeneratorConfig>> Configs;
+        Configs configs;
 
         static Generator &SharedInstance();
 
         void display(MainWindow &window);
 
+        void next();
+
         void redo();
+
+        void undo();
+
+        std::string save();
+
+        std::string load();
 
         void saveErrorData();
 

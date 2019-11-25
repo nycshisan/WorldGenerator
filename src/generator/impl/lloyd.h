@@ -9,7 +9,7 @@
 
 namespace wg {
 
-    class LloydRelaxation {
+    class LloydRelaxation : public GeneratorImpl {
     public:
         typedef VoronoiDiagram::Output Input;
         typedef VoronoiDiagram::Output Output;
@@ -19,13 +19,15 @@ namespace wg {
         Output _relaxedVd;
 
     public:
-        void input(const Input &vd);
+        std::string getHintLabelText() override;
 
-        void generate();
+        void input(void* inputData) override;
 
-        Output output();
+        void generate() override;
 
-        void prepareVertexes(Drawer &drawer);
+        void* output() override;
+
+        void prepareVertexes(Drawer &drawer) override;
     };
 
 }

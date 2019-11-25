@@ -47,7 +47,7 @@ namespace wg {
                 _trisBuf.append(vertex);
                 break;
             default:
-                LOGOUT("Error primitive type in drawer.");
+                LOG("Error primitive type in drawer.");
         }
     }
 

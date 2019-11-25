@@ -4,18 +4,22 @@
 
 #include "delaunay.h"
 
-#include "../conf/conf.h"
-#include "../graphics/drawer.h"
+#include "../../conf/conf.h"
+#include "../../graphics/drawer.h"
 
 namespace wg {
 
-    void DelaunayTriangles::input(const Input &input) {
-        _centers = input;
+    void DelaunayTriangles::input(void* inputData) {
+        _centers = *(Input*)inputData;
     }
 
     void DelaunayTriangles::generate() {
         _deleteOldNodes();
         int newNetNodeId = 0;
+
+        _centersTris.first = _centers;
+        auto &allocatedNodes = _centersTris.second;
+
         // Bowyer-Watson algorithm
         auto n = (int) _centers.size();
         int width = CONF.getMapWidth(), height = CONF.getMapHeight();
@@ -23,12 +27,12 @@ namespace wg {
         _centers.emplace_back(3 * CONF.getMapWidth(), 0);
         _centers.emplace_back(0, 3 * CONF.getMapHeight());
         _triNetHead = new NetNode(newNetNodeId++, n, n + 1, n + 2, _centers, n);
-        _allocatedNodes.insert(_triNetHead);
+        allocatedNodes.insert(_triNetHead);
 
         for (int i = 0; i < n; ++i) {
             auto center = _centers[i];
             NetNode *containingTriangle = nullptr;
-            for (auto tri: _allocatedNodes) {
+            for (auto tri: allocatedNodes) {
                 if (center.x < tri->_minX || center.x > tri->_maxX || center.y < tri->_minY || center.y > tri->_maxY)
                     continue;
                 if (tri->contains(center)) {
@@ -44,7 +48,7 @@ namespace wg {
             std::vector<NetNode *> newTris;
             for (auto &edge: influencedEdges) {
                 auto *newTri = new NetNode(newNetNodeId++, edge->pid[0], edge->pid[1], i, _centers, n);
-                _allocatedNodes.insert(newTri);
+                allocatedNodes.insert(newTri);
                 newTris.emplace_back(newTri);
                 auto &newEdge = newTri->edges[0];
                 newEdge.nextTri = edge->nextTri;
@@ -57,7 +61,7 @@ namespace wg {
                 }
             }
 
-            for (int j = 0; j < newTris.size(); ++j) {
+            for (size_t j = 0; j < newTris.size(); ++j) {
                 NetNode *tri = newTris[j], *lastTri, *nextTri;
                 if (j == 0)
                     lastTri = newTris[newTris.size() - 1];
@@ -73,10 +77,10 @@ namespace wg {
             }
 
             for (auto tri: influencedTris) {
-                _allocatedNodes.erase(_allocatedNodes.find(tri));
+                allocatedNodes.erase(allocatedNodes.find(tri));
                 delete tri;
             }
-            _triNetHead = *_allocatedNodes.begin();
+            _triNetHead = *allocatedNodes.begin();
         }
 
         _centers.pop_back();
@@ -84,13 +88,14 @@ namespace wg {
         _centers.pop_back();
     }
 
-    DelaunayTriangles::Output DelaunayTriangles::output() {
-        return _allocatedNodes;
+    void* DelaunayTriangles::output() {
+        return (void*)&_centersTris;
     }
 
     void DelaunayTriangles::prepareVertexes(Drawer &drawer) {
+        auto &allocatedNodes = _centersTris.second;
         bool showBoundingTriangles = CONF.getDelaunayShowBoundingTriangles();
-        for (auto &tri: _allocatedNodes) {
+        for (auto &tri: allocatedNodes) {
             if (!tri->_isBoundingTriangle || showBoundingTriangles) {
                 drawer.appendVertex(sf::Lines, tri->points[0].vertex);
                 drawer.appendVertex(sf::Lines, tri->points[1].vertex);
@@ -103,16 +108,21 @@ namespace wg {
     }
 
     void DelaunayTriangles::_deleteOldNodes() {
-        if (!_allocatedNodes.empty()) {
-            for (auto ptr: _allocatedNodes)
+        auto &allocatedNodes = _centersTris.second;
+        if (!allocatedNodes.empty()) {
+            for (auto ptr: allocatedNodes)
                 delete ptr;
-            _allocatedNodes.clear();
+            allocatedNodes.clear();
         }
         _triNetHead = nullptr;
     }
 
     DelaunayTriangles::~DelaunayTriangles() {
         _deleteOldNodes();
+    }
+
+    std::string DelaunayTriangles::getHintLabelText() {
+        return "Generated Delaunay triangles.";
     }
 
     DelaunayTriangles::Edge::Edge(int pointIdA, int pointIdB) {
@@ -131,27 +141,27 @@ namespace wg {
     }
 
     void DelaunayTriangles::NetNode::_findInfluenced(const Point &point, int beginEdgeId, std::set<NetNode *> &tris,
-                                                     std::vector<Edge *> &edges) {
+                                                     std::vector<Edge *> &influencedEdges) {
         _visited = true;
         tris.insert(this); // Any triangle executing this function should be influenced due to the recursion condition.
         for (int i = 0; i < 3; ++i) {
             auto &edge = this->edges[(i + beginEdgeId) % 3];
             auto nextTri = edge.nextTri;
             if (nextTri == nullptr) {
-                edges.emplace_back(&edge); // The outermost edge must be influenced.
+                influencedEdges.emplace_back(&edge); // The outermost edge must be influenced.
             } else if (!nextTri->_visited) {
                 if (point.squareDistance(nextTri->exCenter) > nextTri->exRadius) {
-                    edges.emplace_back(&edge); // Next triangle is not influenced, so the edge is influenced.
+                    influencedEdges.emplace_back(&edge); // Next triangle is not influenced, so the edge is influenced.
                 } else {
-                    nextTri->_findInfluenced(point, edge.nextTriEdgeId, tris, edges);
+                    nextTri->_findInfluenced(point, edge.nextTriEdgeId, tris, influencedEdges);
                 }
             }
         }
     }
 
     void DelaunayTriangles::NetNode::findInfluenced(const Point &point, std::set<NetNode *> &tris,
-                                                    std::vector<Edge *> &edges) {
-        _findInfluenced(point, 0, tris, edges);
+                                                    std::vector<Edge *> &influencedEdges) {
+        _findInfluenced(point, 0, tris, influencedEdges);
         _clearVisitFlag();
     }
 

@@ -7,12 +7,12 @@
 #include <random>
 #include <fstream>
 
-#include "../conf/conf.h"
-#include "../graphics/drawer.h"
+#include "../../conf/conf.h"
+#include "../../graphics/drawer.h"
 
 namespace wg {
 
-    void Centers::input() {}
+    void Centers::input(void* inputData) { assert(inputData == nullptr); }
 
     void Centers::generate() {
         int width = CONF.getMapWidth(), height = CONF.getMapHeight();
@@ -43,8 +43,8 @@ namespace wg {
         }
     }
 
-    Centers::Output Centers::output() {
-        return _centers;
+    void* Centers::output() {
+        return (void*)&_centers;
     }
 
     void Centers::prepareVertexes(Drawer &drawer) {
@@ -53,18 +53,18 @@ namespace wg {
         }
     }
 
-    bool Centers::save() {
+    std::string Centers::save() {
         std::ofstream outfile("logs/centers.txt");
-        if (!outfile.good()) return false;
+        if (!outfile.good()) return "Centers saving failed.";
         for (auto &center: _centers) {
             outfile << (int) center.x << " " << (int) center.y << std::endl;
         }
-        return true;
+        return "Centers saved.";
     }
 
-    bool Centers::load() {
+    std::string Centers::load() {
         std::ifstream infile("logs/centers.txt");
-        if (!infile.good()) return false;
+        if (!infile.good()) return "Centers loading failed.";
         std::vector<Point> centers;
         while (!infile.eof()) {
             int x, y;
@@ -73,7 +73,11 @@ namespace wg {
         }
         centers.pop_back();
         _centers = centers;
-        return true;
+        return "Centers loaded.";
+    }
+
+    std::string Centers::getHintLabelText() {
+        return "Generated block centers.";
     }
 
 }

@@ -160,7 +160,7 @@ namespace wg {
     void MainWindow::openConfigWindow(Generator *generator) {
         if (configWindow == nullptr) {
             configWindow = new ConfigWindow(generator);
-            LOGOUT("Configuration window opened.");
+//            LOG("Configuration window opened.");
         }
         configWindow->requestFocus();
     }
@@ -170,7 +170,7 @@ namespace wg {
             if (configWindow->isOpen()) {
                 configWindow->play();
             } else {
-                LOGOUT("Configuration window closed.");
+//                LOG("Configuration window closed.");
                 delete configWindow;
                 configWindow = nullptr;
             }

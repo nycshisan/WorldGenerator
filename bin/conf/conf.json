@@ -24,8 +24,8 @@
     },
     "coast": {
         "continentNumber": 4,
-        "oceanFactor": 0.5699999928474426,
-        "seaFactor": 0.4699999988079071,
-        "noiseInfluence": 0.6599999666213989
+        "oceanFactor": 0.5453999638557434,
+        "seaFactor": 0.39389997720718386,
+        "noiseInfluence": 0.5958999991416931
     }
 }

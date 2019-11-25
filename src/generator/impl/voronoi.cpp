@@ -4,8 +4,8 @@
 
 #include "voronoi.h"
 
-#include "../conf/conf.h"
-#include "../graphics/drawer.h"
+#include "../../conf/conf.h"
+#include "../../graphics/drawer.h"
 
 namespace wg {
 
@@ -15,14 +15,17 @@ namespace wg {
         return exist;
     }
 
-    void VoronoiDiagram::input(const InputCenters &centers, const InputTris &tris) {
-        _centers = centers;
-        _tris = tris;
+    void VoronoiDiagram::input(void* inputData) {
+        auto t = *(Input*)inputData;
+        _centersTris = t;
     }
 
     void VoronoiDiagram::generate() {
         int width = CONF.getMapWidth(), height = CONF.getMapHeight();
         Rectangle box = Rectangle(0, width, height, 0);
+
+        auto &centers = _centersTris.first;
+        auto &tris = _centersTris.second;
 
         auto &centerMap = _diagram.first;
         auto &edgeMap = _diagram.second;
@@ -32,18 +35,18 @@ namespace wg {
         edgeMap.clear();
         _existsEdges.clear();
 
-        for (int i = 0; i < _centers.size(); ++i) {
-            centerMap[i] = CenterNode(_centers[i]);
+        for (int i = 0; i < centers.size(); ++i) {
+            centerMap[i] = CenterNode(centers[i]);
         }
 
         int newVertexId = 0;
-        for (auto &tri: _tris) {
+        for (auto &tri: tris) {
             if (tri->id > newVertexId)
                 newVertexId = tri->id;
         }
         ++newVertexId;
 
-        for (auto &tri: _tris) {
+        for (auto &tri: tris) {
             for (auto &edge: tri->edges) {
                 if (edge.nextTri == nullptr) {
                     continue;
@@ -90,8 +93,8 @@ namespace wg {
         }
     }
 
-    VoronoiDiagram::Output VoronoiDiagram::output() {
-        return _diagram;
+    void* VoronoiDiagram::output() {
+        return (void*)&_diagram;
     }
 
     void VoronoiDiagram::prepareVertexes(Drawer &drawer) {
@@ -103,6 +106,10 @@ namespace wg {
             drawer.appendVertex(sf::Lines, pair.second.point[0].vertex);
             drawer.appendVertex(sf::Lines, pair.second.point[1].vertex);
         }
+    }
+
+    std::string VoronoiDiagram::getHintLabelText() {
+        return "Generated Voronoi diagram.";
     }
 
     VoronoiDiagram::CenterNode::CenterNode(const Point &p) {

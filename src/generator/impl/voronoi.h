@@ -12,7 +12,7 @@
 
 namespace wg {
 
-    class VoronoiDiagram {
+    class VoronoiDiagram : public GeneratorImpl {
     public:
         struct CenterNode {
             std::vector<int> edgeIds;
@@ -33,12 +33,10 @@ namespace wg {
             EdgeNode(const Point &pa, int paId, const Point &pb, int pbId);
         };
 
-        typedef DelaunayTriangles::Output InputTris;
-        typedef Centers::Output InputCenters;
+        typedef DelaunayTriangles::Output Input;
         typedef std::pair<std::map<int, CenterNode>, std::map<int, EdgeNode>> Output;
     private:
-        InputCenters _centers;
-        InputTris _tris;
+        Input _centersTris;
         Output _diagram;
 
         std::map<int, std::map<int, bool>> _existsEdges;
@@ -46,13 +44,15 @@ namespace wg {
         bool _existsEdge(int paId, int pbId);
 
     public:
-        void input(const InputCenters &centers, const InputTris &tris);
+        std::string getHintLabelText() override;
 
-        void generate();
+        void input(void* inputData) override;
 
-        Output output();
+        void generate() override;
 
-        void prepareVertexes(Drawer &drawer);
+        void* output() override;
+
+        void prepareVertexes(Drawer &drawer) override;
     };
 
 }

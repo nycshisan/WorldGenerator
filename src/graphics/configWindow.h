@@ -47,7 +47,7 @@ namespace wg {
 
         Generator *_generator;
 
-        GeneratorState _lastState;
+        int _lastState;
 
         std::vector<ConfigUIWidget> _configWidgets;
 

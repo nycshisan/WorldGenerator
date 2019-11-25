@@ -14,7 +14,7 @@ void testVD() {
 
     for (int i = 1; i <= testNumber; ++i) {
         if (i % (testNumber / 100) == 0) {
-            LOGOUT("Proceeding: " + std::to_string(i) + "/" + std::to_string(testNumber));
+            LOG("Proceeding: " + std::to_string(i) + "/" + std::to_string(testNumber));
         }
         Generator::NextButtonResponder(*window); // Block centers
         if (loadData) {
@@ -29,11 +29,17 @@ void testVD() {
         Generator::UndoButtonResponder(*window);
     }
 
-    LOGOUT("OK!");
+    LOG("OK!");
 
 }
 
+void testStates(int target) {
+    auto window = MainWindow::MakeWindow();
+    while (Generator::SharedInstance().state < target)
+        Generator::NextButtonResponder(*window);
+}
+
 int main() {
-    testVD();
+    testStates(Generator::State::LloydRelaxation);
     return 0;
 }

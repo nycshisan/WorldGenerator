@@ -6,18 +6,18 @@
 
 #include <cmath>
 
-#include "../conf/conf.h"
-#include "../graphics/drawer.h"
+#include "../../conf/conf.h"
+#include "../../graphics/drawer.h"
 
 namespace wg {
 
-    void Blocks::input(const Input &relaxedVd) {
-        _relaxedVd = relaxedVd;
+    void Blocks::input(void* inputData) {
+        _relaxedVd = *(Input*)inputData;
     }
 
     void Blocks::generate() {
         int width = CONF.getMapWidth(), height = CONF.getMapHeight();
-        Rectangle box = Rectangle(0, width, height, 0);
+        Rectangle box = Rectangle(0, float(width), float(height), 0);
 
         _blockInfos.clear();
 
@@ -70,8 +70,8 @@ namespace wg {
         assertWithSave(_blockInfos.size() == CONF.getCenterNumber());
     }
 
-    Blocks::Output Blocks::output() {
-        return _blockInfos;
+    void* Blocks::output() {
+        return (void*)&_blockInfos;
     }
 
     void Blocks::prepareVertexes(Drawer &drawer) {
@@ -88,6 +88,10 @@ namespace wg {
 
             _prepareBlockVertexes(drawer, blockInfo, color);
         }
+    }
+
+    std::string Blocks::getHintLabelText() {
+        return "Initialized blocks' information.";
     }
 
     void BlocksDrawable::_prepareBlockVertexes(Drawer &drawer, const std::shared_ptr<BlockInfo> &blockInfo,

@@ -4,13 +4,13 @@
 
 #include "lloyd.h"
 
-#include "../conf/conf.h"
-#include "../graphics/drawer.h"
+#include "../../conf/conf.h"
+#include "../../graphics/drawer.h"
 
 namespace wg {
 
-    void LloydRelaxation::input(const Input &vd) {
-        _inputVd = vd;
+    void LloydRelaxation::input(void* inputData) {
+        _inputVd = *(Input*)inputData;
     }
 
     void LloydRelaxation::generate() {
@@ -46,19 +46,19 @@ namespace wg {
             }
 
             class DelaunayTriangles delaunayTriangles;
-            delaunayTriangles.input(centers);
+            delaunayTriangles.input((void*)&centers);
             delaunayTriangles.generate();
-            auto tris = delaunayTriangles.output();
+            auto centersTris = delaunayTriangles.output();
 
             class VoronoiDiagram voronoiDiagram;
-            voronoiDiagram.input(centers, tris);
+            voronoiDiagram.input(centersTris);
             voronoiDiagram.generate();
-            _relaxedVd = voronoiDiagram.output();
+            _relaxedVd = *(Output*)voronoiDiagram.output();
         }
     }
 
-    LloydRelaxation::Output LloydRelaxation::output() {
-        return _relaxedVd;
+    void* LloydRelaxation::output() {
+        return (void*)&_relaxedVd;
     }
 
     void LloydRelaxation::prepareVertexes(Drawer &drawer) {
@@ -70,6 +70,10 @@ namespace wg {
             drawer.appendVertex(sf::Lines, pair.second.point[0].vertex);
             drawer.appendVertex(sf::Lines, pair.second.point[1].vertex);
         }
+    }
+
+    std::string LloydRelaxation::getHintLabelText() {
+        return "Done Lloyd relaxation.";
     }
 
 }

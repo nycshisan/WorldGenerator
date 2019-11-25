@@ -14,7 +14,7 @@ wg::ConfigWindow::ConfigWindow(wg::Generator *generator) : sf::RenderWindow(sf::
         (unsigned int)(_BaseConfigWindowWidth * CONF.getUIScale()),
         (unsigned int)(CONF.getUIMapHeight() + MainWindow::_BaseBarHeight * CONF.getUIScale() * 2) / 2), "Config") {
     this->_generator = generator;
-    this->_lastState = Ready;
+    this->_lastState = Generator::State::Ready;
 }
 
 void wg::ConfigWindow::play() {
