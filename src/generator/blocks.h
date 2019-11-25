@@ -11,11 +11,12 @@
 #include <memory>
 
 #include "../data/blockInfo.h"
+#include "../conf/conf.h"
 
 namespace wg {
 
     class BlocksDrawable {
-        static constexpr float _CoastThickness = 2.f;
+        const float _CoastThickness = 2.f * CONF.getUIMapScaleConversion();
     protected:
         void _prepareBlockVertexes(Drawer &drawer, const std::shared_ptr<BlockInfo> &blockInfo, const sf::Color &color);
         void _prepareCoast(Drawer &drawer, const std::shared_ptr<EdgeInfo> &edgeInfo);

@@ -154,3 +154,4 @@ bin/WorldGenerator
 bin/Test
 cmake-build-release
 bin/logs
+.idea/codeStyles/Project.xml

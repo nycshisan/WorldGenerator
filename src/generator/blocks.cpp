@@ -112,11 +112,11 @@ namespace wg {
                 rtp(pointB.x + _CoastThickness * sin, pointB.y - _CoastThickness * cos),
                 lbp(pointA.x - _CoastThickness * sin, pointA.y + _CoastThickness * cos),
                 rbp(pointA.x + _CoastThickness * sin, pointA.y - _CoastThickness * cos);
-        drawer.appendVertex(sf::Triangles, ltp);
-        drawer.appendVertex(sf::Triangles, lbp);
-        drawer.appendVertex(sf::Triangles, rtp);
-        drawer.appendVertex(sf::Triangles, rtp);
-        drawer.appendVertex(sf::Triangles, lbp);
-        drawer.appendVertex(sf::Triangles, rbp);
+        drawer.appendVertex(sf::Triangles, ltp.vertex);
+        drawer.appendVertex(sf::Triangles, lbp.vertex);
+        drawer.appendVertex(sf::Triangles, rtp.vertex);
+        drawer.appendVertex(sf::Triangles, rtp.vertex);
+        drawer.appendVertex(sf::Triangles, lbp.vertex);
+        drawer.appendVertex(sf::Triangles, rbp.vertex);
     }
 }
