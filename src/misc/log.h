@@ -12,7 +12,7 @@ namespace wg {
 
     template<typename T>
     void _print(std::ostream &ostream, T &&arg) {
-        ostream << std::forward<T>(arg);
+        ostream << std::forward<T>(arg) << " ";
     }
 
     template<typename... Args>
@@ -28,6 +28,6 @@ namespace wg {
 
 }
 
-#define LOG(args...) LOGOUT(__FILE__, ":", __LINE__, " \"", __func__, "\" ", args)
+#define LOG(args...) LOGOUT(std::string(__FILE__) + ":" + std::to_string(__LINE__), args)
 
 #endif //WORLDGENERATOR_LOG_H
