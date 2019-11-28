@@ -4,7 +4,6 @@
 
 #include "noise.h"
 
-#include <cmath>
 #include <algorithm>
 
 namespace wg {

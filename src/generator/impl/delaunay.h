@@ -57,8 +57,8 @@ namespace wg {
         typedef Centers::Output Input;
         typedef std::pair<Input, std::unordered_set<NetNode *>> Output;
     public:
-        Input _centers{};
-        Output _centersTris{};
+        Input _centers;
+        Output _centersTris;
 
         NetNode *_triNetHead = nullptr;
 

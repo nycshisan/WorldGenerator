@@ -94,6 +94,21 @@ namespace wg {
         return "Initialized blocks' information.";
     }
 
+    std::string Blocks::save() {
+        const auto &fp = CONF.getBlocksOutputPath();
+        std::ofstream ofs(fp, std::ios_base::binary);
+        if (ofs.good()) {
+            BlockInfo::SaveBlockInfosTo(ofs, _blockInfos);
+            return "Blocks saved.";
+        } else {
+            return "Blocks saving failed.";
+        }
+    }
+
+    std::string Blocks::load() {
+        return "Not Implemented now.";
+    }
+
     void BlocksDrawable::_prepareBlockVertexes(Drawer &drawer, const std::shared_ptr<BlockInfo> &blockInfo,
                                                const sf::Color &color) {
         sf::Vertex v0 = blockInfo->center.vertex;

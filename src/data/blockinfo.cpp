@@ -4,6 +4,8 @@
 
 #include "blockInfo.h"
 
+#include <fstream>
+
 namespace wg {
 
     void BlockInfo::addMarginEdge(const Rectangle &box) {
@@ -64,6 +66,16 @@ namespace wg {
             area += std::abs((p1.x - center.x) * (p2.y - center.y) - (p2.x - center.x) * (p1.y - center.y));
         }
         area /= 2;
+    }
+
+    void BlockInfo::SaveBlockInfosTo(std::ofstream &ofs, const std::vector<std::shared_ptr<BlockInfo>> &infos) {
+        int head = 'WGBI';
+        ofs.write((char*)&head, sizeof(int));
+        size_t infosSize = infos.size();
+        ofs.write((char*)&infosSize, sizeof(size_t));
+        for (size_t i = 0; i < infosSize; ++i) {
+
+        }
     }
 
 }

@@ -54,7 +54,7 @@ namespace wg {
 
         // Coast Infos
         enum CoastType {
-            Land, Ocean, Sea, Unknown
+            Land = 1, Ocean = 2, Sea = 3, Unknown = 0
         };
         CoastType coastType = Unknown;
         bool isContinentCenter = false;
@@ -65,6 +65,8 @@ namespace wg {
         void addMarginEdge(const wg::Rectangle &box);
 
         void calcArea();
+
+        static void SaveBlockInfosTo(std::ofstream &ofs, const std::vector<std::shared_ptr<BlockInfo>>& infos);
     };
 
 }

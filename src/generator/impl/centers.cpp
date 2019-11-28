@@ -54,7 +54,8 @@ namespace wg {
     }
 
     std::string Centers::save() {
-        std::ofstream outfile("logs/centers.txt");
+        const auto &fp = CONF.getCentersOutputPath();
+        std::ofstream outfile(fp);
         if (!outfile.good()) return "Centers saving failed.";
         for (auto &center: _centers) {
             outfile << (int) center.x << " " << (int) center.y << std::endl;
@@ -63,11 +64,12 @@ namespace wg {
     }
 
     std::string Centers::load() {
-        std::ifstream infile("logs/centers.txt");
+        const auto &fp = CONF.getCentersOutputPath();
+        std::ifstream infile(fp);
         if (!infile.good()) return "Centers loading failed.";
         std::vector<Point> centers;
         while (!infile.eof()) {
-            int x, y;
+            int x = 0, y = 0;
             infile >> x >> y;
             centers.emplace_back(Point(x, y));
         }

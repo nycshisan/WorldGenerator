@@ -63,6 +63,10 @@ namespace wg {
         return (*this)["centers"]["span"].GetInt();
     }
 
+    std::string Configure::getCentersOutputPath() const {
+        return (*this)["centers"]["outputPath"].GetString();
+    }
+
     bool Configure::getDelaunayShowBoundingTriangles() const {
         return (*this)["delaunay"]["showBoundingTriangles"].GetBool();
     }
@@ -73,6 +77,10 @@ namespace wg {
 
     int Configure::getLloydIteration() const {
         return (*this)["lloyd"]["iteration"].GetInt();
+    }
+
+    std::string Configure::getBlocksOutputPath() const {
+        return (*this)["blocks"]["outputPath"].GetString();
     }
 
     int Configure::getCoastContinentNumber() const {

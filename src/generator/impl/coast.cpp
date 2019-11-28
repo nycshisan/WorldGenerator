@@ -83,7 +83,7 @@ namespace wg {
             if (block->coastType == BlockInfo::CoastType::Land) {
                 for (auto &edge: block->edges) {
                     for (auto &relatedBlock: edge->relatedBlocks) {
-                        if (relatedBlock.lock() != block->thisPtr.lock()) {
+                        if (relatedBlock.lock() != block) {
                             if (relatedBlock.lock()->coastType == BlockInfo::CoastType::Ocean) {
                                 block->coastType = BlockInfo::CoastType::Sea;
                             }

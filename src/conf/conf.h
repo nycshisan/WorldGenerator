@@ -64,11 +64,15 @@ namespace wg {
 
         int getCenterSpan() const;
 
+        std::string getCentersOutputPath() const;
+
         bool getDelaunayShowBoundingTriangles() const;
 
         float getLloydFactor() const;
 
         int getLloydIteration() const;
+
+        std::string getBlocksOutputPath() const;
 
         int getCoastContinentNumber() const;
 

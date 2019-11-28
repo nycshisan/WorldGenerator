@@ -41,6 +41,10 @@ namespace wg {
         void* output() override;
 
         void prepareVertexes(Drawer &drawer) override;
+
+        std::string save() override;
+
+        std::string load() override;
     };
 
 }

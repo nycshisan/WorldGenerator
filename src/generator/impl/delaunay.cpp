@@ -14,6 +14,9 @@ namespace wg {
     }
 
     void DelaunayTriangles::generate() {
+        // For reasons which are unknown for now (maybe because of the computation accuracy of float numbers), each time
+        // we call this function will generate the triangles with different order but in almost same position.
+
         _deleteOldNodes();
         int newNetNodeId = 0;
 
