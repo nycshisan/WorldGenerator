@@ -23,8 +23,8 @@ namespace wg {
         auto &centerMap = _relaxedVd.first;
         auto &edgeMap = _relaxedVd.second;
 
-        std::map<int, std::shared_ptr<EdgeInfo>> initializedEdgeInfos;
-        std::map<int, std::shared_ptr<VertexInfo>> initializedVertexInfos;
+        std::map<int, std::shared_ptr<EdgeInfo>> _initializedEdgeInfos;
+        std::map<int, std::shared_ptr<VertexInfo>> _initializedVertexInfos;
 
         for (auto &pair: centerMap) {
             // Initialize the block information
@@ -34,26 +34,26 @@ namespace wg {
             blockInfo->center = center.point;
 
             for (auto edgeId: center.edgeIds) {
-                if (initializedEdgeInfos.count(edgeId) == 0) {
+                if (_initializedEdgeInfos.count(edgeId) == 0) {
                     // Initialize the edge information
                     auto &edge = edgeMap[edgeId];
                     auto newEdgeInfo = std::make_shared<EdgeInfo>(edgeId);
                     for (int i = 0; i < 2; ++i) {
                         int vertexId = edge.vertexIds[i];
-                        if (initializedVertexInfos.count(vertexId) == 0) {
+                        if (_initializedVertexInfos.count(vertexId) == 0) {
                             // Initialize the vertex information
                             auto &vertex = edge.point[i];
                             auto newVertexInfo = std::make_shared<VertexInfo>(vertexId);
                             newVertexInfo->point = vertex;
-                            initializedVertexInfos[vertexId] = newVertexInfo;
+                            _initializedVertexInfos[vertexId] = newVertexInfo;
                         }
-                        auto vertexInfo = initializedVertexInfos[vertexId];
+                        auto vertexInfo = _initializedVertexInfos[vertexId];
                         newEdgeInfo->vertexes.emplace(vertexInfo);
                         vertexInfo->relatedEdges.emplace(newEdgeInfo);
                     }
-                    initializedEdgeInfos[edgeId] = newEdgeInfo;
+                    _initializedEdgeInfos[edgeId] = newEdgeInfo;
                 }
-                auto &edgeInfo = initializedEdgeInfos[edgeId];
+                auto &edgeInfo = _initializedEdgeInfos[edgeId];
                 for (auto &vertex: edgeInfo->vertexes) {
                     blockInfo->vertexes.emplace(vertex);
                     vertex->relatedBlocks.emplace(blockInfo);

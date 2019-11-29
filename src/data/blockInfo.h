@@ -53,10 +53,10 @@ namespace wg {
         float area = 0.0f;
 
         // Coast Infos
-        enum CoastType {
+        enum class CoastType : int {
             Land = 1, Ocean = 2, Sea = 3, Unknown = 0
         };
-        CoastType coastType = Unknown;
+        CoastType coastType = CoastType::Unknown;
         bool isContinentCenter = false;
 
 

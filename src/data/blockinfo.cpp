@@ -4,6 +4,8 @@
 
 #include "blockInfo.h"
 
+#include <unordered_set>
+
 #include "binaryIO.h"
 
 namespace wg {
@@ -75,6 +77,22 @@ namespace wg {
 
         write(ofs, VerifyHeader);
         write(ofs, infos);
+
+        std::unordered_set<std::shared_ptr<EdgeInfo>> edges;
+        for (const auto &info : infos) {
+            for (const auto &edgePtr : info->edges) {
+                edges.insert(edgePtr);
+            }
+        }
+        write(ofs, edges);
+
+        std::unordered_set<std::shared_ptr<VertexInfo>> vertexes;
+        for (const auto &info : infos) {
+            for (const auto &vertexPtr : info->vertexes) {
+                vertexes.insert(vertexPtr.lock());
+            }
+        }
+        write(ofs, vertexes);
     }
 
     void BlockInfo::LoadBlockInfosTo(std::ifstream &ifs, std::vector<std::shared_ptr<BlockInfo>> &infos) {
