@@ -7,7 +7,7 @@
 
 #include "SFML/Graphics.hpp"
 
-#include "simd.h"
+#include "../misc/simd.h"
 
 namespace wg {
 

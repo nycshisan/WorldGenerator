@@ -7,9 +7,6 @@
 #include <random>
 #include <fstream>
 
-#include "../../conf/conf.h"
-#include "../../graphics/drawer.h"
-
 namespace wg {
 
     void Centers::input(void* inputData) { assert(inputData == nullptr); }

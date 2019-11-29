@@ -70,11 +70,8 @@ namespace wg {
             }
         };
 
-        float glb = grad(hlb, xf, yf), glt = grad(hlt, xf, yf - 1.0f), grb = grad(hrb, xf - 1.0f, yf), grt = grad(hrt,
-                                                                                                                  xf -
-                                                                                                                  1.0f,
-                                                                                                                  yf -
-                                                                                                                  1.0f);
+        float glb = grad(hlb, xf, yf), glt = grad(hlt, xf, yf - 1.0f),
+              grb = grad(hrb, xf - 1.0f, yf), grt = grad(hrt, xf - 1.0f, yf - 1.0f);
 
         auto lerp = [](float a, float b, float x) -> float { return a + x * (b - a); };
 

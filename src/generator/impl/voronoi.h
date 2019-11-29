@@ -7,7 +7,6 @@
 
 #include <vector>
 
-#include "centers.h"
 #include "delaunay.h"
 
 namespace wg {

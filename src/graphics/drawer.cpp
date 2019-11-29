@@ -2,8 +2,9 @@
 // Created by Nycshisan on 2018/4/16.
 //
 
-#include "window.h"
 #include "drawer.h"
+
+#include "window.h"
 #include "../conf/conf.h"
 
 namespace wg {

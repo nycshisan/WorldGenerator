@@ -5,7 +5,7 @@
 #include "lloyd.h"
 
 #include "../../conf/conf.h"
-#include "../../graphics/drawer.h"
+#include "../../graphics/graphics.h"
 
 namespace wg {
 

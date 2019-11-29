@@ -5,13 +5,14 @@
 #ifndef WORLDGENERATOR_CONFIGWINDOW_H
 #define WORLDGENERATOR_CONFIGWINDOW_H
 
-#include <SFML/Graphics.hpp>
+#include <memory>
 
-#include "../generator/generator.h"
+#include <SFML/Graphics.hpp>
 
 namespace wg {
 
     class Generator;
+    class GeneratorConfig;
     class ConfigWindow;
 
     class ConfigUIWidget {

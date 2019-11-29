@@ -7,8 +7,6 @@
 #include <cmath>
 #include <limits>
 
-#include "../../conf/conf.h"
-#include "../../graphics/drawer.h"
 #include "../generator.h"
 
 namespace wg {

@@ -61,7 +61,7 @@ namespace wg {
 
     void BlockInfo::calcArea() {
         for (auto &edge: edges) {
-            assertWithSave(edge->vertexes.size() == 2);
+            assert(edge->vertexes.size() == 2);
             const Point &p1 = (*edge->vertexes.begin())->point, &p2 = (*edge->vertexes.rbegin())->point;
             area += std::abs((p1.x - center.x) * (p2.y - center.y) - (p2.x - center.x) * (p1.y - center.y));
         }

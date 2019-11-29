@@ -6,7 +6,6 @@
 
 #include "window.h"
 
-#include "../conf/conf.h"
 #include "../generator/generator.h"
 
 namespace wg {

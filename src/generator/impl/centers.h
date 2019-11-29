@@ -9,7 +9,6 @@
 
 #include "SFML/Graphics.hpp"
 
-#include "../../misc/misc.h"
 #include "../impl.h"
 
 namespace wg {

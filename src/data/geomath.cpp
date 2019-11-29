@@ -7,7 +7,7 @@
 #include <cmath>
 
 #include "../conf/conf.h"
-#include "error.h"
+#include "../misc/error.h"
 
 namespace wg {
 

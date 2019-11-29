@@ -9,7 +9,7 @@
 #include <unordered_set>
 #include <set>
 
-#include "../misc/misc.h"
+#include "geomath.h"
 
 namespace wg {
 

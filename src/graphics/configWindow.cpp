@@ -4,8 +4,8 @@
 
 #include "configWindow.h"
 
-#include "../conf/conf.h"
 #include "window.h"
+#include "../generator/generator.h"
 
 sf::Font wg::ConfigUIWidget::_Font = sf::Font();
 bool wg::ConfigUIWidget::_FontLoaded = false;

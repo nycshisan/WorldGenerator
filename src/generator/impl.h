@@ -5,7 +5,9 @@
 #ifndef WORLDGENERATOR_IMPL_H
 #define WORLDGENERATOR_IMPL_H
 
-#include "../graphics/drawer.h"
+#include "../graphics/graphics.h"
+#include "../misc/misc.h"
+#include "../conf/conf.h"
 
 namespace wg {
 

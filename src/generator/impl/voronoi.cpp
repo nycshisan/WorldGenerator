@@ -4,9 +4,6 @@
 
 #include "voronoi.h"
 
-#include "../../conf/conf.h"
-#include "../../graphics/drawer.h"
-
 namespace wg {
 
     bool VoronoiDiagram::_existsEdge(int paId, int pbId) {

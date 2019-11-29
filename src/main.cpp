@@ -1,4 +1,4 @@
-#include "graphics/window.h"
+#include "graphics/graphics.h"
 
 int main() {
     wg::MainWindow::MakeWindow()->play();

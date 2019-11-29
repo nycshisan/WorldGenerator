@@ -4,10 +4,7 @@
 
 #include "generator.h"
 
-#include "../misc/log.h"
-#include "../conf/conf.h"
-#include "../graphics/window.h"
-#include "../graphics/drawer.h"
+#include "../graphics/graphics.h"
 
 namespace wg {
 
