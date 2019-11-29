@@ -4,7 +4,7 @@
 
 #include "blockInfo.h"
 
-#include <fstream>
+#include "binaryIO.h"
 
 namespace wg {
 
@@ -68,14 +68,17 @@ namespace wg {
         area /= 2;
     }
 
-    void BlockInfo::SaveBlockInfosTo(std::ofstream &ofs, const std::vector<std::shared_ptr<BlockInfo>> &infos) {
-        int head = 'WGBI';
-        ofs.write((char*)&head, sizeof(int));
-        size_t infosSize = infos.size();
-        ofs.write((char*)&infosSize, sizeof(size_t));
-        for (size_t i = 0; i < infosSize; ++i) {
+    static std::string VerifyHeader = "WGBI"; // NOLINT(cert-err58-cpp)
 
-        }
+    void BlockInfo::SaveBlockInfosTo(std::ofstream &ofs, const std::vector<std::shared_ptr<BlockInfo>> &infos) {
+        using namespace BinaryIO;
+
+        write(ofs, VerifyHeader);
+        write(ofs, infos);
+    }
+
+    void BlockInfo::LoadBlockInfosTo(std::ifstream &ifs, std::vector<std::shared_ptr<BlockInfo>> &infos) {
+
     }
 
 }

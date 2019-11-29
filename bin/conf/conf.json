@@ -11,10 +11,10 @@
         "font": "assets/PingFang.ttc"
     },
     "centers": {
-        "number": 50,
+        "number": 20,
         "padding": 50,
         "span": 50,
-        "outputPath": "centers.txt"
+        "outputPath": "output/centers.txt"
     },
     "delaunay": {
         "showBoundingTriangles": false
@@ -24,7 +24,7 @@
         "iteration": 1
     },
     "blocks": {
-        "outputPath": "blocks.dat"
+        "outputPath": "output/blocks.dat"
     },
     "coast": {
         "continentNumber": 4,

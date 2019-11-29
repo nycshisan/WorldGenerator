@@ -153,5 +153,5 @@ Temporary Items
 bin/WorldGenerator
 bin/Test
 cmake-build-release
-bin/logs
+bin/output
 .idea/codeStyles/Project.xml

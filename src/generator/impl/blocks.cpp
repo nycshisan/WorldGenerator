@@ -104,8 +104,15 @@ namespace wg {
         }
     }
 
-    std::string Blocks::load() {
-        return "Not Implemented now.";
+    std::string Blocks::load() {const auto &fp = CONF.getBlocksOutputPath();
+        std::ifstream ifs(fp, std::ios_base::binary);
+        if (ifs.good()) {
+            _blockInfos.clear();
+            BlockInfo::LoadBlockInfosTo(ifs, _blockInfos);
+            return "Blocks loaded.";
+        } else {
+            return "Blocks loading failed.";
+        }
     }
 
     void BlocksDrawable::_prepareBlockVertexes(Drawer &drawer, const std::shared_ptr<BlockInfo> &blockInfo,

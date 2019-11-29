@@ -67,6 +67,8 @@ namespace wg {
         void calcArea();
 
         static void SaveBlockInfosTo(std::ofstream &ofs, const std::vector<std::shared_ptr<BlockInfo>>& infos);
+
+        static void LoadBlockInfosTo(std::ifstream &ifs, std::vector<std::shared_ptr<BlockInfo>>& infos);
     };
 
 }

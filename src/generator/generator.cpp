@@ -114,6 +114,7 @@ namespace wg {
 
     std::string Generator::load() {
         if (state > State::Ready) {
+            _drawer->clearVertexes();
             const auto &loadResult = impls[state]->load();
             impls[state]->prepareVertexes(*_drawer);
             return loadResult;
