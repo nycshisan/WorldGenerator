@@ -5,12 +5,16 @@
 #include "blockInfo.h"
 
 #include <unordered_set>
+#include <unordered_map>
 
 #include "binaryIO.h"
 
 namespace wg {
 
     void BlockInfo::addMarginEdge(const Rectangle &box) {
+        static unsigned int MarginEdgeId = 1000000;
+        static unsigned int CornerVertexId = 2000000;
+
         std::vector<std::pair<std::shared_ptr<VertexInfo>, Line>> edgePoints;
         for (auto &edgeInfo: edges) {
             for (auto &vertexInfo: edgeInfo->vertexes) {
@@ -25,7 +29,7 @@ namespace wg {
             auto &va = edgePoints[0].first, &vb = edgePoints[1].first;
             auto &la = edgePoints[0].second, &lb = edgePoints[1].second;
             if ((la.vertical && lb.vertical) || (la.horizontal && lb.horizontal)) {
-                auto edge = std::make_shared<EdgeInfo>(-1);
+                auto edge = std::make_shared<EdgeInfo>(MarginEdgeId++);
                 edge->isMargin = true;
                 edge->relatedBlocks.emplace(thisPtr);
                 edge->vertexes.emplace(va);
@@ -35,19 +39,19 @@ namespace wg {
                 if (la.horizontal) {
                     std::swap(la, lb);
                 }
-                auto corner = std::make_shared<VertexInfo>(-1);
+                auto corner = std::make_shared<VertexInfo>(CornerVertexId++);
                 corner->isCorner = true;
                 corner->point = Point(la.verticalX, lb.horizontalY);
                 vertexes.emplace(corner);
 
-                auto edgeA = std::make_shared<EdgeInfo>(-1);
+                auto edgeA = std::make_shared<EdgeInfo>(MarginEdgeId++);
                 edgeA->isMargin = true;
                 edgeA->relatedBlocks.emplace(thisPtr);
                 edgeA->vertexes.emplace(va);
                 edgeA->vertexes.emplace(corner);
                 edges.emplace(edgeA);
 
-                auto edgeB = std::make_shared<EdgeInfo>(-1);
+                auto edgeB = std::make_shared<EdgeInfo>(MarginEdgeId++);
                 edgeB->isMargin = true;
                 edgeB->relatedBlocks.emplace(thisPtr);
                 edgeB->vertexes.emplace(vb);
@@ -70,13 +74,11 @@ namespace wg {
         area /= 2;
     }
 
-    static std::string VerifyHeader = "WGBI"; // NOLINT(cert-err58-cpp)
+    static std::string VerifyHead = "WGBIHD"; // NOLINT(cert-err58-cpp)
+    static std::string VerifyTail = "WGBITL"; // NOLINT(cert-err58-cpp)
 
     void BlockInfo::SaveBlockInfosTo(std::ofstream &ofs, const std::vector<std::shared_ptr<BlockInfo>> &infos) {
         using namespace BinaryIO;
-
-        write(ofs, VerifyHeader);
-        write(ofs, infos);
 
         std::unordered_set<std::shared_ptr<EdgeInfo>> edges;
         for (const auto &info : infos) {
@@ -84,19 +86,91 @@ namespace wg {
                 edges.insert(edgePtr);
             }
         }
-        write(ofs, edges);
-
         std::unordered_set<std::shared_ptr<VertexInfo>> vertexes;
         for (const auto &info : infos) {
             for (const auto &vertexPtr : info->vertexes) {
                 vertexes.insert(vertexPtr.lock());
             }
         }
-        write(ofs, vertexes);
+
+        write(ofs, VerifyHead);
+        write(ofs, infos.size());
+        write(ofs, edges.size());
+        write(ofs, vertexes.size());
+        for (const auto &ele : infos) {
+            write(ofs, ele);
+        }
+        for (const auto &ele : edges) {
+            write(ofs, ele);
+        }
+        for (const auto &ele : vertexes) {
+            write(ofs, ele);
+        }
+        write(ofs, VerifyTail);
     }
 
     void BlockInfo::LoadBlockInfosTo(std::ifstream &ifs, std::vector<std::shared_ptr<BlockInfo>> &infos) {
+        using namespace BinaryIO;
 
+        std::string head;
+        read(ifs, head, VerifyHead.size());
+        assert(head == VerifyHead);
+
+        unsigned int blockNum, edgeNum, vertexNum;
+        read(ifs, blockNum);
+        read(ifs, edgeNum);
+        read(ifs, vertexNum);
+
+        std::vector<std::shared_ptr<EdgeInfo>> edges;
+        std::vector<std::shared_ptr<VertexInfo>> vertexes;
+
+        read(ifs, infos, blockNum);
+        read(ifs, edges, edgeNum);
+        read(ifs, vertexes, vertexNum);
+
+        std::unordered_map<int, std::shared_ptr<BlockInfo>> bm;
+        std::unordered_map<int, std::shared_ptr<EdgeInfo>> em;
+        std::unordered_map<int, std::shared_ptr<VertexInfo>> vm;
+        for (const auto &ptr : infos) {
+            bm[ptr->id] = ptr;
+        }
+        for (const auto &ptr : edges) {
+            em[ptr->id] = ptr;
+        }
+        for (const auto &ptr : vertexes) {
+            vm[ptr->id] = ptr;
+        }
+
+        for (const auto &ptr : vertexes) {
+            for (int id : ptr->edgeIds) {
+                ptr->relatedEdges.emplace(em[id]);
+            }
+            for (int id : ptr->blockIds) {
+                ptr->relatedBlocks.emplace(bm[id]);
+            }
+        }
+        for (const auto &ptr : edges) {
+            for (int id : ptr->blockIds) {
+                ptr->relatedBlocks.emplace(bm[id]);
+            }
+            for (int id : ptr->vertexIds) {
+                ptr->vertexes.emplace(vm[id]);
+            }
+        }
+        for (const auto &ptr : infos) {
+            for (int id : ptr->edgeIds) {
+                ptr->edges.emplace(em[id]);
+            }
+            for (int id : ptr->vertexIds) {
+                ptr->vertexes.emplace(vm[id]);
+            }
+            ptr->thisPtr = ptr;
+            ptr->calcArea();
+        }
+
+        std::string tail;
+        read(ifs, tail, VerifyTail.size());
+        assert(tail == VerifyTail);
     }
 
 }

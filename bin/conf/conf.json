@@ -11,7 +11,7 @@
         "font": "assets/PingFang.ttc"
     },
     "centers": {
-        "number": 20,
+        "number": 3000,
         "padding": 50,
         "span": 50,
         "outputPath": "output/centers.txt"

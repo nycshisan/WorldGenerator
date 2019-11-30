@@ -66,6 +66,42 @@ namespace wg {
             for (const auto& ele : vector)
                 write(ofs, ele);
         }
+
+        typedef std::ifstream& IFS;
+
+        void read(IFS ifs, bool& b);
+        void read(IFS ifs, std::string& string, size_t size);
+        void read(IFS ifs, VertexInfo& info);
+        void read(IFS ifs, EdgeInfo& info);
+        void read(IFS ifs, BlockInfo& info);
+
+        template <typename T>
+        void_if<std::is_arithmetic<T>::value> read(IFS ifs, T& number) {
+            ifs.read((char*)&number, sizeof(T));
+        }
+
+        template <class T>
+        void read(IFS ifs, std::shared_ptr<T>& ptr) {
+            ptr.reset(new T());
+            read(ifs, *ptr);
+        }
+
+        template <class T>
+        void read(IFS ifs, std::vector<T>& vector, size_t size) {
+            vector.clear();
+            for (size_t i = 0; i < size; ++i) {
+                T ele;
+                read(ifs, ele);
+                vector.emplace_back(ele);
+            }
+        }
+
+        template <class T>
+        void read(IFS ifs, std::vector<T>& vector) {
+            size_t size;
+            read(ifs, size);
+            read(ifs, vector, size);
+        }
     }
 }
 

@@ -2,7 +2,8 @@
 // Created by Nycshisan on 2018/4/8.
 //
 
-#include "../graphics/window.h"
+#include "../graphics/graphics.h"
+#include "../generator/generator.h"
 
 using namespace wg;
 
@@ -39,7 +40,15 @@ void testStates(int target) {
         Generator::NextButtonResponder(*window);
 }
 
+void testIO(int target) {
+    auto window = MainWindow::MakeWindow();
+    while (Generator::SharedInstance().state < target)
+        Generator::NextButtonResponder(*window);
+    Generator::SaveButtonResponder(*window);
+    Generator::LoadButtonResponder(*window);
+}
+
 int main() {
-    testStates(Generator::State::LloydRelaxation);
+    testIO(Generator::State::Blocks);
     return 0;
 }
