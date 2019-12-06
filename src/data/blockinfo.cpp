@@ -116,7 +116,7 @@ namespace wg {
         read(ifs, head, VerifyHead.size());
         assert(head == VerifyHead);
 
-        unsigned int blockNum, edgeNum, vertexNum;
+        size_t blockNum, edgeNum, vertexNum;
         read(ifs, blockNum);
         read(ifs, edgeNum);
         read(ifs, vertexNum);
