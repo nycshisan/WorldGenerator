@@ -128,9 +128,9 @@ namespace wg {
         read(ifs, edges, edgeNum);
         read(ifs, vertexes, vertexNum);
 
-        std::unordered_map<int, std::shared_ptr<BlockInfo>> bm;
-        std::unordered_map<int, std::shared_ptr<EdgeInfo>> em;
-        std::unordered_map<int, std::shared_ptr<VertexInfo>> vm;
+        std::unordered_map<decltype(BlockInfo::id), std::shared_ptr<BlockInfo>> bm;
+        std::unordered_map<decltype(EdgeInfo::id), std::shared_ptr<EdgeInfo>> em;
+        std::unordered_map<decltype(VertexInfo::id), std::shared_ptr<VertexInfo>> vm;
         for (const auto &ptr : infos) {
             bm[ptr->id] = ptr;
         }

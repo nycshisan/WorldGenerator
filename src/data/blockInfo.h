@@ -26,8 +26,8 @@ namespace wg {
         bool isCorner = false;
 
         // caches in loading
-        std::vector<int> blockIds;
-        std::vector<int> edgeIds;
+        std::vector<unsigned int> blockIds;
+        std::vector<unsigned int> edgeIds;
 
         explicit VertexInfo() : id(0) {}
         explicit VertexInfo(unsigned int id) : id(id) {}
@@ -40,8 +40,8 @@ namespace wg {
         std::set<std::shared_ptr<VertexInfo>, std::owner_less<std::shared_ptr<VertexInfo>>> vertexes;
 
         // caches in loading
-        std::vector<int> blockIds;
-        std::vector<int> vertexIds;
+        std::vector<unsigned int> blockIds;
+        std::vector<unsigned int> vertexIds;
 
         bool isMargin = false;
 
@@ -60,8 +60,8 @@ namespace wg {
         float area = 0.0f;
 
         // caches in loading
-        std::vector<int> edgeIds;
-        std::vector<int> vertexIds;
+        std::vector<unsigned int> edgeIds;
+        std::vector<unsigned int> vertexIds;
 
         // Coast Infos
         enum class CoastType : int {
