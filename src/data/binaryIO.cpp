@@ -16,16 +16,6 @@ void wg::BinaryIO::write(std::ofstream &ofs, const std::string& string) {
 }
 
 void wg::BinaryIO::write(std::ofstream &ofs, const wg::VertexInfo &info) {
-    // ----------------------------------------------
-    // Binary data model in file:
-    //
-    // unsigned int id;
-    // float point.(x, y);
-    // unsigned char point.color.(r, g, b, a);
-    // bool isCorner;
-    // vector<unsigned int> relatedBlocks;
-    // vector<unsigned int> relatedEdges;
-    // ----------------------------------------------
     write(ofs, info.id);
     write(ofs, info.point.x);
     write(ofs, info.point.y);
@@ -47,14 +37,6 @@ void wg::BinaryIO::write(std::ofstream &ofs, const wg::VertexInfo &info) {
 }
 
 void wg::BinaryIO::write(std::ofstream &ofs, const wg::EdgeInfo &info) {
-    // ----------------------------------------------
-    // Binary data model in file:
-    //
-    // unsigned int id;
-    // bool isMargin;
-    // vector<unsigned int> relatedBlocks;
-    // vector<unsigned int> vertexes;
-    // ----------------------------------------------
     write(ofs, info.id);
     write(ofs, info.isMargin);
     std::vector<unsigned int> ids;
@@ -70,15 +52,6 @@ void wg::BinaryIO::write(std::ofstream &ofs, const wg::EdgeInfo &info) {
 }
 
 void wg::BinaryIO::write(std::ofstream &ofs, const wg::BlockInfo &info) {
-    // ----------------------------------------------
-    // Binary data model in file:
-    //
-    // unsigned int id;
-    // float center.(x, y);
-    // unsigned char center.color.(r, g, b, a);
-    // vector<unsigned int> edges;
-    // vector<unsigned int> vertexes;
-    // ----------------------------------------------
     write(ofs, info.id);
     write(ofs, info.center.x);
     write(ofs, info.center.y);
