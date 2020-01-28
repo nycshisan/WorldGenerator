@@ -37,6 +37,9 @@ namespace wg {
             ofs.write((char*)&number, sizeof(T));
         }
 
+        // write size_t as unsigned int for cross-language readability
+        void write(OFS ofs, size_t size);
+
         void write(OFS ofs, bool b);
         void write(OFS ofs, const std::string& string);
         void write(OFS ofs, const VertexInfo& info);
@@ -79,6 +82,9 @@ namespace wg {
         void_if<std::is_arithmetic<T>::value> read(IFS ifs, T& number) {
             ifs.read((char*)&number, sizeof(T));
         }
+
+        // read size_t as unsigned int for cross-language readability
+        void read(IFS ifs, size_t &size);
 
         template <class T>
         void read(IFS ifs, std::shared_ptr<T>& ptr) {

@@ -24,7 +24,7 @@
         "iteration": 1
     },
     "blocks": {
-        "outputPath": "output/blocks.dat"
+        "outputPath": "output/blocks.bytes"
     },
     "coast": {
         "continentNumber": 4,

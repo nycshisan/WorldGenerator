@@ -71,6 +71,10 @@ void wg::BinaryIO::write(std::ofstream &ofs, const wg::BlockInfo &info) {
     write(ofs, ids);
 }
 
+void wg::BinaryIO::write(std::ofstream &ofs, size_t size) {
+    write(ofs, (unsigned int)size);
+}
+
 void wg::BinaryIO::read(std::ifstream &ifs, bool& b) {
     unsigned char ucb;
     read(ifs, ucb);
@@ -117,4 +121,10 @@ void wg::BinaryIO::read(std::ifstream &ifs, wg::BlockInfo &info) {
     read(ifs, info.center.vertex.color.a);
     read(ifs, info.edgeIds);
     read(ifs, info.vertexIds);
+}
+
+void wg::BinaryIO::read(std::ifstream &ifs, size_t &size) {
+    unsigned int uis;
+    read(ifs, uis);
+    size = uis;
 }
