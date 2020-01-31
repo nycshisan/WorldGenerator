@@ -117,12 +117,12 @@ namespace wg {
 
     void BlocksDrawable::_prepareBlockVertexes(Drawer &drawer, const std::shared_ptr<BlockInfo> &blockInfo,
                                                const sf::Color &color) {
-        sf::Vertex v0 = blockInfo->center.vertex;
+        sf::Vertex &v0 = blockInfo->center.vertex;
         v0.color = color;
         for (auto &edgeInfo: blockInfo->edges) {
             drawer.appendVertex(sf::Triangles, v0);
             for (auto &vertexInfo: edgeInfo->vertexes) {
-                auto v = vertexInfo->point.vertex;
+                auto &v = vertexInfo->point.vertex;
                 v.color = color;
                 drawer.appendVertex(sf::Triangles, v);
             }

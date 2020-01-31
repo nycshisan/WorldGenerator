@@ -8,6 +8,7 @@
 #include <unordered_map>
 
 #include "binaryIO.h"
+#include "../conf/conf.h"
 
 namespace wg {
 
@@ -94,6 +95,8 @@ namespace wg {
         }
 
         write(ofs, VerifyHead);
+        write(ofs, CONF.getMapWidth());
+        write(ofs, CONF.getMapHeight());
         write(ofs, infos.size());
         write(ofs, edges.size());
         write(ofs, vertexes.size());
@@ -117,6 +120,8 @@ namespace wg {
         assert(head == VerifyHead);
 
         size_t blockNum, edgeNum, vertexNum;
+        int width, height;
+        read(ifs, width); read(ifs, height);
         read(ifs, blockNum);
         read(ifs, edgeNum);
         read(ifs, vertexNum);
