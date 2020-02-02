@@ -10,6 +10,7 @@
 #include <set>
 
 #include "geomath.h"
+#include "coastinfo.h"
 
 namespace wg {
 
@@ -64,11 +65,7 @@ namespace wg {
         std::vector<unsigned int> vertexIds;
 
         // Coast Infos
-        enum class CoastType : int {
-            Land = 1, Ocean = 2, Sea = 3, Unknown = 0
-        };
-        CoastType coastType = CoastType::Unknown;
-        bool isContinentCenter = false;
+        CoastInfo coastInfo;
 
         explicit BlockInfo() : id(0) {}
         explicit BlockInfo(unsigned int id) : id(id) {}
