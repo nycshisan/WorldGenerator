@@ -9,5 +9,6 @@
 #include "log.h"
 #include "error.h"
 #include "noise.h"
+#include "fsWrapper.h"
 
 #endif //WORLDGENERATOR_MISC_H

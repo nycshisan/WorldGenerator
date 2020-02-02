@@ -13,6 +13,7 @@
 #include "impl/lloyd.h"
 #include "impl/blocks.h"
 #include "impl/coast.h"
+#include "impl/finish.h"
 
 #include "config.h"
 
@@ -41,6 +42,7 @@ namespace wg {
             static const int LloydRelaxation = 3;
             static const int Blocks = 4;
             static const int Coast = 5;
+            static const int Finish = 6;
         };
 
         int state = State::Ready;

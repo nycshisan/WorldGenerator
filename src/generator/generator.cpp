@@ -4,8 +4,6 @@
 
 #include "generator.h"
 
-#include "../graphics/graphics.h"
-
 namespace wg {
 
     Generator::Generator() {
@@ -15,6 +13,7 @@ namespace wg {
         this->impls.emplace_back(std::make_shared<LloydRelaxation>());
         this->impls.emplace_back(std::make_shared<Blocks>());
         this->impls.emplace_back(std::make_shared<Coast>());
+        this->impls.emplace_back(std::make_shared<Finish>());
 
         this->_drawer = std::make_shared<Drawer>();
     }
@@ -84,6 +83,10 @@ namespace wg {
         if (state >= (int)impls.size() - 1) return; // do nothing if all the generators have been run
         void *input = state >= 0 ? impls[state]->output() : nullptr; // get input from the last generator
         if (state >= 0) impls[state]->save(); // save the data of the last generator (is exists)
+        else {
+            // clear the output directory at the initial stage
+            ClearDirectory(CONF.getOutputDirectory());
+        }
         state++;
         impls[state]->input(input);
         redo();

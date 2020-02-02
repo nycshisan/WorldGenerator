@@ -5,7 +5,6 @@
 #include "blocks.h"
 
 #include <cmath>
-#include <filesystem>
 
 #include "../../conf/conf.h"
 
@@ -96,7 +95,7 @@ namespace wg {
 
     std::string Blocks::save() {
         const auto &fp = CONF.getBlocksOutputPath();
-        std::filesystem::create_directory(std::filesystem::path(fp).remove_filename());
+        CreateDependentDirectory(fp);
         std::ofstream ofs(fp, std::ios_base::binary);
         if (ofs.good()) {
             BlockInfo::SaveBlockInfosTo(ofs, _blockInfos);
