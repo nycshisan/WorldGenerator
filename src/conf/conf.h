@@ -60,6 +60,8 @@ namespace wg {
 
         std::string getOutputDirectory() const;
 
+        bool getOutputAutoSave() const;
+
         int getCenterNumber() const;
 
         int getCenterPadding() const;

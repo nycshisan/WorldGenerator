@@ -11,7 +11,8 @@
         "font": "assets/PingFang.ttc"
     },
     "output": {
-        "directory": "output/"
+        "directory": "output/",
+        "autosave": true
     },
     "centers": {
         "number": 200,

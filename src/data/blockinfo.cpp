@@ -75,8 +75,8 @@ namespace wg {
         area /= 2;
     }
 
-    static std::string VerifyHead = "WGBIHD"; // NOLINT(cert-err58-cpp)
-    static std::string VerifyTail = "WGBITL"; // NOLINT(cert-err58-cpp)
+    static std::string BlockInfoVerifyHead = "WGBIHD"; // NOLINT(cert-err58-cpp)
+    static std::string BlockInfoVerifyTail = "WGBITL"; // NOLINT(cert-err58-cpp)
 
     void BlockInfo::SaveBlockInfosTo(std::ofstream &ofs, const std::vector<std::shared_ptr<BlockInfo>> &infos) {
         using namespace BinaryIO;
@@ -94,7 +94,7 @@ namespace wg {
             }
         }
 
-        write(ofs, VerifyHead);
+        write(ofs, BlockInfoVerifyHead);
         write(ofs, CONF.getMapWidth());
         write(ofs, CONF.getMapHeight());
         write(ofs, infos.size());
@@ -109,15 +109,15 @@ namespace wg {
         for (const auto &ele : vertexes) {
             write(ofs, ele);
         }
-        write(ofs, VerifyTail);
+        write(ofs, BlockInfoVerifyTail);
     }
 
     void BlockInfo::LoadBlockInfosTo(std::ifstream &ifs, std::vector<std::shared_ptr<BlockInfo>> &infos) {
         using namespace BinaryIO;
 
         std::string head;
-        read(ifs, head, VerifyHead.size());
-        assert(head == VerifyHead);
+        read(ifs, head, BlockInfoVerifyHead.size());
+        assert(head == BlockInfoVerifyHead);
 
         size_t blockNum, edgeNum, vertexNum;
         int width, height;
@@ -174,8 +174,8 @@ namespace wg {
         }
 
         std::string tail;
-        read(ifs, tail, VerifyTail.size());
-        assert(tail == VerifyTail);
+        read(ifs, tail, BlockInfoVerifyTail.size());
+        assert(tail == BlockInfoVerifyTail);
     }
 
 }

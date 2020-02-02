@@ -105,7 +105,8 @@ namespace wg {
         }
     }
 
-    std::string Blocks::load() {const auto &fp = CONF.getBlocksOutputPath();
+    std::string Blocks::load() {
+        const auto &fp = CONF.getBlocksOutputPath();
         std::ifstream ifs(fp, std::ios_base::binary);
         if (ifs.good()) {
             _blockInfos.clear();

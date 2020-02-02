@@ -10,7 +10,7 @@
 #include <set>
 
 #include "geomath.h"
-#include "coastinfo.h"
+#include "coastInfo.h"
 
 namespace wg {
 

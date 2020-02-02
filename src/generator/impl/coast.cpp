@@ -75,8 +75,10 @@ namespace wg {
                 block->coastInfo.coastType = CoastInfo::CoastType::Ocean;
             else if (noise > seaFactor)
                 block->coastInfo.coastType = CoastInfo::CoastType::Sea;
+            block->coastInfo.height = noise;
         }
 
+        // make the ocean block near to the land to be seas
         for (auto &block: _blockInfos) {
             if (block->coastInfo.coastType == CoastInfo::CoastType::Land) {
                 for (auto &edge: block->edges) {
@@ -162,4 +164,38 @@ namespace wg {
         return "Generated the coast.";
     }
 
+    std::string Coast::save() {
+        const auto &fp = CONF.getCoastOutputPath();
+        CreateDependentDirectory(fp);
+        std::ofstream ofs(fp, std::ios_base::binary);
+        if (ofs.good()) {
+            std::vector<CoastInfo> coastInfos(_blockInfos.size());
+            for (int i = 0; i < _blockInfos.size(); ++i) {
+                coastInfos[i] = _blockInfos[i]->coastInfo;
+            }
+            CoastInfo::SaveCoastInfosTo(ofs, coastInfos);
+            return "Coast saved.";
+        } else {
+            return "Coast saving failed.";
+        }
+    }
+
+    std::string Coast::load() {
+        const auto &fp = CONF.getCoastOutputPath();
+        std::ifstream ifs(fp, std::ios_base::binary);
+        if (ifs.good()) {
+            std::vector<CoastInfo> coastInfos;
+            CoastInfo::LoadCoastInfosTo(ifs, coastInfos);
+            if (coastInfos.size() != _blockInfos.size()) {
+                return "Coast data error!";
+            } else {
+                for (int i = 0; i < coastInfos.size(); ++i) {
+                    _blockInfos[i]->coastInfo = coastInfos[i];
+                }
+            }
+            return "Coast loaded.";
+        } else {
+            return "Coast loading failed.";
+        }
+    }
 }

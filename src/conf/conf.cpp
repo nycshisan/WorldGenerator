@@ -55,6 +55,10 @@ namespace wg {
         return (*this)["output"]["directory"].GetString();
     }
 
+    bool Configure::getOutputAutoSave() const {
+        return (*this)["output"]["autosave"].GetBool();
+    }
+
     int Configure::getCenterNumber() const {
         return (*this)["centers"]["number"].GetInt();
     }

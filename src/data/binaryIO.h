@@ -16,9 +16,9 @@
 
 namespace wg {
 
-    class VertexInfo;
-    class EdgeInfo;
-    class BlockInfo;
+    struct VertexInfo;
+    struct EdgeInfo;
+    struct BlockInfo;
 
     namespace BinaryIO {
         template <bool>

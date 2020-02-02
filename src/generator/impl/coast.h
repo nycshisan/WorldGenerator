@@ -33,6 +33,10 @@ namespace wg {
         void prepareVertexes(Drawer &drawer) override;
 
         void getConfigs(Generator &generator) override;
+
+        std::string save() override;
+
+        std::string load() override;
     };
 
 }

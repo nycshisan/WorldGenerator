@@ -82,10 +82,12 @@ namespace wg {
     void Generator::next() {
         if (state >= (int)impls.size() - 1) return; // do nothing if all the generators have been run
         void *input = state >= 0 ? impls[state]->output() : nullptr; // get input from the last generator
-        if (state >= 0) impls[state]->save(); // save the data of the last generator (is exists)
-        else {
-            // clear the output directory at the initial stage
-            ClearDirectory(CONF.getOutputDirectory());
+        if (CONF.getOutputAutoSave()) {
+            if (state >= 0) impls[state]->save(); // save the data of the last generator (is exists)
+            else {
+                // clear the output directory at the initial stage
+                ClearDirectory(CONF.getOutputDirectory());
+            }
         }
         state++;
         impls[state]->input(input);
