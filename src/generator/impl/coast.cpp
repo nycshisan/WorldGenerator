@@ -118,8 +118,12 @@ namespace wg {
             }
 
             for (auto &edgeInfo: blockInfo->edges) {
-                drawer.appendVertex(sf::Lines, (*edgeInfo->vertexes.begin())->point.vertex);
-                drawer.appendVertex(sf::Lines, (*edgeInfo->vertexes.rbegin())->point.vertex);
+                sf::Vertex lineEndVertexes[2] = { (*edgeInfo->vertexes.begin())->point.vertex, (*edgeInfo->vertexes.rbegin())->point.vertex};
+                lineEndVertexes[0].color = sf::Color::White;
+                lineEndVertexes[1].color = sf::Color::White;
+
+                drawer.appendVertex(sf::Lines, lineEndVertexes[0]);
+                drawer.appendVertex(sf::Lines, lineEndVertexes[1]);
             }
         }
 
