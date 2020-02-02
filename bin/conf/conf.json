@@ -10,11 +10,14 @@
         "scale": 2.0,
         "font": "assets/PingFang.ttc"
     },
+    "output": {
+        "directory": "output/"
+    },
     "centers": {
         "number": 200,
         "padding": 50,
         "span": 50,
-        "outputPath": "output/centers.txt"
+        "outputPath": "map/centers.txt"
     },
     "delaunay": {
         "showBoundingTriangles": false
@@ -24,12 +27,13 @@
         "iteration": 1
     },
     "blocks": {
-        "outputPath": "output/blocks.bytes"
+        "outputPath": "map/blocks.bytes"
     },
     "coast": {
         "continentNumber": 4,
         "oceanFactor": 0.5453999638557434,
         "seaFactor": 0.39389997720718386,
-        "noiseInfluence": 0.5958999991416931
+        "noiseInfluence": 0.5958999991416931,
+        "outputPath": "map/coast.bytes"
     }
 }

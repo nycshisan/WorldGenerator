@@ -6,6 +6,7 @@
 
 #include <random>
 #include <fstream>
+#include <filesystem>
 
 namespace wg {
 
@@ -52,6 +53,7 @@ namespace wg {
 
     std::string Centers::save() {
         const auto &fp = CONF.getCentersOutputPath();
+        std::filesystem::create_directory(std::filesystem::path(fp).remove_filename());
         std::ofstream outfile(fp);
         if (!outfile.good()) return "Centers saving failed.";
         for (auto &center: _centers) {

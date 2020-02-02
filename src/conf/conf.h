@@ -58,6 +58,8 @@ namespace wg {
 
         std::string getUIFontFilename() const;
 
+        std::string getOutputDirectory() const;
+
         int getCenterNumber() const;
 
         int getCenterPadding() const;
@@ -81,6 +83,8 @@ namespace wg {
         float getCoastSeaFactor() const;
 
         float getCoastNoiseInfluence() const;
+
+        std::string getCoastOutputPath() const;
     };
 
 }

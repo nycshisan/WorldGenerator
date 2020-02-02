@@ -81,8 +81,9 @@ namespace wg {
     }
 
     void Generator::next() {
-        if (state >= (int)impls.size() - 1) return;
-        void *input = state >= 0 ? impls[state]->output() : nullptr;
+        if (state >= (int)impls.size() - 1) return; // do nothing if all the generators have been run
+        void *input = state >= 0 ? impls[state]->output() : nullptr; // get input from the last generator
+        if (state >= 0) impls[state]->save(); // save the data of the last generator (is exists)
         state++;
         impls[state]->input(input);
         redo();

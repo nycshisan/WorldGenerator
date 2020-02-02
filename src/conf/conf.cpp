@@ -51,6 +51,10 @@ namespace wg {
         return (*this)["ui"]["font"].GetString();
     }
 
+    std::string Configure::getOutputDirectory() const {
+        return (*this)["output"]["directory"].GetString();
+    }
+
     int Configure::getCenterNumber() const {
         return (*this)["centers"]["number"].GetInt();
     }
@@ -64,7 +68,7 @@ namespace wg {
     }
 
     std::string Configure::getCentersOutputPath() const {
-        return (*this)["centers"]["outputPath"].GetString();
+        return getOutputDirectory() + (*this)["centers"]["outputPath"].GetString();
     }
 
     bool Configure::getDelaunayShowBoundingTriangles() const {
@@ -80,7 +84,7 @@ namespace wg {
     }
 
     std::string Configure::getBlocksOutputPath() const {
-        return (*this)["blocks"]["outputPath"].GetString();
+        return getOutputDirectory() + (*this)["blocks"]["outputPath"].GetString();
     }
 
     int Configure::getCoastContinentNumber() const {
@@ -105,6 +109,10 @@ namespace wg {
 
     unsigned Configure::getUIMapHeight() const {
         return getMapHeight() / getUIMapScaleConversion();
+    }
+
+    std::string Configure::getCoastOutputPath() const {
+        return getOutputDirectory() + (*this)["coast"]["outputPath"].GetString();
     }
 
 }
