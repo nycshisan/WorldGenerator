@@ -6,10 +6,14 @@
 
 #include <filesystem>
 
-bool CreateDependentDirectory(const std::string &fp) {
-    return std::filesystem::create_directories(std::filesystem::path(fp).remove_filename());
-}
+namespace wg {
 
-bool ClearDirectory(const std::string &dir) {
-    return std::filesystem::remove_all(dir);
+    bool CreateDependentDirectory(const std::string &fp) {
+        return std::filesystem::create_directories(std::filesystem::path(fp).remove_filename());
+    }
+
+    bool ClearDirectory(const std::string &dir) {
+        return std::filesystem::remove_all(dir);
+    }
+
 }

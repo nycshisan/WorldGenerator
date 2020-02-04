@@ -7,8 +7,11 @@
 
 #include <string>
 
-bool CreateDependentDirectory(const std::string &fp);
+namespace wg {
 
-bool ClearDirectory(const std::string &dir);
+    bool CreateDependentDirectory(const std::string &fp);
 
+    bool ClearDirectory(const std::string &dir);
+
+}
 #endif //WORLDGENERATOR_FSWRAPPER_H

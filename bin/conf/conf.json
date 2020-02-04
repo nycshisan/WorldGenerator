@@ -18,7 +18,7 @@
         "number": 200,
         "padding": 50,
         "span": 50,
-        "outputPath": "map/centers.txt"
+        "outputPath": "Map/centers.txt"
     },
     "delaunay": {
         "showBoundingTriangles": false
@@ -28,13 +28,13 @@
         "iteration": 1
     },
     "blocks": {
-        "outputPath": "map/blocks.bytes"
+        "outputPath": "Map/blocks.bytes"
     },
     "coast": {
         "continentNumber": 4,
         "oceanFactor": 0.5453999638557434,
         "seaFactor": 0.39389997720718386,
         "noiseInfluence": 0.5958999991416931,
-        "outputPath": "map/coast.bytes"
+        "outputPath": "Map/coast.bytes"
     }
 }

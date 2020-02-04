@@ -16,6 +16,7 @@ namespace wg {
     void CoastInfo::SaveCoastInfosTo(std::ofstream &ofs, const std::vector<CoastInfo> &infos) {
         using namespace BinaryIO;
 
+        // save the information on each vertex
         write(ofs, CoastInfoVerifyHead);
         write(ofs, infos.size());
         for (const auto &ele : infos) {
@@ -23,6 +24,9 @@ namespace wg {
             write(ofs, ele.isContinentCenter);
             write(ofs, ele.height);
         }
+
+        // save the height map
+
         write(ofs, CoastInfoVerifyTail);
     }
 
