@@ -30,3 +30,10 @@ file(GLOB SOURCE_FILES
 add_executable(WorldGenerator src/main.cpp ${SOURCE_FILES})
 
 add_executable(Test src/test/testmain.cpp ${SOURCE_FILES})
+
+file(GLOB_RECURSE HMG_SOURCE_FILES
+        src/others/heightMapGenerator/*.cpp)
+
+add_executable(WorldGenerator_HeightMap ${HMG_SOURCE_FILES} ${SOURCE_FILES})
+
+target_include_directories(WorldGenerator_HeightMap PUBLIC src/)

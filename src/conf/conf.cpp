@@ -47,6 +47,14 @@ namespace wg {
         return (*this)["ui"]["scale"].GetFloat();
     }
 
+    unsigned Configure::getUIMapWidth() const {
+        return getMapWidth() / getUIMapScaleConversion();
+    }
+
+    unsigned Configure::getUIMapHeight() const {
+        return getMapHeight() / getUIMapScaleConversion();
+    }
+
     std::string Configure::getUIFontFilename() const {
         return (*this)["ui"]["font"].GetString();
     }
@@ -99,44 +107,16 @@ namespace wg {
         return (*this)["blocks"]["outputPath"].GetString();
     }
 
-    int Configure::getCoastContinentNumber() const {
-        return (*this)["coast"]["continentNumber"].GetInt();
+    unsigned Configure::getHeightMapWidth() const {
+        return (*this)["heights"]["width"].GetUint();
     }
 
-    float Configure::getCoastOceanFactor() const {
-        return (*this)["coast"]["oceanFactor"].GetFloat();
+    unsigned Configure::getHeightMapHeight() const {
+        return (*this)["heights"]["height"].GetUint();
     }
 
-    float Configure::getCoastSeaFactor() const {
-        return (*this)["coast"]["seaFactor"].GetFloat();
-    }
-
-    float Configure::getCoastNoiseInfluence() const {
-        return (*this)["coast"]["noiseInfluence"].GetFloat();
-    }
-
-    unsigned Configure::getUIMapWidth() const {
-        return getMapWidth() / getUIMapScaleConversion();
-    }
-
-    unsigned Configure::getUIMapHeight() const {
-        return getMapHeight() / getUIMapScaleConversion();
-    }
-
-    std::string Configure::getCoastOutputPath() const {
-        return (*this)["coast"]["outputPath"].GetString();
-    }
-
-    unsigned Configure::getCoastHeightMapWidth() const {
-        return (*this)["coast"]["heightMap"]["width"].GetUint();
-    }
-
-    unsigned Configure::getCoastHeightMapHeight() const {
-        return (*this)["coast"]["heightMap"]["height"].GetUint();
-    }
-
-    std::string Configure::getCoastHeightMapOutputPath() const {
-        return (*this)["coast"]["heightMap"]["outputPath"].GetString();
+    std::string Configure::getHeightMapOutputPath() const {
+        return (*this)["heights"]["outputPath"].GetString();
     }
 
 
