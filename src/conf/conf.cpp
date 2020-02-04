@@ -59,6 +59,14 @@ namespace wg {
         return (*this)["output"]["autosave"].GetBool();
     }
 
+    bool Configure::getInstallEnable() const {
+        return (*this)["install"]["enable"].GetBool();
+    }
+
+    std::string Configure::getInstallTarget() const {
+        return (*this)["install"]["target"].GetString();
+    }
+
     int Configure::getCenterNumber() const {
         return (*this)["centers"]["number"].GetInt();
     }
@@ -72,7 +80,7 @@ namespace wg {
     }
 
     std::string Configure::getCentersOutputPath() const {
-        return getOutputDirectory() + (*this)["centers"]["outputPath"].GetString();
+        return (*this)["centers"]["outputPath"].GetString();
     }
 
     bool Configure::getDelaunayShowBoundingTriangles() const {
@@ -88,7 +96,7 @@ namespace wg {
     }
 
     std::string Configure::getBlocksOutputPath() const {
-        return getOutputDirectory() + (*this)["blocks"]["outputPath"].GetString();
+        return (*this)["blocks"]["outputPath"].GetString();
     }
 
     int Configure::getCoastContinentNumber() const {
@@ -116,7 +124,20 @@ namespace wg {
     }
 
     std::string Configure::getCoastOutputPath() const {
-        return getOutputDirectory() + (*this)["coast"]["outputPath"].GetString();
+        return (*this)["coast"]["outputPath"].GetString();
     }
+
+    unsigned Configure::getCoastHeightMapWidth() const {
+        return (*this)["coast"]["heightMap"]["width"].GetUint();
+    }
+
+    unsigned Configure::getCoastHeightMapHeight() const {
+        return (*this)["coast"]["heightMap"]["height"].GetUint();
+    }
+
+    std::string Configure::getCoastHeightMapOutputPath() const {
+        return (*this)["coast"]["heightMap"]["outputPath"].GetString();
+    }
+
 
 }

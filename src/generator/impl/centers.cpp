@@ -62,7 +62,7 @@ namespace wg {
     }
 
     std::string Centers::load() {
-        const auto &fp = CONF.getCentersOutputPath();
+        const auto &fp = CONF.getOutputDirectory() + CONF.getCentersOutputPath();
         std::ifstream infile(fp);
         if (!infile.good()) return "Centers loading failed.";
         std::vector<Point> centers;

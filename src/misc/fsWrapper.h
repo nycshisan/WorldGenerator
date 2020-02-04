@@ -13,5 +13,7 @@ namespace wg {
 
     bool ClearDirectory(const std::string &dir);
 
+    bool CopyFile(const std::string &fromPath, const std::string &toPath);
+
 }
 #endif //WORLDGENERATOR_FSWRAPPER_H

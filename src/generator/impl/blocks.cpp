@@ -94,7 +94,7 @@ namespace wg {
     }
 
     std::string Blocks::save() {
-        const auto &fp = CONF.getBlocksOutputPath();
+        const auto &fp = CONF.getOutputDirectory() + CONF.getBlocksOutputPath();
         CreateDependentDirectory(fp);
         std::ofstream ofs(fp, std::ios_base::binary);
         if (ofs.good()) {
@@ -106,7 +106,7 @@ namespace wg {
     }
 
     std::string Blocks::load() {
-        const auto &fp = CONF.getBlocksOutputPath();
+        const auto &fp = CONF.getOutputDirectory() + CONF.getBlocksOutputPath();
         std::ifstream ifs(fp, std::ios_base::binary);
         if (ifs.good()) {
             _blockInfos.clear();

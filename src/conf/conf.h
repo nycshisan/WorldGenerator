@@ -40,53 +40,65 @@ namespace wg {
             Accept(writer);
         }
 
-        int getMapWidth() const;
+#define NO_DISCARD [[nodiscard]]
 
-        int getMapHeight() const;
+        NO_DISCARD int getMapWidth() const;
 
-        int getMapRandomSeed() const;
+        NO_DISCARD int getMapHeight() const;
 
-        unsigned getUIMapScaleConversion() const;
+        NO_DISCARD int getMapRandomSeed() const;
 
-        unsigned getUIMapWidth() const;
+        NO_DISCARD unsigned getUIMapScaleConversion() const;
 
-        unsigned getUIMapHeight() const;
+        NO_DISCARD unsigned getUIMapWidth() const;
 
-        int getUIUpdateFPSFrameInterval() const;
+        NO_DISCARD unsigned getUIMapHeight() const;
 
-        float getUIScale() const;
+        NO_DISCARD int getUIUpdateFPSFrameInterval() const;
 
-        std::string getUIFontFilename() const;
+        NO_DISCARD float getUIScale() const;
 
-        std::string getOutputDirectory() const;
+        NO_DISCARD std::string getUIFontFilename() const;
 
-        bool getOutputAutoSave() const;
+        NO_DISCARD std::string getOutputDirectory() const;
 
-        int getCenterNumber() const;
+        NO_DISCARD bool getOutputAutoSave() const;
 
-        int getCenterPadding() const;
+        NO_DISCARD bool getInstallEnable() const;
 
-        int getCenterSpan() const;
+        NO_DISCARD std::string getInstallTarget() const;
 
-        std::string getCentersOutputPath() const;
+        NO_DISCARD int getCenterNumber() const;
 
-        bool getDelaunayShowBoundingTriangles() const;
+        NO_DISCARD int getCenterPadding() const;
 
-        float getLloydFactor() const;
+        NO_DISCARD int getCenterSpan() const;
 
-        int getLloydIteration() const;
+        NO_DISCARD std::string getCentersOutputPath() const;
 
-        std::string getBlocksOutputPath() const;
+        NO_DISCARD bool getDelaunayShowBoundingTriangles() const;
 
-        int getCoastContinentNumber() const;
+        NO_DISCARD float getLloydFactor() const;
 
-        float getCoastOceanFactor() const;
+        NO_DISCARD int getLloydIteration() const;
 
-        float getCoastSeaFactor() const;
+        NO_DISCARD std::string getBlocksOutputPath() const;
 
-        float getCoastNoiseInfluence() const;
+        NO_DISCARD int getCoastContinentNumber() const;
 
-        std::string getCoastOutputPath() const;
+        NO_DISCARD float getCoastOceanFactor() const;
+
+        NO_DISCARD float getCoastSeaFactor() const;
+
+        NO_DISCARD float getCoastNoiseInfluence() const;
+
+        NO_DISCARD std::string getCoastOutputPath() const;
+
+        NO_DISCARD unsigned getCoastHeightMapWidth() const;
+
+        NO_DISCARD unsigned getCoastHeightMapHeight() const;
+
+        NO_DISCARD std::string getCoastHeightMapOutputPath() const;
     };
 
 }

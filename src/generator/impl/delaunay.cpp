@@ -19,7 +19,6 @@ namespace wg {
         _deleteOldNodes();
         int newNetNodeId = 0;
 
-        _centersTris.first = _centers;
         auto &allocatedNodes = _centersTris.second;
 
         // Bowyer-Watson algorithm
@@ -88,6 +87,10 @@ namespace wg {
         _centers.pop_back();
         _centers.pop_back();
         _centers.pop_back();
+
+
+//        _centersTris.first = _centers;
+        _centersTris.first.swap(_centers);
     }
 
     void* DelaunayTriangles::output() {

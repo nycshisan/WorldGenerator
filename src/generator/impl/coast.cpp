@@ -165,7 +165,7 @@ namespace wg {
     }
 
     std::string Coast::save() {
-        const auto &fp = CONF.getCoastOutputPath();
+        const auto &fp = CONF.getOutputDirectory() + CONF.getCoastOutputPath();
         CreateDependentDirectory(fp);
         std::ofstream ofs(fp, std::ios_base::binary);
         if (ofs.good()) {
