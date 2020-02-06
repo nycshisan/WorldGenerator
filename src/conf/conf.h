@@ -84,11 +84,21 @@ namespace wg {
 
         NO_DISCARD std::string getBlocksOutputPath() const;
 
-        NO_DISCARD unsigned getHeightMapWidth() const;
+        NO_DISCARD int getCoastContinentNumber() const;
 
-        NO_DISCARD unsigned getHeightMapHeight() const;
+        NO_DISCARD float getCoastOceanFactor() const;
 
-        NO_DISCARD std::string getHeightMapOutputPath() const;
+        NO_DISCARD float getCoastSeaFactor() const;
+
+        NO_DISCARD float getCoastNoiseInfluence() const;
+
+        NO_DISCARD std::string getCoastOutputPath() const;
+
+        NO_DISCARD unsigned getCoastHeightMapWidth() const;
+
+        NO_DISCARD unsigned getCoastHeightMapHeight() const;
+
+        NO_DISCARD std::string getCoastHeightMapOutputPath() const;
     };
 
 }

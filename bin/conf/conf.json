@@ -1,7 +1,7 @@
 {
     "map": {
-        "width": 8192,
-        "height": 8192,
+        "width": 15000,
+        "height": 15000,
         "randomSeed": 48196648
     },
     "ui": {
@@ -34,9 +34,16 @@
     "blocks": {
         "outputPath": "Map/blocks.bytes"
     },
-    "heights": {
-        "width": 4097,
-        "height": 4097,
-        "outputPath": "Map/heights.bytes"
+    "coast": {
+        "continentNumber": 4,
+        "oceanFactor": 0.5453999638557434,
+        "seaFactor": 0.39389997720718386,
+        "noiseInfluence": 0.5958999991416931,
+        "outputPath": "Map/coast.bytes",
+        "heightMap": {
+            "width": 1025,
+            "height": 1025,
+            "outputPath": "Map/heights.bytes"
+        }
     }
 }

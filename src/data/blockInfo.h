@@ -10,6 +10,7 @@
 #include <set>
 
 #include "geomath.h"
+#include "coastInfo.h"
 
 namespace wg {
 
@@ -62,6 +63,9 @@ namespace wg {
         // caches in loading
         std::vector<unsigned int> edgeIds;
         std::vector<unsigned int> vertexIds;
+
+        // Coast Infos
+        CoastInfo coastInfo;
 
         explicit BlockInfo() : id(0) {}
         explicit BlockInfo(unsigned int id) : id(id) {}

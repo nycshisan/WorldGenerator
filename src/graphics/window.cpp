@@ -51,7 +51,7 @@ namespace wg {
         _hintLabelContent = "Ready!";
 
         // Initialize panel
-        auto buttonSize = sf::Vector2f(_barHeight * 1.8f, _barHeight * 0.6f);
+        auto buttonSize = sf::Vector2f(_barHeight * 3.0f, _barHeight * 0.6f);
         int buttonXOffset = xOffset;
         int buttonXInterval = (_width - (int) _ButtonMaterials.size() * (int) buttonSize.x - 2 * buttonXOffset) /
                               ((int) _ButtonMaterials.size() - 1);

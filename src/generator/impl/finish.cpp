@@ -14,6 +14,8 @@ void wg::Finish::generate() {
     if (CONF.getInstallEnable()) {
         // install blocks data
         _installFile(CONF.getBlocksOutputPath());
+        // install coast info
+        _installFile(CONF.getCoastOutputPath());
     }
 }
 
