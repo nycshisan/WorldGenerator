@@ -20,8 +20,6 @@ namespace wg {
         Input _blockInfos;
 
     public:
-        explicit Coast();
-
         std::string getHintLabelText() override;
 
         void input(void* inputData) override;

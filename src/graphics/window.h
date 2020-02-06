@@ -23,7 +23,7 @@ namespace wg {
     class MainWindow : public sf::RenderWindow {
         friend class ConfigWindow;
 
-        static constexpr int _BaseBarHeight = 32;
+        static constexpr int _BaseBarHeight = 24;
         static constexpr int _BaseBarSeparatorHeight = 1;
 
         char _defaultTitle[20] = "World Generator";

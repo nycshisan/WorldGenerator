@@ -51,6 +51,14 @@ namespace wg {
         return (*this)["ui"]["font"].GetString();
     }
 
+    unsigned Configure::getUIMapWidth() const {
+        return getMapWidth() / getUIMapScaleConversion();
+    }
+
+    unsigned Configure::getUIMapHeight() const {
+        return getMapHeight() / getUIMapScaleConversion();
+    }
+
     std::string Configure::getOutputDirectory() const {
         return (*this)["output"]["directory"].GetString();
     }
@@ -99,45 +107,16 @@ namespace wg {
         return (*this)["blocks"]["outputPath"].GetString();
     }
 
-    int Configure::getCoastContinentNumber() const {
-        return (*this)["coast"]["continentNumber"].GetInt();
-    }
-
-    float Configure::getCoastOceanFactor() const {
-        return (*this)["coast"]["oceanFactor"].GetFloat();
-    }
-
-    float Configure::getCoastSeaFactor() const {
-        return (*this)["coast"]["seaFactor"].GetFloat();
-    }
-
-    float Configure::getCoastNoiseInfluence() const {
-        return (*this)["coast"]["noiseInfluence"].GetFloat();
-    }
-
-    unsigned Configure::getUIMapWidth() const {
-        return getMapWidth() / getUIMapScaleConversion();
-    }
-
-    unsigned Configure::getUIMapHeight() const {
-        return getMapHeight() / getUIMapScaleConversion();
-    }
-
-    std::string Configure::getCoastOutputPath() const {
-        return (*this)["coast"]["outputPath"].GetString();
-    }
-
-    unsigned Configure::getCoastHeightMapWidth() const {
+    unsigned Configure::getHeightMapWidth() const {
         return (*this)["coast"]["heightMap"]["width"].GetUint();
     }
 
-    unsigned Configure::getCoastHeightMapHeight() const {
+    unsigned Configure::getHeightMapHeight() const {
         return (*this)["coast"]["heightMap"]["height"].GetUint();
     }
 
-    std::string Configure::getCoastHeightMapOutputPath() const {
+    std::string Configure::getHeightMapOutputPath() const {
         return (*this)["coast"]["heightMap"]["outputPath"].GetString();
     }
-
 
 }

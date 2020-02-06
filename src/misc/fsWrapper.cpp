@@ -18,6 +18,7 @@ namespace wg {
 
     bool CopyFile(const std::string &fromPath, const std::string &toPath) {
         std::filesystem::create_directories(std::filesystem::path(toPath).remove_filename());
-        return std::filesystem::copy_file(fromPath, toPath, std::filesystem::copy_options::overwrite_existing);
+        std::filesystem::remove(toPath);
+        return std::filesystem::copy_file(fromPath, toPath);
     }
 }

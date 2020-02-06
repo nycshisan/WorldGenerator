@@ -51,7 +51,7 @@ namespace wg {
     }
 
     std::string Centers::save() {
-        const auto &fp = CONF.getCentersOutputPath();
+        const auto &fp = CONF.getOutputDirectory() + CONF.getCentersOutputPath();
         CreateDependentDirectory(fp);
         std::ofstream outfile(fp);
         if (!outfile.good()) return "Centers saving failed.";
