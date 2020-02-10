@@ -85,7 +85,16 @@ namespace wg {
             }
             auto color = sf::Color(r, g, b);
 
-            _prepareBlockVertexes(drawer, blockInfo, color);
+            sf::Vertex &v0 = blockInfo->center.vertex;
+            v0.color = color;
+            for (auto &edgeInfo: blockInfo->edges) {
+                drawer.appendVertex(sf::Triangles, v0);
+                for (auto &vertexInfo: edgeInfo->vertexes) {
+                    auto &v = vertexInfo->point.vertex;
+                    v.color = color;
+                    drawer.appendVertex(sf::Triangles, v);
+                }
+            }
         }
     }
 
@@ -115,35 +124,5 @@ namespace wg {
         } else {
             return "Blocks loading failed.";
         }
-    }
-
-    void BlocksDrawable::_prepareBlockVertexes(Drawer &drawer, const std::shared_ptr<BlockInfo> &blockInfo,
-                                               const sf::Color &color) {
-        sf::Vertex &v0 = blockInfo->center.vertex;
-        v0.color = color;
-        for (auto &edgeInfo: blockInfo->edges) {
-            drawer.appendVertex(sf::Triangles, v0);
-            for (auto &vertexInfo: edgeInfo->vertexes) {
-                auto &v = vertexInfo->point.vertex;
-                v.color = color;
-                drawer.appendVertex(sf::Triangles, v);
-            }
-        }
-    }
-
-    void BlocksDrawable::_prepareCoast(Drawer &drawer, const std::shared_ptr<EdgeInfo> &edgeInfo) {
-        Point pointA = (*edgeInfo->vertexes.begin())->point, pointB = (*edgeInfo->vertexes.rbegin())->point;
-        float length = std::sqrt(pointA.squareDistance(pointB));
-        float sin = (pointA.y - pointB.y) / length, cos = (pointA.x - pointB.x) / length;
-        Point ltp(pointB.x - _CoastThickness * sin, pointB.y + _CoastThickness * cos),
-                rtp(pointB.x + _CoastThickness * sin, pointB.y - _CoastThickness * cos),
-                lbp(pointA.x - _CoastThickness * sin, pointA.y + _CoastThickness * cos),
-                rbp(pointA.x + _CoastThickness * sin, pointA.y - _CoastThickness * cos);
-        drawer.appendVertex(sf::Triangles, ltp.vertex);
-        drawer.appendVertex(sf::Triangles, lbp.vertex);
-        drawer.appendVertex(sf::Triangles, rtp.vertex);
-        drawer.appendVertex(sf::Triangles, rtp.vertex);
-        drawer.appendVertex(sf::Triangles, lbp.vertex);
-        drawer.appendVertex(sf::Triangles, rbp.vertex);
     }
 }

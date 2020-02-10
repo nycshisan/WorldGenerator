@@ -13,7 +13,7 @@
 
 namespace wg {
 
-    class Coast : public GeneratorImpl, protected BlocksDrawable {
+    class Coast : public GeneratorImpl {
     public:
         typedef Blocks::Output Input;
     private:

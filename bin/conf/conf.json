@@ -34,8 +34,6 @@
     "blocks": {
         "outputPath": "Map/blocks.bytes"
     },
-    "coast": {
-    },
     "heightMap": {
         "width": 1025,
         "height": 1025,

@@ -14,15 +14,7 @@
 #include "../../conf/conf.h"
 
 namespace wg {
-
-    class BlocksDrawable {
-        const float _CoastThickness = 2.f * CONF.getUIMapScaleConversion();
-    protected:
-        void _prepareBlockVertexes(Drawer &drawer, const std::shared_ptr<BlockInfo> &blockInfo, const sf::Color &color);
-        void _prepareCoast(Drawer &drawer, const std::shared_ptr<EdgeInfo> &edgeInfo);
-    };
-
-    class Blocks : public GeneratorImpl, protected BlocksDrawable {
+    class Blocks : public GeneratorImpl {
     public:
         typedef LloydRelaxation::Output Input;
         typedef std::vector<std::shared_ptr<BlockInfo>> Output;

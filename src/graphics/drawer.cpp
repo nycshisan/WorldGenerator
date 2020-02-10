@@ -4,6 +4,8 @@
 
 #include "drawer.h"
 
+#include <cmath>
+
 #include "window.h"
 #include "../conf/conf.h"
 
@@ -50,6 +52,22 @@ namespace wg {
             default:
                 LOG("Error primitive type in drawer.");
         }
+    }
+
+    void Drawer::drawThickLine(const std::shared_ptr<EdgeInfo> &edgeInfo, float thickness) {
+        Point pointA = (*edgeInfo->vertexes.begin())->point, pointB = (*edgeInfo->vertexes.rbegin())->point;
+        float length = std::sqrt(pointA.squareDistance(pointB));
+        float sin = (pointA.y - pointB.y) / length, cos = (pointA.x - pointB.x) / length;
+        Point ltp(pointB.x - thickness * sin, pointB.y + thickness * cos),
+                rtp(pointB.x + thickness * sin, pointB.y - thickness * cos),
+                lbp(pointA.x - thickness * sin, pointA.y + thickness * cos),
+                rbp(pointA.x + thickness * sin, pointA.y - thickness * cos);
+        appendVertex(sf::Triangles, ltp.vertex);
+        appendVertex(sf::Triangles, lbp.vertex);
+        appendVertex(sf::Triangles, rtp.vertex);
+        appendVertex(sf::Triangles, rtp.vertex);
+        appendVertex(sf::Triangles, lbp.vertex);
+        appendVertex(sf::Triangles, rbp.vertex);
     }
 
 }

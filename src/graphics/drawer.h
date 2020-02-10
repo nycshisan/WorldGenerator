@@ -29,6 +29,7 @@ namespace wg {
 
         void clearVertexes();
         void appendVertex(sf::PrimitiveType type, const sf::Vertex &vertex);
+        void drawThickLine(const std::shared_ptr<EdgeInfo> &edgeInfo, float thickness);
         void commit();
     };
 
