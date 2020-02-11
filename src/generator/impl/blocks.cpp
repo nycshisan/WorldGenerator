@@ -4,8 +4,6 @@
 
 #include "blocks.h"
 
-#include <cmath>
-
 #include "../../conf/conf.h"
 
 namespace wg {
@@ -15,6 +13,8 @@ namespace wg {
     }
 
     void Blocks::generate() {
+        BlockInfo::ReinitHelperId();
+
         int width = CONF.getMapWidth(), height = CONF.getMapHeight();
         Rectangle box = Rectangle(0, float(width), float(height), 0);
 

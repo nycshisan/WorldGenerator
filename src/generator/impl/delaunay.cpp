@@ -89,8 +89,7 @@ namespace wg {
         _centers.pop_back();
 
 
-//        _centersTris.first = _centers;
-        _centersTris.first.swap(_centers);
+        _centersTris.first = _centers;
     }
 
     void* DelaunayTriangles::output() {

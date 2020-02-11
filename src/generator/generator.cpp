@@ -12,7 +12,7 @@ namespace wg {
         this->impls.emplace_back(std::make_shared<VoronoiDiagram>());
         this->impls.emplace_back(std::make_shared<LloydRelaxation>());
         this->impls.emplace_back(std::make_shared<Blocks>());
-        this->impls.emplace_back(std::make_shared<Coast>());
+        this->impls.emplace_back(std::make_shared<Heights>());
         this->impls.emplace_back(std::make_shared<Finish>());
 
         this->_drawer = std::make_shared<Drawer>();

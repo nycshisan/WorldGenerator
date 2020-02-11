@@ -10,12 +10,12 @@
 #include "binaryIO.h"
 #include "../conf/conf.h"
 
+static unsigned int MarginEdgeId = 1000000;
+static unsigned int CornerVertexId = 2000000;
+
 namespace wg {
 
     void BlockInfo::addMarginEdge(const Rectangle &box) {
-        static unsigned int MarginEdgeId = 1000000;
-        static unsigned int CornerVertexId = 2000000;
-
         std::vector<std::pair<std::shared_ptr<VertexInfo>, Line>> edgePoints;
         for (auto &edgeInfo: edges) {
             for (auto &vertexInfo: edgeInfo->vertexes) {
@@ -176,6 +176,11 @@ namespace wg {
         std::string tail;
         read(ifs, tail, BlockInfoVerifyTail.size());
         assert(tail == BlockInfoVerifyTail);
+    }
+
+    void BlockInfo::ReinitHelperId() {
+        MarginEdgeId = 1000000;
+        CornerVertexId = 2000000;
     }
 
 }

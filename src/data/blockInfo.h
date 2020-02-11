@@ -66,6 +66,8 @@ namespace wg {
         explicit BlockInfo() : id(0) {}
         explicit BlockInfo(unsigned int id) : id(id) {}
 
+        static void ReinitHelperId();
+
         void addMarginEdge(const wg::Rectangle &box);
 
         void calcArea();

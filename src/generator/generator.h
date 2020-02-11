@@ -12,7 +12,7 @@
 #include "impl/voronoi.h"
 #include "impl/lloyd.h"
 #include "impl/blocks.h"
-#include "impl/coast.h"
+#include "impl/heights.h"
 #include "impl/finish.h"
 
 #include "config.h"
