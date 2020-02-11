@@ -67,13 +67,8 @@ namespace wg {
         }
 
         assertWithSave(_blockInfos.size() == CONF.getCenterNumber());
-    }
 
-    void* Blocks::output() {
-        return (void*)&_blockInfos;
-    }
-
-    void Blocks::prepareVertexes(Drawer &drawer) {
+        // set colors
         for (auto &blockInfo: _blockInfos) {
             sf::Uint8 r = 0, g = 0, b = 0;
             r += sf::Uint8(blockInfo->id);
@@ -84,13 +79,23 @@ namespace wg {
                 b += vertexInfo.lock()->id;
             }
             auto color = sf::Color(r, g, b);
+//            std::cout << int(r) << " " << int(g) << " " << int(b) << std::endl;
+            blockInfo->center.vertex.color = color;
+        }
+    }
 
+    void* Blocks::output() {
+        return (void*)&_blockInfos;
+    }
+
+    void Blocks::prepareVertexes(Drawer &drawer) {
+        for (auto &blockInfo: _blockInfos) {
             sf::Vertex &v0 = blockInfo->center.vertex;
-            v0.color = color;
+            auto &color = v0.color;
             for (auto &edgeInfo: blockInfo->edges) {
                 drawer.appendVertex(sf::Triangles, v0);
                 for (auto &vertexInfo: edgeInfo->vertexes) {
-                    auto &v = vertexInfo->point.vertex;
+                    auto v = vertexInfo->point.vertex;
                     v.color = color;
                     drawer.appendVertex(sf::Triangles, v);
                 }

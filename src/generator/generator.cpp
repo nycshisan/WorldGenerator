@@ -71,6 +71,7 @@ namespace wg {
     }
 
     void Generator::saveErrorData() {
+        LOG("Error data saved!");
         impls[State::Centers]->save();
     }
 
@@ -95,7 +96,7 @@ namespace wg {
     }
 
     void Generator::redo() {
-        _drawer->clearVertexes();
+        _drawer->clear();
         if (state > State::Ready) {
             CONF.reload();
             impls[state]->generate();
@@ -105,7 +106,7 @@ namespace wg {
     }
 
     void Generator::undo() {
-        _drawer->clearVertexes();
+        _drawer->clear();
         if (state > State::Ready) {
             state--;
             redo();
@@ -120,7 +121,7 @@ namespace wg {
 
     std::string Generator::load() {
         if (state > State::Ready) {
-            _drawer->clearVertexes();
+            _drawer->clear();
             const auto &loadResult = impls[state]->load();
             impls[state]->prepareVertexes(*_drawer);
             return loadResult;

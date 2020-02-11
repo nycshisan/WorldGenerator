@@ -49,6 +49,6 @@ void testIO(int target) {
 }
 
 int main() {
-    testIO(Generator::State::Blocks);
+    testStates(Generator::State::Heights);
     return 0;
 }

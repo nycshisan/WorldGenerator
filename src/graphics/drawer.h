@@ -22,14 +22,17 @@ namespace wg {
 
         sf::VertexArray _pointsBuf, _linesBuf, _trisBuf;
 
+        std::vector<const sf::Sprite*> _sprites;
+
     public:
         explicit Drawer();
 
         void setWindow(MainWindow *window);
 
-        void clearVertexes();
+        void clear();
         void appendVertex(sf::PrimitiveType type, const sf::Vertex &vertex);
         void drawThickLine(const std::shared_ptr<EdgeInfo> &edgeInfo, float thickness);
+        void addSprite(const sf::Sprite &s);
         void commit();
     };
 

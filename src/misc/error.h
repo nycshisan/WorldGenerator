@@ -13,6 +13,6 @@ namespace wg {
 
 }
 
-#define assertWithSave(COND) do { if (!(COND)) { SaveErrorData(); assert(COND); } } while (false)
+#define assertWithSave(COND) do { if (!(COND)) { SaveErrorData(); } assert(COND); } while (false)
 
 #endif //WORLDGENERATOR_ERROR_H

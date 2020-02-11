@@ -23,6 +23,9 @@ namespace wg {
     }
 
     void Drawer::commit() {
+        for (const auto spritePtr : _sprites) {
+            _window->draw(*spritePtr);
+        }
         _window->draw(_trisBuf);
         _window->draw(_linesBuf);
         for (size_t i = 0; i < _pointsBuf.getVertexCount(); ++i) {
@@ -32,10 +35,11 @@ namespace wg {
         }
     }
 
-    void Drawer::clearVertexes() {
+    void Drawer::clear() {
         _pointsBuf.clear();
         _linesBuf.clear();
         _trisBuf.clear();
+        _sprites.clear();
     }
 
     void Drawer::appendVertex(sf::PrimitiveType type, const sf::Vertex &vertex) {
@@ -55,6 +59,7 @@ namespace wg {
     }
 
     void Drawer::drawThickLine(const std::shared_ptr<EdgeInfo> &edgeInfo, float thickness) {
+        thickness *= CONF.getUIScale();
         Point pointA = (*edgeInfo->vertexes.begin())->point, pointB = (*edgeInfo->vertexes.rbegin())->point;
         float length = std::sqrt(pointA.squareDistance(pointB));
         float sin = (pointA.y - pointB.y) / length, cos = (pointA.x - pointB.x) / length;
@@ -68,6 +73,10 @@ namespace wg {
         appendVertex(sf::Triangles, rtp.vertex);
         appendVertex(sf::Triangles, lbp.vertex);
         appendVertex(sf::Triangles, rbp.vertex);
+    }
+
+    void Drawer::addSprite(const sf::Sprite &s) {
+        _sprites.emplace_back(&s);
     }
 
 }

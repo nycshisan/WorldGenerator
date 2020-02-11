@@ -41,7 +41,7 @@ namespace wg {
             static const int VoronoiDiagram = 2;
             static const int LloydRelaxation = 3;
             static const int Blocks = 4;
-            static const int Coast = 5;
+            static const int Heights = 5;
             static const int Finish = 6;
         };
 

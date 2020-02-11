@@ -6,6 +6,9 @@
 
 #include "../../graphics/graphics.h"
 
+bool ShowContainTriId = false;
+bool ShowInfluencedTriId = false;
+
 namespace wg {
 
     void DelaunayTriangles::input(void* inputData) {
@@ -37,13 +40,15 @@ namespace wg {
                 if (center.x < tri->_minX || center.x > tri->_maxX || center.y < tri->_minY || center.y > tri->_maxY)
                     continue;
                 if (tri->contains(center)) {
+                    if (ShowContainTriId)
+                        std::cout << tri->id << " ";
                     containingTriangle = tri;
                     break;
                 }
             }
             assertWithSave(containingTriangle != nullptr);
             // `Influenced` triangles & edges means the triangles and edges constituting the cavity made by putting the newest center
-            std::set<NetNode *> influencedTris;
+            std::unordered_set<NetNode *> influencedTris;
             std::vector<Edge *> influencedEdges;
             containingTriangle->findInfluenced(center, influencedTris, influencedEdges);
             std::vector<NetNode *> newTris;
@@ -78,6 +83,8 @@ namespace wg {
             }
 
             for (auto tri: influencedTris) {
+                if (ShowInfluencedTriId)
+                    std::cout << tri->id << " ";
                 allocatedNodes.erase(allocatedNodes.find(tri));
                 delete tri;
             }
@@ -88,8 +95,10 @@ namespace wg {
         _centers.pop_back();
         _centers.pop_back();
 
-
         _centersTris.first = _centers;
+
+        if (ShowContainTriId || ShowInfluencedTriId)
+            std::cout << std::endl;
     }
 
     void* DelaunayTriangles::output() {
@@ -144,7 +153,7 @@ namespace wg {
         }
     }
 
-    void DelaunayTriangles::NetNode::_findInfluenced(const Point &point, int beginEdgeId, std::set<NetNode *> &tris,
+    void DelaunayTriangles::NetNode::_findInfluenced(const Point &point, int beginEdgeId, std::unordered_set<NetNode *> &tris,
                                                      std::vector<Edge *> &influencedEdges) {
         _visited = true;
         tris.insert(this); // Any triangle executing this function should be influenced due to the recursion condition.
@@ -163,7 +172,7 @@ namespace wg {
         }
     }
 
-    void DelaunayTriangles::NetNode::findInfluenced(const Point &point, std::set<NetNode *> &tris,
+    void DelaunayTriangles::NetNode::findInfluenced(const Point &point, std::unordered_set<NetNode *> &tris,
                                                     std::vector<Edge *> &influencedEdges) {
         _findInfluenced(point, 0, tris, influencedEdges);
         _clearVisitFlag();

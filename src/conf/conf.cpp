@@ -108,15 +108,15 @@ namespace wg {
     }
 
     unsigned Configure::getHeightMapWidth() const {
-        return (*this)["coast"]["heightMap"]["width"].GetUint();
+        return (*this)["heightMap"]["width"].GetUint();
     }
 
     unsigned Configure::getHeightMapHeight() const {
-        return (*this)["coast"]["heightMap"]["height"].GetUint();
+        return (*this)["heightMap"]["height"].GetUint();
     }
 
     std::string Configure::getHeightMapOutputPath() const {
-        return (*this)["coast"]["heightMap"]["outputPath"].GetString();
+        return (*this)["heightMap"]["outputPath"].GetString();
     }
 
 }

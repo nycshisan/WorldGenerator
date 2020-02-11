@@ -10,8 +10,8 @@
 #include "binaryIO.h"
 #include "../conf/conf.h"
 
-static unsigned int MarginEdgeId = 1000000;
-static unsigned int CornerVertexId = 2000000;
+static unsigned int MarginEdgeId;
+static unsigned int CornerVertexId;
 
 namespace wg {
 

@@ -34,9 +34,9 @@ namespace wg {
             void _clearVisitFlag();
 
             void
-            _findInfluenced(const Point &point, int beginEdgeId, std::set<NetNode *> &tris, std::vector<Edge *> &edges);
+            _findInfluenced(const Point &point, int beginEdgeId, std::unordered_set<NetNode *> &tris, std::vector<Edge *> &edges);
 
-            void findInfluenced(const Point &point, std::set<NetNode *> &tris, std::vector<Edge *> &edges);
+            void findInfluenced(const Point &point, std::unordered_set<NetNode *> &tris, std::vector<Edge *> &edges);
 
             bool _isBoundingTriangle;
 
