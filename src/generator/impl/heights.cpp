@@ -4,24 +4,22 @@
 
 #include "heights.h"
 
+#include "blocks.h"
+
 namespace wg {
 
-    void Heights::input(void* inputData) {
-        _blockInfos = *(Input*)inputData;
-    }
-
     void Heights::generate() {
+        auto &blockInfos = *(Blocks::Output*)_inputData;
+
         auto heightMapWidth = CONF.getHeightMapWidth(), heightMapHeight = CONF.getHeightMapHeight();
 
-        _blockHeightInfos.first = _blockInfos;
+        _blockHeightInfos.first = blockInfos;
         _blockHeightInfos.second.resize(heightMapHeight, std::vector<float>(heightMapWidth, 0.5f));
 
         BlockHeightInfoDrawable::createTexture(CONF.getUIMapWidth(), CONF.getUIMapHeight());
         BlockHeightInfoDrawable::setTexture(_blockHeightInfos.second);
-    }
 
-    void *Heights::output() {
-        return (void*)&_blockHeightInfos;
+        _outputData = (void*)&_blockHeightInfos;
     }
 
     void Heights::prepareVertexes(Drawer &drawer) {

@@ -5,13 +5,12 @@
 #include "centers.h"
 
 #include <random>
-#include <fstream>
 
 namespace wg {
 
-    void Centers::input(void* inputData) { assert(inputData == nullptr); }
-
     void Centers::generate() {
+        assert(_inputData == nullptr);
+
         int width = CONF.getMapWidth(), height = CONF.getMapHeight();
         int span = CONF.getCenterSpan();
         int randomSeed = CONF.getMapRandomSeed();
@@ -34,14 +33,12 @@ namespace wg {
                 }
             }
             if (occupiedFlag) {
-                _centers.emplace_back(Point(x, y));
+                _centers.emplace_back(Point(float(x), float(y)));
                 ++i;
             }
         }
-    }
 
-    void* Centers::output() {
-        return (void*)&_centers;
+        _outputData = (void*)&_centers;
     }
 
     void Centers::prepareVertexes(Drawer &drawer) {
@@ -69,7 +66,7 @@ namespace wg {
         while (!infile.eof()) {
             int x = 0, y = 0;
             infile >> x >> y;
-            centers.emplace_back(Point(x, y));
+            centers.emplace_back(Point(float(x), float(y)));
         }
         centers.pop_back();
         _centers = centers;

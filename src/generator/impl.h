@@ -14,14 +14,17 @@ namespace wg {
     class Generator;
 
     class GeneratorImpl {
+    protected:
+        void *_inputData = nullptr, *_outputData = nullptr;
+
     public:
         virtual std::string getHintLabelText() = 0;
 
-        virtual void input(void* inputData) = 0;
+        void input(void* inputData);
 
         virtual void generate() = 0;
 
-        virtual void* output() = 0;
+        void* output();
 
         virtual void prepareVertexes(Drawer &drawer) = 0;
 

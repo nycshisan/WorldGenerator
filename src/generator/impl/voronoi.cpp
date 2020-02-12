@@ -4,6 +4,8 @@
 
 #include "voronoi.h"
 
+#include "delaunay.h"
+
 namespace wg {
 
     bool VoronoiDiagram::_existsEdge(int paId, int pbId) {
@@ -12,17 +14,14 @@ namespace wg {
         return exist;
     }
 
-    void VoronoiDiagram::input(void* inputData) {
-        auto t = *(Input*)inputData;
-        _centersTris = t;
-    }
-
     void VoronoiDiagram::generate() {
-        int width = CONF.getMapWidth(), height = CONF.getMapHeight();
-        Rectangle box = Rectangle(0, width, height, 0);
+        auto centersTris = *(DelaunayTriangles::Output*)_inputData;
 
-        auto &centers = _centersTris.first;
-        auto &tris = _centersTris.second;
+        int width = CONF.getMapWidth(), height = CONF.getMapHeight();
+        Rectangle box = Rectangle(0, float(width), float(height), 0);
+
+        auto &centers = centersTris.first;
+        auto &tris = centersTris.second;
 
         auto &centerMap = _diagram.first;
         auto &edgeMap = _diagram.second;
@@ -88,10 +87,8 @@ namespace wg {
         for (auto &pair: centerMap) {
             assertWithSave(!pair.second.edgeIds.empty());
         }
-    }
 
-    void* VoronoiDiagram::output() {
-        return (void*)&_diagram;
+        _outputData = (void*)&_diagram;
     }
 
     void VoronoiDiagram::prepareVertexes(Drawer &drawer) {

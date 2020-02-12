@@ -5,9 +5,7 @@
 #ifndef WORLDGENERATOR_VORONOI_H
 #define WORLDGENERATOR_VORONOI_H
 
-#include <vector>
-
-#include "delaunay.h"
+#include "../impl.h"
 
 namespace wg {
 
@@ -32,10 +30,8 @@ namespace wg {
             EdgeNode(const Point &pa, int paId, const Point &pb, int pbId);
         };
 
-        typedef DelaunayTriangles::Output Input;
         typedef std::pair<std::map<int, CenterNode>, std::map<int, EdgeNode>> Output;
     private:
-        Input _centersTris;
         Output _diagram;
 
         std::map<int, std::map<int, bool>> _existsEdges;
@@ -45,11 +41,7 @@ namespace wg {
     public:
         std::string getHintLabelText() override;
 
-        void input(void* inputData) override;
-
         void generate() override;
-
-        void* output() override;
 
         void prepareVertexes(Drawer &drawer) override;
     };

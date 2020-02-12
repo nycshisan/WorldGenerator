@@ -4,27 +4,24 @@
 
 #include "lloyd.h"
 
-#include "../../conf/conf.h"
-#include "../../graphics/graphics.h"
+#include "delaunay.h"
 
 namespace wg {
 
-    void LloydRelaxation::input(void* inputData) {
-        _inputVd = *(Input*)inputData;
-    }
-
     void LloydRelaxation::generate() {
+        auto &inputVd = *(VoronoiDiagram::Output*)_inputData;
+
         float factor = CONF.getLloydFactor();
         int iteration = CONF.getLloydIteration();
         Rectangle box = Rectangle(0, CONF.getMapWidth(), CONF.getMapHeight(), 0);
 
-        _relaxedVd = _inputVd;
+        _relaxedVd = inputVd;
 
         auto &centerMap = _relaxedVd.first;
         auto &edgeMap = _relaxedVd.second;
 
         for (int i = 0; i < iteration; ++i) {
-            DelaunayTriangles::Input centers;
+            std::vector<Point> centers;
 
             for (auto &pair: centerMap) {
                 auto &center = pair.second;
@@ -55,10 +52,8 @@ namespace wg {
             voronoiDiagram.generate();
             _relaxedVd = *(Output*)voronoiDiagram.output();
         }
-    }
 
-    void* LloydRelaxation::output() {
-        return (void*)&_relaxedVd;
+        _outputData = (void*)&_relaxedVd;
     }
 
     void LloydRelaxation::prepareVertexes(Drawer &drawer) {

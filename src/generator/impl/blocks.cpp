@@ -4,15 +4,13 @@
 
 #include "blocks.h"
 
-#include "../../conf/conf.h"
+#include "lloyd.h"
 
 namespace wg {
 
-    void Blocks::input(void* inputData) {
-        _relaxedVd = *(Input*)inputData;
-    }
-
     void Blocks::generate() {
+        auto &relaxedVd = *(LloydRelaxation::Output*)_inputData;
+
         BlockInfo::ReinitHelperId();
 
         int width = CONF.getMapWidth(), height = CONF.getMapHeight();
@@ -20,8 +18,8 @@ namespace wg {
 
         _blockInfos.clear();
 
-        auto &centerMap = _relaxedVd.first;
-        auto &edgeMap = _relaxedVd.second;
+        auto &centerMap = relaxedVd.first;
+        auto &edgeMap = relaxedVd.second;
 
         std::map<int, std::shared_ptr<EdgeInfo>> _initializedEdgeInfos;
         std::map<int, std::shared_ptr<VertexInfo>> _initializedVertexInfos;
@@ -82,10 +80,8 @@ namespace wg {
 //            std::cout << int(r) << " " << int(g) << " " << int(b) << std::endl;
             blockInfo->center.vertex.color = color;
         }
-    }
 
-    void* Blocks::output() {
-        return (void*)&_blockInfos;
+        _outputData = (void*)&_blockInfos;
     }
 
     void Blocks::prepareVertexes(Drawer &drawer) {

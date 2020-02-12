@@ -8,17 +8,11 @@ std::string wg::Finish::getHintLabelText() {
     return "Finished!";
 }
 
-void wg::Finish::input(void *inputData) {}
-
 void wg::Finish::generate() {
     if (CONF.getInstallEnable()) {
         // install blocks data
         _installFile(CONF.getBlocksOutputPath());
     }
-}
-
-void *wg::Finish::output() {
-    return nullptr;
 }
 
 void wg::Finish::prepareVertexes(wg::Drawer &drawer) {}

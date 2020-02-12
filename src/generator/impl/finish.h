@@ -15,11 +15,7 @@ namespace wg {
     public:
         std::string getHintLabelText() override;
 
-        void input(void* inputData) override;
-
         void generate() override;
-
-        void* output() override;
 
         void prepareVertexes(Drawer &drawer) override;
     };

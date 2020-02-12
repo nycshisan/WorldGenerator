@@ -4,18 +4,16 @@
 
 #include "delaunay.h"
 
-#include "../../graphics/graphics.h"
+#include "centers.h"
 
 bool ShowContainTriId = false;
 bool ShowInfluencedTriId = false;
 
 namespace wg {
 
-    void DelaunayTriangles::input(void* inputData) {
-        _centers = *(Input*)inputData;
-    }
-
     void DelaunayTriangles::generate() {
+        auto &centers = *(Centers::Output*)_inputData;
+
         // For reasons which are unknown for now (maybe because of the computation accuracy of float numbers), each time
         // we call this function will generate the triangles with different order but in almost same position.
 
@@ -25,16 +23,16 @@ namespace wg {
         auto &allocatedNodes = _centersTris.second;
 
         // Bowyer-Watson algorithm
-        auto n = (int) _centers.size();
+        auto n = (int) centers.size();
         int width = CONF.getMapWidth(), height = CONF.getMapHeight();
-        _centers.emplace_back(-width, -height);
-        _centers.emplace_back(3 * CONF.getMapWidth(), 0);
-        _centers.emplace_back(0, 3 * CONF.getMapHeight());
-        _triNetHead = new NetNode(newNetNodeId++, n, n + 1, n + 2, _centers, n);
+        centers.emplace_back(-width, -height);
+        centers.emplace_back(3 * CONF.getMapWidth(), 0);
+        centers.emplace_back(0, 3 * CONF.getMapHeight());
+        _triNetHead = new NetNode(newNetNodeId++, n, n + 1, n + 2, centers, n);
         allocatedNodes.insert(_triNetHead);
 
         for (int i = 0; i < n; ++i) {
-            auto center = _centers[i];
+            auto center = centers[i];
             NetNode *containingTriangle = nullptr;
             for (auto tri: allocatedNodes) {
                 if (center.x < tri->_minX || center.x > tri->_maxX || center.y < tri->_minY || center.y > tri->_maxY)
@@ -53,7 +51,7 @@ namespace wg {
             containingTriangle->findInfluenced(center, influencedTris, influencedEdges);
             std::vector<NetNode *> newTris;
             for (auto &edge: influencedEdges) {
-                auto *newTri = new NetNode(newNetNodeId++, edge->pid[0], edge->pid[1], i, _centers, n);
+                auto *newTri = new NetNode(newNetNodeId++, edge->pid[0], edge->pid[1], i, centers, n);
                 allocatedNodes.insert(newTri);
                 newTris.emplace_back(newTri);
                 auto &newEdge = newTri->edges[0];
@@ -91,18 +89,16 @@ namespace wg {
             _triNetHead = *allocatedNodes.begin();
         }
 
-        _centers.pop_back();
-        _centers.pop_back();
-        _centers.pop_back();
+        centers.pop_back();
+        centers.pop_back();
+        centers.pop_back();
 
-        _centersTris.first = _centers;
+        _centersTris.first = centers;
 
         if (ShowContainTriId || ShowInfluencedTriId)
             std::cout << std::endl;
-    }
 
-    void* DelaunayTriangles::output() {
-        return (void*)&_centersTris;
+        _outputData = (void*)&_centersTris;
     }
 
     void DelaunayTriangles::prepareVertexes(Drawer &drawer) {

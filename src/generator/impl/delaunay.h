@@ -5,10 +5,7 @@
 #ifndef WORLDGENERATOR_DELAUNAY_H
 #define WORLDGENERATOR_DELAUNAY_H
 
-#include <set>
-#include <unordered_set>
-
-#include "centers.h"
+#include "../impl.h"
 
 namespace wg {
 
@@ -54,10 +51,8 @@ namespace wg {
             float exRadius = 0;
         };
 
-        typedef Centers::Output Input;
-        typedef std::pair<Input, std::unordered_set<NetNode *>> Output;
+        typedef std::pair<std::vector<Point>, std::unordered_set<NetNode*>> Output;
     public:
-        Input _centers;
         Output _centersTris;
 
         NetNode *_triNetHead = nullptr;
@@ -67,11 +62,7 @@ namespace wg {
     public:
         std::string getHintLabelText() override;
 
-        void input(void* inputData) override;
-
         void generate() override;
-
-        void* output() override;
 
         void prepareVertexes(Drawer &drawer) override;
 

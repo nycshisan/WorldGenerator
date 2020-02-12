@@ -16,8 +16,14 @@ namespace wg {
         return "Can't load in this state.";
     }
 
-    void GeneratorImpl::getConfigs(Generator& generator) {
-        generator.configs.clear();
+    void GeneratorImpl::getConfigs(Generator& generator) {}
+
+    void GeneratorImpl::input(void *inputData) {
+        _inputData = inputData;
+    }
+
+    void *GeneratorImpl::output() {
+        return _outputData;
     }
 
 }
