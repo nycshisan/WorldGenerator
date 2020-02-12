@@ -1,15 +1,15 @@
 //
-// Created by nycsh on 2020/2/10.
+// Created by Nycshisan on 2020/2/12.
 //
 
-#ifndef WORLDGENERATOR_HEIGHTS_H
-#define WORLDGENERATOR_HEIGHTS_H
+#ifndef WORLDGENERATOR_MOUNTAINS_H
+#define WORLDGENERATOR_MOUNTAINS_H
 
 #include "../impl.h"
 
 namespace wg {
 
-    class Heights : public GeneratorImpl, private BlockHeightInfoDrawable {
+    class Mountains : public GeneratorImpl, private BlockHeightInfoDrawable {
     public:
         typedef std::pair<std::vector<std::shared_ptr<BlockInfo>>, std::vector<std::vector<float>>> Output;
 
@@ -26,4 +26,4 @@ namespace wg {
 
 }
 
-#endif //WORLDGENERATOR_HEIGHTS_H
+#endif //WORLDGENERATOR_MOUNTAINS_H

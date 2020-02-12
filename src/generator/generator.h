@@ -5,15 +5,7 @@
 #ifndef WORLDGENERATOR_GENERATOR_H
 #define WORLDGENERATOR_GENERATOR_H
 
-#include <vector>
-
-#include "impl/centers.h"
-#include "impl/delaunay.h"
-#include "impl/voronoi.h"
-#include "impl/lloyd.h"
-#include "impl/blocks.h"
-#include "impl/heights.h"
-#include "impl/finish.h"
+#include "impl.h"
 
 #include "config.h"
 
@@ -42,7 +34,8 @@ namespace wg {
             static const int LloydRelaxation = 3;
             static const int Blocks = 4;
             static const int Heights = 5;
-            static const int Finish = 6;
+            static const int Mountains = 6;
+            static const int Finish = 7;
         };
 
         int state = State::Ready;

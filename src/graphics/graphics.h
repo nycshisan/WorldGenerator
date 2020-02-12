@@ -10,5 +10,6 @@
 #include "button.h"
 #include "window.h"
 #include "configWindow.h"
+#include "heightDrawable.h"
 
 #endif //WORLDGENERATOR_GRAPHICS_H
