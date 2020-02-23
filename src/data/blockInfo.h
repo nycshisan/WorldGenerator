@@ -10,6 +10,7 @@
 #include <set>
 
 #include "geomath.h"
+#include "curveInfo.h"
 
 namespace wg {
 
@@ -19,7 +20,7 @@ namespace wg {
     struct VertexInfo {
         unsigned int id;
 
-        wg::Point point;
+        Point point;
         std::set<std::weak_ptr<BlockInfo>, std::owner_less<std::weak_ptr<BlockInfo>>> relatedBlocks;
         std::set<std::weak_ptr<EdgeInfo>, std::owner_less<std::weak_ptr<EdgeInfo>>> relatedEdges;
 
@@ -38,6 +39,8 @@ namespace wg {
 
         std::set<std::weak_ptr<BlockInfo>, std::owner_less<std::weak_ptr<BlockInfo>>> relatedBlocks;
         std::set<std::shared_ptr<VertexInfo>, std::owner_less<std::shared_ptr<VertexInfo>>> vertexes;
+
+        CurveInfo curveInfo;
 
         // caches in loading
         std::vector<unsigned int> blockIds;

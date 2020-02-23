@@ -9,6 +9,7 @@
 #include "impl/voronoi.h"
 #include "impl/lloyd.h"
 #include "impl/blocks.h"
+#include "impl/blockEdges.h"
 #include "impl/heights.h"
 #include "impl/mountains.h"
 #include "impl/finish.h"
@@ -21,6 +22,7 @@ namespace wg {
         this->impls.emplace_back(std::make_shared<VoronoiDiagram>());
         this->impls.emplace_back(std::make_shared<LloydRelaxation>());
         this->impls.emplace_back(std::make_shared<Blocks>());
+        this->impls.emplace_back(std::make_shared<BlockEdges>());
         this->impls.emplace_back(std::make_shared<Heights>());
         this->impls.emplace_back(std::make_shared<Mountains>());
         this->impls.emplace_back(std::make_shared<Finish>());

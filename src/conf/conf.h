@@ -84,6 +84,10 @@ namespace wg {
 
         NO_DISCARD std::string getBlocksOutputPath() const;
 
+        NO_DISCARD float getBlockEdgesCurveSpan() const;
+
+        NO_DISCARD float getBlockEdgesCurveStep() const;
+
         NO_DISCARD unsigned getHeightMapWidth() const;
 
         NO_DISCARD unsigned getHeightMapHeight() const;

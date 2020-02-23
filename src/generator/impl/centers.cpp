@@ -4,27 +4,23 @@
 
 #include "centers.h"
 
-#include <random>
-
 namespace wg {
 
     void Centers::generate() {
         assert(_inputData == nullptr);
 
+        Random::ResetRandomEngine();
+
         int width = CONF.getMapWidth(), height = CONF.getMapHeight();
         int span = CONF.getCenterSpan();
-        int randomSeed = CONF.getMapRandomSeed();
 
         int n = CONF.getCenterNumber();
         int padding = CONF.getCenterPadding();
 
-        std::mt19937 gen(randomSeed);
-        std::uniform_int_distribution<> disX(padding, width - padding), disY(padding, height - padding);
-
         _centers.clear();
         for (int i = 0; i < n;) {
-            int x = disX(gen);
-            int y = disY(gen);
+            int x = Random::RandInt(padding, width - padding);
+            int y = Random::RandInt(padding, height - padding);
             bool occupiedFlag = true;
             for (auto &point : _centers) {
                 if (abs(x - int(point.x)) <= span && abs(y - int(point.y)) <= span) {
@@ -43,7 +39,7 @@ namespace wg {
 
     void Centers::prepareVertexes(Drawer &drawer) {
         for (auto &point : _centers) {
-            drawer.appendVertex(sf::Points, point.vertex);
+            drawer.appendPointShape(point.vertex);
         }
     }
 

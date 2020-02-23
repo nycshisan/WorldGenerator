@@ -28,10 +28,14 @@ namespace wg {
         }
         _window->draw(_trisBuf);
         _window->draw(_linesBuf);
-        for (size_t i = 0; i < _pointsBuf.getVertexCount(); ++i) {
-            const sf::Vertex &vertex = _pointsBuf[i];
+        _window->draw(_pointsBuf);
+        for (size_t i = 0; i < _pointShapeBuf.getVertexCount(); ++i) {
+            const sf::Vertex &vertex = _pointShapeBuf[i];
             _pointShape.setPosition(vertex.position);
             _window->draw(_pointShape);
+        }
+        for (const auto &shape: _coloredPointShapes) {
+            _window->draw(shape);
         }
     }
 
@@ -40,6 +44,8 @@ namespace wg {
         _linesBuf.clear();
         _trisBuf.clear();
         _sprites.clear();
+        _pointShapeBuf.clear();
+        _coloredPointShapes.clear();
     }
 
     void Drawer::appendVertex(sf::PrimitiveType type, const sf::Vertex &vertex) {
@@ -56,6 +62,10 @@ namespace wg {
             default:
                 LOG("Error primitive type in drawer.");
         }
+    }
+
+    void Drawer::appendPointShape(const sf::Vertex &vertex) {
+        _pointShapeBuf.append(vertex);
     }
 
     void Drawer::drawThickLine(const std::shared_ptr<EdgeInfo> &edgeInfo, float thickness) {
@@ -79,4 +89,10 @@ namespace wg {
         _sprites.emplace_back(&s);
     }
 
+    void Drawer::appendColoredPointShape(const sf::Vertex &vertex, const sf::Color &color) {
+        auto shape = _pointShape;
+        shape.setPosition(vertex.position);
+        shape.setFillColor(color);
+        _coloredPointShapes.emplace_back(std::move(shape));
+    }
 }

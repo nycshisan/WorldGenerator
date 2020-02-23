@@ -4,12 +4,12 @@
 
 #include "heights.h"
 
-#include "blocks.h"
+#include "blockEdges.h"
 
 namespace wg {
 
     void Heights::generate() {
-        auto &blockInfos = *(Blocks::Output*)_inputData;
+        auto &blockInfos = *(BlockEdges::Output*)_inputData;
 
         auto heightMapWidth = CONF.getHeightMapWidth(), heightMapHeight = CONF.getHeightMapHeight();
 

@@ -93,7 +93,7 @@ namespace wg {
 
     void VoronoiDiagram::prepareVertexes(Drawer &drawer) {
         for (auto &pair: _diagram.first) {
-            drawer.appendVertex(sf::Points, pair.second.point.vertex);
+            drawer.appendPointShape(pair.second.point.vertex);
         }
 
         for (auto &pair: _diagram.second) {

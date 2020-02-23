@@ -21,11 +21,11 @@ namespace wg {
 
         explicit Point(const sf::Vector2f &v);
 
-        float squareDistance(const Point &anoPoint) const;
+        [[nodiscard]] float squareDistance(const Point &anoPoint) const;
 
-        bool operator==(const Point &anoP);
+        bool operator == (const Point &anoP);
 
-        bool operator!=(const Point &anoP);
+        bool operator != (const Point &anoP);
 
         sf::Vertex vertex;
 
@@ -66,9 +66,9 @@ namespace wg {
 
         Point intersect(const Line &anoLine);
 
-        float yGivenX(float x) const;
+        [[nodiscard]] float yGivenX(float x) const;
 
-        float xGivenY(float y) const;
+        [[nodiscard]] float xGivenY(float y) const;
 
         static Line Horizontal(float y);
 
@@ -85,7 +85,7 @@ namespace wg {
     };
 
     class Rectangle {
-        float _left, _right, _top, _down;
+        float _left{}, _right{}, _top{}, _down{};
         Line _edges[4];
 
         constexpr static float _Error = 1e-3;

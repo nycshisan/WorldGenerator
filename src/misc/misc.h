@@ -10,5 +10,6 @@
 #include "error.h"
 #include "noise.h"
 #include "fsWrapper.h"
+#include "random.h"
 
 #endif //WORLDGENERATOR_MISC_H

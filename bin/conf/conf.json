@@ -34,6 +34,10 @@
     "blocks": {
         "outputPath": "Map/blocks.bytes"
     },
+    "blockEdges": {
+        "curveSpan": 20,
+        "curveStep": 0.09
+    },
     "heightMap": {
         "width": 1025,
         "height": 1025,

@@ -19,8 +19,9 @@ namespace wg {
         MainWindow *_window = nullptr;
 
         sf::CircleShape _pointShape;
+        std::vector<sf::CircleShape> _coloredPointShapes;
 
-        sf::VertexArray _pointsBuf, _linesBuf, _trisBuf;
+        sf::VertexArray _pointsBuf, _linesBuf, _trisBuf, _pointShapeBuf;
 
         std::vector<const sf::Sprite*> _sprites;
 
@@ -31,6 +32,8 @@ namespace wg {
 
         void clear();
         void appendVertex(sf::PrimitiveType type, const sf::Vertex &vertex);
+        void appendPointShape(const sf::Vertex &vertex);
+        void appendColoredPointShape(const sf::Vertex &vertex, const sf::Color &color);
         void drawThickLine(const std::shared_ptr<EdgeInfo> &edgeInfo, float thickness);
         void addSprite(const sf::Sprite &s);
         void commit();

@@ -107,6 +107,14 @@ namespace wg {
         return (*this)["blocks"]["outputPath"].GetString();
     }
 
+    float Configure::getBlockEdgesCurveSpan() const {
+        return (*this)["blockEdges"]["curveSpan"].GetFloat();
+    }
+
+    float Configure::getBlockEdgesCurveStep() const {
+        return (*this)["blockEdges"]["curveStep"].GetFloat();
+    }
+
     unsigned Configure::getHeightMapWidth() const {
         return (*this)["heightMap"]["width"].GetUint();
     }

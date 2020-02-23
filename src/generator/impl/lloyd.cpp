@@ -58,7 +58,7 @@ namespace wg {
 
     void LloydRelaxation::prepareVertexes(Drawer &drawer) {
         for (auto &pair: _relaxedVd.first) {
-            drawer.appendVertex(sf::Points, pair.second.point.vertex);
+            drawer.appendPointShape(pair.second.point.vertex);
         }
 
         for (auto &pair: _relaxedVd.second) {
