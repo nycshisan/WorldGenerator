@@ -34,10 +34,13 @@ void testVD() {
 
 }
 
-void testStates(int target) {
+void testStates(int target, bool display = false) {
     auto window = MainWindow::MakeWindow();
     while (Generator::SharedInstance().state < target)
         Generator::NextButtonResponder(*window);
+    if (display) {
+        window->play();
+    }
 }
 
 void testIO(int target) {
@@ -49,6 +52,5 @@ void testIO(int target) {
 }
 
 int main() {
-    testStates(Generator::State::Heights);
     return 0;
 }

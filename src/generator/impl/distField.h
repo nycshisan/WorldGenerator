@@ -16,6 +16,11 @@ namespace wg {
     private:
         Output _blockInfos;
 
+        float *_df = nullptr;
+
+        sf::Sprite _s;
+        sf::Texture _t;
+
     public:
         std::string getHintLabelText() override;
 

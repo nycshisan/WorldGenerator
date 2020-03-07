@@ -12,7 +12,7 @@
 namespace wg {
 
     class Point : public sf::Vector2f {
-        constexpr static float _Error = 1e-4;
+        constexpr static float _Error = 1e-4f;
 
     public:
         Point() = default;
@@ -49,7 +49,7 @@ namespace wg {
 
     class Line {
     protected:
-        float _err = 1e-3;
+        float _err = 1e-3f;
         float _k = 0.0f, _b = 0.0f;
 
     public:
@@ -88,7 +88,7 @@ namespace wg {
         float _left{}, _right{}, _top{}, _down{};
         Line _edges[4];
 
-        constexpr static float _Error = 1e-3;
+        constexpr static float _Error = 1e-3f;
 
     public:
         Rectangle() = default;

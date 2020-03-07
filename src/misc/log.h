@@ -28,6 +28,6 @@ namespace wg {
 
 }
 
-#define LOG(args...) LOGOUT(std::string(__FILE__) + ":" + std::to_string(__LINE__), args)
+#define LOG(args...) wg::LOGOUT(std::string(__FILE__) + ":" + std::to_string(__LINE__), args)
 
 #endif //WORLDGENERATOR_LOG_H

@@ -1,7 +1,14 @@
 #include "graphics/graphics.h"
 
+#include "cuda_modules/common/common.h"
+
 int main() {
-    wg::MainWindow::MakeWindow()->play();
+    if (CMIsOK()) {
+        wg::MainWindow::MakeWindow()->play();
+    } else {
+        LOG("Cuda Modules DLL Error!");
+    }
+
 
     return 0;
 }
