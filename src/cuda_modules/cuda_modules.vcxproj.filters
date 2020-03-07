@@ -27,6 +27,9 @@
     <ClInclude Include="src\cuda_modules\common\common.h">
       <Filter>头文件\common</Filter>
     </ClInclude>
+    <ClInclude Include="src\cuda_modules\common\cuda_common.h">
+      <Filter>头文件\common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -36,6 +39,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\cuda_modules\common\common.cpp">
+      <Filter>源文件\common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cuda_modules\common\cuda_common.cu">
       <Filter>源文件\common</Filter>
     </ClCompile>
   </ItemGroup>

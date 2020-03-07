@@ -1,0 +1,5 @@
+#pragma once
+
+#define CUDA_KERNAL_CALL(NAME, BLOCK_NUM, THREAD_PER_BLOCK) NAME<<<BLOCK_NUM, THREAD_PER_BLOCK>>>
+
+bool CMCudaTest();

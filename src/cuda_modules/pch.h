@@ -9,6 +9,7 @@
 
 // 添加要在此处预编译的标头
 #include <iostream>
+#include <cmath>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
