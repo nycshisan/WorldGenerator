@@ -23,6 +23,10 @@ namespace wg {
         Configure::SharedInstance() = Configure();
     }
 
+    std::string Configure::getModuleOutputPath(const std::string &moduleName) {
+        return (*this)[moduleName.c_str()]["outputPath"].GetString();
+    }
+
     int Configure::getMapWidth() const {
         return (*this)["map"]["width"].GetInt();
     }
@@ -87,10 +91,6 @@ namespace wg {
         return (*this)["centers"]["span"].GetInt();
     }
 
-    std::string Configure::getCentersOutputPath() const {
-        return (*this)["centers"]["outputPath"].GetString();
-    }
-
     bool Configure::getDelaunayShowBoundingTriangles() const {
         return (*this)["delaunay"]["showBoundingTriangles"].GetBool();
     }
@@ -101,10 +101,6 @@ namespace wg {
 
     int Configure::getLloydIteration() const {
         return (*this)["lloyd"]["iteration"].GetInt();
-    }
-
-    std::string Configure::getBlocksOutputPath() const {
-        return (*this)["blocks"]["outputPath"].GetString();
     }
 
     float Configure::getBlockEdgesCurveSpan() const {
@@ -121,10 +117,6 @@ namespace wg {
 
     unsigned Configure::getHeightMapHeight() const {
         return (*this)["heightMap"]["height"].GetUint();
-    }
-
-    std::string Configure::getHeightMapOutputPath() const {
-        return (*this)["heightMap"]["outputPath"].GetString();
     }
 
 }

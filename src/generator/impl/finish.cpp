@@ -11,12 +11,15 @@ std::string wg::Finish::getHintLabelText() {
 void wg::Finish::generate() {
     if (CONF.getInstallEnable()) {
         // install blocks data
-        _installFile(CONF.getBlocksOutputPath());
+        _installFile("blocks");
+        // install block edges distance field
+        _installFile("distField");
     }
 }
 
 void wg::Finish::prepareVertexes(wg::Drawer &drawer) {}
 
-bool wg::Finish::_installFile(const std::string &fp) {
-    return CopyFile(CONF.getOutputDirectory() + fp, CONF.getInstallTarget() + fp);
+bool wg::Finish::_installFile(const std::string &moduleName) {
+    return CopyFile(CONF.getOutputDirectory() + CONF.getModuleOutputPath(moduleName),
+                    CONF.getInstallTarget() + CONF.getModuleOutputPath(moduleName));
 }

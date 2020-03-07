@@ -11,5 +11,6 @@
 #include "noise.h"
 #include "fsWrapper.h"
 #include "random.h"
+#include "tga.h"
 
 #endif //WORLDGENERATOR_MISC_H

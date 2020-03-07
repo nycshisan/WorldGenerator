@@ -42,6 +42,8 @@ namespace wg {
 
 #define NO_DISCARD [[nodiscard]]
 
+        NO_DISCARD std::string getModuleOutputPath(const std::string &moduleName);
+
         NO_DISCARD int getMapWidth() const;
 
         NO_DISCARD int getMapHeight() const;
@@ -74,15 +76,11 @@ namespace wg {
 
         NO_DISCARD int getCenterSpan() const;
 
-        NO_DISCARD std::string getCentersOutputPath() const;
-
         NO_DISCARD bool getDelaunayShowBoundingTriangles() const;
 
         NO_DISCARD float getLloydFactor() const;
 
         NO_DISCARD int getLloydIteration() const;
-
-        NO_DISCARD std::string getBlocksOutputPath() const;
 
         NO_DISCARD float getBlockEdgesCurveSpan() const;
 
@@ -91,8 +89,6 @@ namespace wg {
         NO_DISCARD unsigned getHeightMapWidth() const;
 
         NO_DISCARD unsigned getHeightMapHeight() const;
-
-        NO_DISCARD std::string getHeightMapOutputPath() const;
     };
 
 }

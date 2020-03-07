@@ -34,9 +34,10 @@ namespace wg {
             static const int LloydRelaxation = 3;
             static const int Blocks = 4;
             static const int BlockEdges = 5;
-            static const int Heights = 6;
-            static const int Mountains = 7;
-            static const int Finish = 8;
+            static const int DistField = 6;
+            static const int Heights = 7;
+            static const int Mountains = 8;
+            static const int Finish = 9;
         };
 
         int state = State::Ready;

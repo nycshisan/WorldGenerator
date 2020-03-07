@@ -44,7 +44,7 @@ namespace wg {
     }
 
     std::string Centers::save() {
-        const auto &fp = CONF.getOutputDirectory() + CONF.getCentersOutputPath();
+        const auto &fp = CONF.getOutputDirectory() + CONF.getModuleOutputPath("centers");
         CreateDependentDirectory(fp);
         std::ofstream outfile(fp);
         if (!outfile.good()) return "Centers saving failed.";
@@ -55,7 +55,7 @@ namespace wg {
     }
 
     std::string Centers::load() {
-        const auto &fp = CONF.getOutputDirectory() + CONF.getCentersOutputPath();
+        const auto &fp = CONF.getOutputDirectory() + CONF.getModuleOutputPath("centers");
         std::ifstream infile(fp);
         if (!infile.good()) return "Centers loading failed.";
         std::vector<Point> centers;

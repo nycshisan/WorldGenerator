@@ -10,7 +10,7 @@
 namespace wg {
 
     class Finish : public GeneratorImpl {
-        bool _installFile(const std::string &fp);
+        bool _installFile(const std::string &moduleName);
 
     public:
         std::string getHintLabelText() override;
