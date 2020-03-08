@@ -74,10 +74,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\include;.;$(IncludePath)</IncludePath>
+    <TargetName>$(ProjectName)d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\include;.;$(IncludePath)</IncludePath>
+    <TargetName>$(ProjectName)d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -145,7 +147,7 @@
       <AdditionalDependencies>cudart.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(TargetDir)$(TargetName).dll" "$(SolutionDir)..\..\bin\$(TargetName).dll"</Command>
+      <Command>copy /Y "$(TargetDir)\$(TargetName).dll" "$(SolutionDir)..\..\bin\$(TargetName).dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -168,13 +170,14 @@
       <AdditionalDependencies>cudart.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(TargetDir)$(TargetName).dll" "$(SolutionDir)..\..\bin\$(TargetName).dll"</Command>
+      <Command>copy /Y "$(TargetDir)\$(TargetName).dll" "$(SolutionDir)..\..\bin\$(TargetName).dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\cuda_modules\common\common.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="src\cuda_modules\common\cuda_common.h" />
+    <ClInclude Include="src\cuda_modules\jfa\jfa.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -185,6 +188,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <CudaCompile Include="src\cuda_modules\jfa\jfa.cu">
+      <FileType>CppCode</FileType>
+    </CudaCompile>
     <CudaCompile Include="src\cuda_modules\common\cuda_common.cu">
       <FileType>Document</FileType>
     </CudaCompile>

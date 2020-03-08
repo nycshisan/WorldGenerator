@@ -16,7 +16,7 @@ namespace wg {
     private:
         Output _blockInfos;
 
-        float *_df = nullptr;
+        float *_dfx = nullptr, *_dfy = nullptr;
 
         sf::Sprite _s;
         sf::Texture _t;

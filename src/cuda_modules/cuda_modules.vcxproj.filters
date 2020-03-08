@@ -19,6 +19,12 @@
     <Filter Include="源文件\common">
       <UniqueIdentifier>{4c9a4565-0ff9-436d-90fd-ac2cfbbed20c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\jfa">
+      <UniqueIdentifier>{cd78df40-b2e7-4b95-9968-2c3db5b40338}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\jfa">
+      <UniqueIdentifier>{4a3ff18d-d2de-4cc6-8012-26ecf2208828}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -29,6 +35,9 @@
     </ClInclude>
     <ClInclude Include="src\cuda_modules\common\cuda_common.h">
       <Filter>头文件\common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cuda_modules\jfa\jfa.h">
+      <Filter>头文件\jfa</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -43,6 +52,9 @@
     </ClCompile>
     <ClCompile Include="src\cuda_modules\common\cuda_common.cu">
       <Filter>源文件\common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cuda_modules\jfa\jfa.cu">
+      <Filter>源文件\jfa</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

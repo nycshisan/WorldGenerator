@@ -1,9 +1,6 @@
+#include "pch.h"
+
 #include "cuda_common.h"
-
-#include <cmath>
-
-#include "cuda_runtime.h"
-#include "device_launch_parameters.h"
 
 __global__ void add(int n, float* y) {
 	int index = blockIdx.x * blockDim.x + threadIdx.x;
@@ -17,9 +14,7 @@ bool CMCudaTest(void) {
 	// Allocate Unified Memory ¨C accessible from CPU or GPU
 	cudaMallocManaged(&y, N * sizeof(float));
 
-	int blockSize = 256;
-	int numBlocks = (N + blockSize - 1) / blockSize;
-	CUDA_KERNAL_CALL(add, numBlocks, blockSize)(N, y);
+	CUDA_KERNAL_CALL(add, N)(N, y);
 
 	// Wait for GPU to finish before accessing on host
 	cudaDeviceSynchronize();
