@@ -18,7 +18,8 @@ void wg::DistField::generate() {
 
     _blockInfos = *(BlockEdges::Output*)_inputData;
 
-    unsigned width = 2048, height = 2048;
+    int size = CONF.getDistFieldSize();
+    auto width = size, height = size;
 
     _t.create(width, height);
     _s.setTexture(_t);
@@ -27,40 +28,25 @@ void wg::DistField::generate() {
 
     _dfx = new float[width * height];
     _dfy = new float[width * height];
-    float large = float(width) * float(height);
-    large *= large;
-    // initialize distance field
-    for (int i = 0; i < height; ++i) {
-        for (int j = 0; j < width; ++j) {
-            _dfx[i * width + j] = large;
-            _dfy[i * width + j] = large;
-        }
-    }
-    _dfx[width * (height / 2) + width / 2] = _dfy[width * (height / 2) + width / 2] = 0.f;
 
-    CMJFACalculate(_dfx, _dfy, int(width));
-    auto stat = CMJFAGetStat();
+    auto handle = CMJFAHandleAlloc(size);
+    CMJFAInitPoint points[2];
+    points[0].x = points[0].y = size / 3 * 2;
+    points[0].vx = points[0].vy = 0.f;
+    points[1].x = points[1].y = size / 3;
+    points[1].vx = points[1].vy = 0.f;
+    CMJFAInit(handle, points, 2);
+
+    CMJFACalculate(handle, _dfx, _dfy);
 
     auto rgba = new unsigned char[width * height * 4];
 
-    for (int i = 0; i < height; ++i) {
-        for (int j = 0; j < width; ++j) {
-            int base = int(i * width + j);
-            float x = _dfx[base], y = _dfy[base];
-            float relDist = std::hypotf(x, y) / stat.maxDist;
-            unsigned char color = std::lroundf(relDist * 255);
-
-            base *= 4;
-
-            rgba[base + 0] = color;
-            rgba[base + 1] = color;
-            rgba[base + 2] = color;
-            rgba[base + 3] = 255;
-        }
-    }
+    CMJFAGenerateTexture(handle, rgba);
 
     _t.update(rgba);
     delete[] rgba;
+
+    CMJFAHandleFree(handle);
 
     _outputData = (void*)&_blockInfos;
 }

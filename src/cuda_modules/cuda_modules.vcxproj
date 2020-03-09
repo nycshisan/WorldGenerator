@@ -73,21 +73,21 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\include;.;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\include;$(SolutionDir);$(SolutionDir)src\;$(IncludePath)</IncludePath>
     <TargetName>$(ProjectName)d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\include;.;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\include;$(SolutionDir);$(SolutionDir)src\;$(IncludePath)</IncludePath>
     <TargetName>$(ProjectName)d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\include;.;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\include;$(SolutionDir);$(SolutionDir)src\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\include;.;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\include;$(SolutionDir);$(SolutionDir)src\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -174,26 +174,28 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\cuda_modules\common\common.h" />
+    <ClInclude Include="src\common\common.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="src\cuda_modules\common\cuda_common.h" />
+    <ClInclude Include="src\common\cuda_common.h" />
     <ClInclude Include="src\cuda_modules\jfa\jfa.h" />
+    <ClInclude Include="src\cuda_modules\jfa\jfa_cuda.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="src\cuda_modules\common\common.cpp" />
+    <ClCompile Include="src\dllmain.cpp" />
+    <ClCompile Include="src\common\common.cpp" />
+    <ClCompile Include="src\cuda_modules\jfa\jfa.cpp">
+      <FileType>CppCode</FileType>
+    </ClCompile>
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <CudaCompile Include="src\cuda_modules\jfa\jfa.cu">
-      <FileType>CppCode</FileType>
-    </CudaCompile>
-    <CudaCompile Include="src\cuda_modules\common\cuda_common.cu">
+    <CudaCompile Include="src\common\cuda_common.cu">
       <FileType>Document</FileType>
     </CudaCompile>
+    <CudaCompile Include="src\cuda_modules\jfa\jfa_cuda.cu" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

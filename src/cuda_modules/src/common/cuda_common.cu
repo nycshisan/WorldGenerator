@@ -1,7 +1,5 @@
 #include "pch.h"
 
-#include "cuda_common.h"
-
 __global__ void add(int n, float* y) {
 	int index = blockIdx.x * blockDim.x + threadIdx.x;
 	y[index] = 3.0f;

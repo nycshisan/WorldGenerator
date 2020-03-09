@@ -86,6 +86,8 @@ namespace wg {
 
         NO_DISCARD float getBlockEdgesCurveStep() const;
 
+        NO_DISCARD int getDistFieldSize() const;
+
         NO_DISCARD unsigned getHeightMapWidth() const;
 
         NO_DISCARD unsigned getHeightMapHeight() const;

@@ -39,7 +39,8 @@
         "curveStep": 0.09
     },
     "distField": {
-        "outputPath": "Map/edgeDF.bytes"
+        "outputPath": "Map/edgeDF.bytes",
+        "size": 256
     },
     "heightMap": {
         "width": 1025,

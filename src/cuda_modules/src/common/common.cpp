@@ -1,7 +1,5 @@
 #include "pch.h"
 
-#include "cuda_common.h"
-
 DLLEXPORT bool CMIsOK() {
 	if (CMCudaTest()) {
 #ifdef _DEBUG
@@ -18,7 +16,7 @@ DLLEXPORT void CMCheckCallArgumentOrder(char a, char b) {
 	std::cout << "Second: " << b << std::endl;
 }
 
-int* CMCheckMemory(int* src, int size) {
+DLLEXPORT int* CMCheckMemory(int* src, int size) {
 	auto r = new int[size];
 	for (int i = 0; i < size; ++i) {
 		r[i] = src[i];
@@ -26,6 +24,14 @@ int* CMCheckMemory(int* src, int size) {
 	return r;
 }
 
-void CMFreeArray(void* ptr) {
+DLLEXPORT void CMFreeArray(void* ptr) {
 	delete[] ptr;
+}
+
+DLLEXPORT double CMGetClockSecond() {
+	static clock_t lastClock = 0;
+	auto crt = clock();
+	auto sec = double(crt - lastClock) / CLOCKS_PER_SEC;
+	lastClock = crt;
+	return sec;
 }

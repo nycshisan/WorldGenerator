@@ -10,11 +10,18 @@
 // 添加要在此处预编译的标头
 #include <iostream>
 #include <cmath>
+#include <ctime>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
+#include "cuda_runtime.h"
+#include "device_launch_parameters.h"
+
+#ifdef _MSC_VER
 #define EXPORTING_DLL
-#include "src/cuda_modules/common/common.h"
+#endif
+#include "common/common.h"
+#include "common/cuda_common.h"
 
 #endif //PCH_H

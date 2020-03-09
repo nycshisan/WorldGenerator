@@ -111,6 +111,10 @@ namespace wg {
         return (*this)["blockEdges"]["curveStep"].GetFloat();
     }
 
+    int Configure::getDistFieldSize() const {
+        return (*this)["distField"]["size"].GetInt();
+    }
+
     unsigned Configure::getHeightMapWidth() const {
         return (*this)["heightMap"]["width"].GetUint();
     }
