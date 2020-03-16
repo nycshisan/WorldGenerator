@@ -17,6 +17,15 @@ __global__ void CMJFAInitDFKernel1(float *dfx, float *dfy, float large, int size
 	dfx[index] = dfy[index] = large;
 }
 
+__device__ void CMJFAInitDFKernel2Point(float *dfx, float *dfy, int ix, int iy, float dx, float dy, int size) {
+	int pid = iy * size + ix;
+	float nd = hypot(dx, dy), od = hypot(dfx[pid], dfy[pid]);
+	if (nd < od) {
+		dfx[pid] = dx;
+		dfy[pid] = dy;
+	}
+}
+
 __global__ void CMJFAInitDFKernel2(float *dfx, float *dfy, CMJFAInitPoint *points, int size, int pointNum) {
 	int index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -24,14 +33,19 @@ __global__ void CMJFAInitDFKernel2(float *dfx, float *dfy, CMJFAInitPoint *point
 		return;
 	}
 
-	int dfBase = points[index].x * size + points[index].y;
-	dfx[dfBase] = points[index].vx;
-	dfy[dfBase] = points[index].vy;
+	float x = points[index].px, y = points[index].py;
+	int left = floor(x), right = left + 1;
+	int top = floor(y), down = top + 1;
+
+	CMJFAInitDFKernel2Point(dfx, dfy, left, top, x - left, y - top, size);
+	CMJFAInitDFKernel2Point(dfx, dfy, right, top, right - x, y - top, size);
+	CMJFAInitDFKernel2Point(dfx, dfy, left, down, x - left, down - y, size);
+	CMJFAInitDFKernel2Point(dfx, dfy, right, down, right - x, down - y, size);
 }
 
 void CMJFAInitDF(float *dfx, float *dfy, CMJFAInitPoint *points, int pointNum, int size) {
 	int cellSize = size * size;
-	CUDA_KERNAL_CALL(CMJFAInitDFKernel1, cellSize)(dfx, dfy, cellSize, size);
+	CUDA_KERNAL_CALL(CMJFAInitDFKernel1, cellSize)(dfx, dfy, float(cellSize), size);
 	cudaDeviceSynchronize();
 	CUDA_KERNAL_CALL(CMJFAInitDFKernel2, pointNum)(dfx, dfy, points, size, pointNum);
 	cudaDeviceSynchronize();

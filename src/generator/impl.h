@@ -8,6 +8,7 @@
 #include "../graphics/graphics.h"
 #include "../misc/misc.h"
 #include "../conf/conf.h"
+#include "../data/data.h"
 
 namespace wg {
 

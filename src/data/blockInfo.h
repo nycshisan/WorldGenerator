@@ -50,6 +50,8 @@ namespace wg {
 
         explicit EdgeInfo() : id(0) {}
         explicit EdgeInfo(unsigned int id) : id(id) {}
+
+        sf::Vector2f sample(float t);
     };
 
     struct BlockInfo {

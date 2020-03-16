@@ -1,4 +1,4 @@
-#include "cuda_modules/common/common.h"
+#include "common/common.h" // This is the common header of cuda modules
 
 bool TestCudaModules() {
     if (!CMIsOK()) {

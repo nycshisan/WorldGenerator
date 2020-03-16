@@ -9,8 +9,19 @@
 
 // 添加要在此处预编译的标头
 #include <iostream>
+#include <fstream>
 #include <cmath>
 #include <ctime>
+#include <algorithm>
+#include <vector>
+#include <map>
+#include <set>
+#include <unordered_map>
+#include <unordered_set>
+#include <utility>
+#include <memory>
+#include <numeric>
+#include <functional>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>

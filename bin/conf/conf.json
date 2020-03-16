@@ -40,7 +40,7 @@
     },
     "distField": {
         "outputPath": "Map/edgeDF.bytes",
-        "size": 256
+        "size": 8192
     },
     "heightMap": {
         "width": 1025,

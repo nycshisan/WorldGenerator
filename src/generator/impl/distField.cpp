@@ -4,8 +4,6 @@
 
 #include "distField.h"
 
-#include "cuda_modules/jfa/jfa.h"
-
 #include "blockEdges.h"
 
 std::string wg::DistField::getHintLabelText() {
@@ -30,14 +28,11 @@ void wg::DistField::generate() {
     _dfy = new float[width * height];
 
     auto handle = CMJFAHandleAlloc(size);
-    CMJFAInitPoint points[2];
-    points[0].x = points[0].y = size / 3 * 2;
-    points[0].vx = points[0].vy = 0.f;
-    points[1].x = points[1].y = size / 3;
-    points[1].vx = points[1].vy = 0.f;
-    CMJFAInit(handle, points, 2);
+
+    _initJFA(handle);
 
     CMJFACalculate(handle, _dfx, _dfy);
+    _maxDist = CMJFAGetStat(handle, CMJFAStatType::MaxDist);
 
     auto rgba = new unsigned char[width * height * 4];
 
@@ -53,4 +48,101 @@ void wg::DistField::generate() {
 
 void wg::DistField::prepareVertexes(wg::Drawer &drawer) {
     drawer.addSprite(_s);
+}
+
+void wg::DistField::_initJFA(CMJFAHandle *handle) {
+    std::unordered_set<std::shared_ptr<EdgeInfo>> edges;
+
+    for (const auto &block: _blockInfos) {
+        for (const auto &edge: block->edges) {
+            edges.emplace(edge);
+        }
+    }
+
+    float sx = (float)CONF.getDistFieldSize() / CONF.getMapWidth(),
+          sy = (float)CONF.getDistFieldSize() / CONF.getMapHeight();
+
+    Point a(888, 6999), b(5120, 1178);
+
+    int stepNum = 100;
+    float step = 1.f / (float)stepNum, crt = 0;
+    while (crt < 1) {
+        auto p = a * crt + b * (1 - crt);
+        p.x *= sx; p.y *= sy;
+        CMJFASetInitPoint(handle, p.x, p.y);
+        crt += step;
+    }
+}
+
+static std::string EDFPrefix = "EDFPrefix"; // NOLINT(cert-err58-cpp)
+static std::string EDFSuffix = "EDFSuffix"; // NOLINT(cert-err58-cpp)
+
+std::string wg::DistField::save() {
+    const auto &fp = CONF.getOutputDirectory() + CONF.getModuleOutputPath("distField");
+    CreateDependentDirectory(fp);
+    std::ofstream ofs(fp, std::ios_base::binary);
+    if (ofs.good()) {
+        int size = CONF.getDistFieldSize();
+        BinaryIO::write(ofs, size);
+        BinaryIO::write(ofs, _maxDist);
+
+        BinaryIO::write(ofs, EDFPrefix);
+        for (int i = 0; i < size; ++i) {
+            for (int j = 0; j < size; ++j) {
+                int id = i * size + j;
+                BinaryIO::write(ofs, _dfx[id]);
+                BinaryIO::write(ofs, _dfy[id]);
+            }
+        }
+        BinaryIO::write(ofs, EDFSuffix);
+
+        return "Edge distance field saved.";
+    } else {
+        return "Edge distance field saving failed.";
+    }
+}
+
+std::string wg::DistField::load() {
+    const auto &fp = CONF.getOutputDirectory() + CONF.getModuleOutputPath("distField");
+    std::ifstream ifs(fp, std::ios_base::binary);
+    if (ifs.good()) {
+        int textureSize;
+        float maxDist;
+        BinaryIO::read(ifs, textureSize);
+        BinaryIO::read(ifs, maxDist);
+
+        std::string s;
+        BinaryIO::read(ifs, s, EDFPrefix.size());
+        if (EDFPrefix != s) {
+            LOG("Invalid EDF file prefix!");
+        }
+
+        auto rgba = new unsigned char[textureSize * textureSize * 4];
+
+        for (int i = 0; i < textureSize; ++i) {
+            for (int j = 0; j < textureSize; ++j) {
+                float dx, dy;
+                BinaryIO::read(ifs, dx);
+                BinaryIO::read(ifs, dy);
+
+                float dist = std::hypot(dx, dy);
+                unsigned char color = int(dist / maxDist * 255);
+                auto tb = (i * textureSize + j) * 4;
+                rgba[tb] = rgba[tb + 1] = rgba[tb + 2] = color;
+                rgba[tb + 3] = 255;
+            }
+        }
+
+        BinaryIO::read(ifs, s, EDFSuffix.size());
+        if (EDFSuffix != s) {
+            LOG("Invalid EDF file prefix!");
+        }
+
+        _t.update(rgba);
+        delete[] rgba;
+
+        return "Edge distance field loaded.";
+    } else {
+        return "Edge distance field loading failed.";
+    }
 }

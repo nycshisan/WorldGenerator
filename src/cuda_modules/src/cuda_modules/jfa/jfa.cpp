@@ -4,11 +4,11 @@
 
 #include "jfa_cuda.h"
 
-//#define CMJFA_PROFILE_MEM
-//#define CMJFA_PROFILE_INIT
-//#define CMJFA_PROFILE_ITERATION
-//#define CMJFA_PROFILE_STAT
-//#define CMJFA_PROFILE_GENTEX
+#define CMJFA_PROFILE_MEM
+#define CMJFA_PROFILE_INIT
+#define CMJFA_PROFILE_ITERATION
+#define CMJFA_PROFILE_STAT
+#define CMJFA_PROFILE_GENTEX
 //#define CMJFA_DUMP
 
 DLLEXPORT CMJFAHandle *CMJFAHandleAlloc(int size) {
@@ -32,29 +32,13 @@ DLLEXPORT CMJFAHandle *CMJFAHandleAlloc(int size) {
 	return handle;
 }
 
-DLLEXPORT void CMJFAInit(CMJFAHandle *handle, CMJFAInitPoint *points, int pointNum) {
-	CMJFAInitPoint *points_gpu;
-
-#ifdef CMJFA_PROFILE_MEM
-	CMGetClockSecond();
-#endif
-	cudaMalloc(&points_gpu, pointNum * sizeof(CMJFAInitPoint));
-	cudaMemcpy(points_gpu, points, pointNum * sizeof(CMJFAInitPoint), cudaMemcpyHostToDevice);
-#ifdef CMJFA_PROFILE_MEM
-	std::cout << "Malloc & memcpy initial value time cost: " << CMGetClockSecond() << std::endl;
-#endif
-
-#ifdef CMJFA_PROFILE_INIT
-	CMGetClockSecond();
-#endif
-	CMJFAInitDF(handle->dfx_gpu, handle->dfy_gpu, points_gpu, pointNum, handle->size);
-#ifdef CMJFA_PROFILE_INIT
-	std::cout << "Initialization time cost: " << CMGetClockSecond() << std::endl;
-#endif
-	cudaFree(points_gpu);
+DLLEXPORT void CMJFASetInitPoint(CMJFAHandle *handle, float px, float py) {
+	handle->initializer.addPoint(px, py);
 }
 
 DLLEXPORT void CMJFACalculate(CMJFAHandle *handle, float *dfx_tgt, float *dfy_tgt) {
+	handle->init();
+
 	int size = handle->size, step = 1 << (int(std::ceil(std::log2(size))) - 1);
 	
 #ifdef _DEBUG
@@ -146,6 +130,17 @@ DLLEXPORT void CMJFAHandleFree(CMJFAHandle *handle) {
 	delete handle;
 }
 
+float CMJFAGetStat(CMJFAHandle *handle, CMJFAStatType type) {
+	switch (type) {
+	case CMJFAStatType::MaxDist:
+		return handle->stat.maxDist;
+		break;
+	default:
+		std::cout << "Invalid statistic type!" << std::endl;
+		return 0.f;
+	}
+}
+
 CMJFADump CMJFADumpData(CMJFAHandle *handle) {
 	CMJFADump dump;
 
@@ -188,3 +183,38 @@ CMJFADump CMJFADumpData(CMJFAHandle *handle) {
 
 	return dump;
 }
+
+void CMJFAInitializer::exportToGPU(CMJFAInitPoint *points_gpu) {
+	CMJFAInitPoint *points_data = points.data();
+
+
+	cudaMemcpy(points_gpu, points_data, sizeof(CMJFAInitPoint) * pointNum, cudaMemcpyHostToDevice);
+}
+
+void CMJFAInitializer::addPoint(float px, float py) {
+	pointNum++;
+	points.emplace_back(px, py);
+}
+
+void CMJFAHandle::init() {
+#ifdef CMJFA_PROFILE_INIT
+	CMGetClockSecond();
+#endif
+	CMJFAInitPoint *points_gpu;
+	cudaMalloc(&points_gpu, initializer.pointNum * sizeof(CMJFAInitPoint));
+	initializer.exportToGPU(points_gpu);
+#ifdef CMJFA_PROFILE_INIT
+	std::cout << "Prepare initial value time cost: " << CMGetClockSecond() << std::endl;
+#endif
+
+#ifdef CMJFA_PROFILE_INIT
+	CMGetClockSecond();
+#endif
+	CMJFAInitDF(dfx_gpu, dfy_gpu, points_gpu, initializer.pointNum, size);
+#ifdef CMJFA_PROFILE_INIT
+	std::cout << "Initialization time cost: " << CMGetClockSecond() << std::endl;
+#endif
+	cudaFree(points_gpu);
+}
+
+inline CMJFAInitPoint::CMJFAInitPoint(float x, float y) : px(x), py(y) {}

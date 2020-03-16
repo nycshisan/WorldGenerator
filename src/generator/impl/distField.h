@@ -7,6 +7,8 @@
 
 #include "../impl.h"
 
+#include "cuda_modules/jfa/jfa.h"
+
 namespace wg {
 
     class DistField : public GeneratorImpl {
@@ -17,9 +19,12 @@ namespace wg {
         Output _blockInfos;
 
         float *_dfx = nullptr, *_dfy = nullptr;
+        float _maxDist;
 
         sf::Sprite _s;
         sf::Texture _t;
+
+        void _initJFA(CMJFAHandle *handle);
 
     public:
         std::string getHintLabelText() override;
@@ -27,6 +32,10 @@ namespace wg {
         void generate() override;
 
         void prepareVertexes(Drawer &drawer) override;
+
+        std::string save() override;
+
+        std::string load() override;
     };
 
 }

@@ -183,4 +183,7 @@ namespace wg {
         CornerVertexId = 2000000;
     }
 
+    sf::Vector2f EdgeInfo::sample(float t) {
+        return (*vertexes.begin())->point * (1.f - t) + (*vertexes.rbegin())->point * t;
+    }
 }

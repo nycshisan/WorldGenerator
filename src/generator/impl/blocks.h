@@ -7,8 +7,6 @@
 
 #include "../impl.h"
 
-#include "../../data/blockInfo.h"
-
 namespace wg {
     class Blocks : public GeneratorImpl {
     public:
