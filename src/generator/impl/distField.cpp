@@ -64,7 +64,7 @@ void wg::DistField::_initJFA(CMJFAHandle *handle) {
 
     Point a(888, 6999), b(5120, 1178);
 
-    int stepNum = 100;
+    int stepNum = 10000;
     float step = 1.f / (float)stepNum, crt = 0;
     while (crt < 1) {
         auto p = a * crt + b * (1 - crt);

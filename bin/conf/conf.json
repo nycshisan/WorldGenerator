@@ -15,7 +15,7 @@
         "autosave": true
     },
     "install": {
-        "enable": false,
+        "enable": true,
         "target": "../../EliGame/Assets/Resources/"
     },
     "centers": {
@@ -40,7 +40,7 @@
     },
     "distField": {
         "outputPath": "Map/edgeDF.bytes",
-        "size": 8192
+        "size": 2048
     },
     "heightMap": {
         "width": 1025,

@@ -33,6 +33,10 @@ namespace wg {
     }
 
     void Generator::NextButtonResponder(MainWindow &window) {
+        // check exit
+        if (Generator::SharedInstance().state == Generator::State::Finish) {
+            window.close();
+        }
         Generator::SharedInstance().next();
         Generator::SharedInstance()._setLabel(window);
     }
@@ -95,7 +99,9 @@ namespace wg {
     }
 
     void Generator::next() {
-        if (state >= (int)impls.size() - 1) return; // do nothing if all the generators have been run
+        if (state >= (int)impls.size() - 1) {
+            return; // do nothing if all the generators have been run
+        }
         void *input = state >= 0 ? impls[state]->output() : nullptr; // get input from the last generator
         if (CONF.getOutputAutoSave()) {
             if (state >= 0) impls[state]->save(); // save the data of the last generator (is exists)
