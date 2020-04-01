@@ -20,6 +20,7 @@ namespace wg {
         static void ResetRandomEngine();
         static int RandInt(int x, int y);
         static float RandFloat(float fx, float fy);
+        static bool RandBinary();
     };
 
 }

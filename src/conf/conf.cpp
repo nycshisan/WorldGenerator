@@ -103,8 +103,24 @@ namespace wg {
         return (*this)["lloyd"]["iteration"].GetInt();
     }
 
-    float Configure::getBlockEdgesCurveSpan() const {
-        return (*this)["blockEdges"]["curveSpan"].GetFloat();
+    std::pair<int, int> Configure::getBlockEdgesSegmentNumberRange() {
+        auto arr = (*this)["blockEdges"]["segmentNumber"].GetArray();
+        return std::make_pair(arr[0].GetInt(), arr[1].GetInt());
+    }
+
+    std::pair<float, float> Configure::getBlockEdgesCurveSpanRange() {
+        auto arr = (*this)["blockEdges"]["curveSpan"].GetArray();
+        return std::make_pair(arr[0].GetFloat(), arr[1].GetFloat());
+    }
+
+    std::pair<float, float> Configure::getBlockEdgesSegmentDistRange() {
+        auto arr = (*this)["blockEdges"]["segmentDist"].GetArray();
+        return std::make_pair(arr[0].GetFloat(), arr[1].GetFloat());
+    }
+
+    std::pair<float, float> Configure::getBlockEdgesControlPointSpanRange() {
+        auto arr = (*this)["blockEdges"]["controlPointSpan"].GetArray();
+        return std::make_pair(arr[0].GetFloat(), arr[1].GetFloat());
     }
 
     float Configure::getBlockEdgesCurveStep() const {

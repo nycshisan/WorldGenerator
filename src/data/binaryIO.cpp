@@ -19,10 +19,10 @@ void wg::BinaryIO::write(std::ofstream &ofs, const wg::VertexInfo &info) {
     write(ofs, info.id);
     write(ofs, info.point.x);
     write(ofs, info.point.y);
-    write(ofs, info.point.vertex.color.r);
-    write(ofs, info.point.vertex.color.g);
-    write(ofs, info.point.vertex.color.b);
-    write(ofs, info.point.vertex.color.a);
+    write(ofs, info.point.vertexUI.color.r);
+    write(ofs, info.point.vertexUI.color.g);
+    write(ofs, info.point.vertexUI.color.b);
+    write(ofs, info.point.vertexUI.color.a);
     write(ofs, info.isCorner);
     std::vector<unsigned int> ids;
     for (const auto &ptr : info.relatedBlocks) {
@@ -55,10 +55,10 @@ void wg::BinaryIO::write(std::ofstream &ofs, const wg::BlockInfo &info) {
     write(ofs, info.id);
     write(ofs, info.center.x);
     write(ofs, info.center.y);
-    write(ofs, info.center.vertex.color.r);
-    write(ofs, info.center.vertex.color.g);
-    write(ofs, info.center.vertex.color.b);
-    write(ofs, info.center.vertex.color.a);
+    write(ofs, info.center.vertexUI.color.r);
+    write(ofs, info.center.vertexUI.color.g);
+    write(ofs, info.center.vertexUI.color.b);
+    write(ofs, info.center.vertexUI.color.a);
     std::vector<unsigned int> ids;
     for (const auto &ptr : info.edges) {
         ids.emplace_back(ptr->id);
@@ -93,10 +93,10 @@ void wg::BinaryIO::read(std::ifstream &ifs, wg::VertexInfo &info) {
     read(ifs, x);
     read(ifs, y);
     info.point = Point(x, y);
-    read(ifs, info.point.vertex.color.r);
-    read(ifs, info.point.vertex.color.g);
-    read(ifs, info.point.vertex.color.b);
-    read(ifs, info.point.vertex.color.a);
+    read(ifs, info.point.vertexUI.color.r);
+    read(ifs, info.point.vertexUI.color.g);
+    read(ifs, info.point.vertexUI.color.b);
+    read(ifs, info.point.vertexUI.color.a);
     read(ifs, info.isCorner);
     read(ifs, info.blockIds);
     read(ifs, info.edgeIds);
@@ -115,10 +115,10 @@ void wg::BinaryIO::read(std::ifstream &ifs, wg::BlockInfo &info) {
     read(ifs, x);
     read(ifs, y);
     info.center = Point(x, y);
-    read(ifs, info.center.vertex.color.r);
-    read(ifs, info.center.vertex.color.g);
-    read(ifs, info.center.vertex.color.b);
-    read(ifs, info.center.vertex.color.a);
+    read(ifs, info.center.vertexUI.color.r);
+    read(ifs, info.center.vertexUI.color.g);
+    read(ifs, info.center.vertexUI.color.b);
+    read(ifs, info.center.vertexUI.color.a);
     read(ifs, info.edgeIds);
     read(ifs, info.vertexIds);
 }

@@ -5,21 +5,26 @@
 #ifndef WORLDGENERATOR_CURVEINFO_H
 #define WORLDGENERATOR_CURVEINFO_H
 
+#include <memory>
+
 #include "geomath.h"
 
 namespace wg {
 
+    struct EdgeInfo;
+
+    struct CurveSegment {
+        static constexpr int ControlPointNumber = 4;
+
+        Point controlPoints[ControlPointNumber];
+
+        Point getCurvePoint(float t) const;
+    };
+
     struct CurveInfo {
-        void setEndPoints(const Point& pa, const Point& pb);
-        void randomControlPoints();
-        sf::Vector2f getCurvePointForDraw(float t);
+        std::vector<CurveSegment> segments;
 
-    private:
-        Point _ca, _cb; // Two Bezier control points
-        Point _pa, _pb; // Two endpoints
-        float _vx{}, _vy{};
-
-        void _setRandomControlPoint(Point& p, float h);
+        void generateSegments(const std::shared_ptr<EdgeInfo> &edge);
     };
 
 }

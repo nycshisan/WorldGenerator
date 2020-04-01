@@ -37,7 +37,6 @@ namespace wg {
                 centerVec /= float(center.edgeIds.size() * 2);
                 pos *= (1 - factor);
                 pos += centerVec * factor;
-                pos.resetUIPosition();
                 assertWithSave(box.contains(pos));
                 centers.emplace_back(pos);
             }
@@ -58,12 +57,12 @@ namespace wg {
 
     void LloydRelaxation::prepareVertexes(Drawer &drawer) {
         for (auto &pair: _relaxedVd.first) {
-            drawer.appendPointShape(pair.second.point.vertex);
+            drawer.appendPointShape(pair.second.point.vertexUI);
         }
 
         for (auto &pair: _relaxedVd.second) {
-            drawer.appendVertex(sf::Lines, pair.second.point[0].vertex);
-            drawer.appendVertex(sf::Lines, pair.second.point[1].vertex);
+            drawer.appendVertex(sf::Lines, pair.second.point[0].vertexUI);
+            drawer.appendVertex(sf::Lines, pair.second.point[1].vertexUI);
         }
     }
 

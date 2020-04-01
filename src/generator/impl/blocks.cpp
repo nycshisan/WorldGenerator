@@ -78,7 +78,7 @@ namespace wg {
             }
             auto color = sf::Color(r, g, b);
 //            std::cout << int(r) << " " << int(g) << " " << int(b) << std::endl;
-            blockInfo->center.vertex.color = color;
+            blockInfo->center.vertexUI.color = color;
         }
 
         _outputData = (void*)&_blockInfos;
@@ -86,12 +86,12 @@ namespace wg {
 
     void Blocks::prepareVertexes(Drawer &drawer) {
         for (auto &blockInfo: _blockInfos) {
-            sf::Vertex &v0 = blockInfo->center.vertex;
+            sf::Vertex &v0 = blockInfo->center.vertexUI;
             auto &color = v0.color;
             for (auto &edgeInfo: blockInfo->edges) {
                 drawer.appendVertex(sf::Triangles, v0);
                 for (auto &vertexInfo: edgeInfo->vertexes) {
-                    auto v = vertexInfo->point.vertex;
+                    auto v = vertexInfo->point.vertexUI;
                     v.color = color;
                     drawer.appendVertex(sf::Triangles, v);
                 }

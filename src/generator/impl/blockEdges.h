@@ -16,7 +16,7 @@ namespace wg {
     private:
         Output _blockInfos;
 
-        std::unordered_set<std::shared_ptr<EdgeInfo>> _edges{};
+        std::set<std::shared_ptr<EdgeInfo>> _edges;
 
     public:
         std::string getHintLabelText() override;

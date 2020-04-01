@@ -77,22 +77,25 @@ namespace wg {
                 rtp(pointB.x + thickness * sin, pointB.y - thickness * cos),
                 lbp(pointA.x - thickness * sin, pointA.y + thickness * cos),
                 rbp(pointA.x + thickness * sin, pointA.y - thickness * cos);
-        appendVertex(sf::Triangles, ltp.vertex);
-        appendVertex(sf::Triangles, lbp.vertex);
-        appendVertex(sf::Triangles, rtp.vertex);
-        appendVertex(sf::Triangles, rtp.vertex);
-        appendVertex(sf::Triangles, lbp.vertex);
-        appendVertex(sf::Triangles, rbp.vertex);
+        appendVertex(sf::Triangles, ltp.vertexUI);
+        appendVertex(sf::Triangles, lbp.vertexUI);
+        appendVertex(sf::Triangles, rtp.vertexUI);
+        appendVertex(sf::Triangles, rtp.vertexUI);
+        appendVertex(sf::Triangles, lbp.vertexUI);
+        appendVertex(sf::Triangles, rbp.vertexUI);
     }
 
     void Drawer::addSprite(const sf::Sprite &s) {
         _sprites.emplace_back(&s);
     }
 
-    void Drawer::appendColoredPointShape(const sf::Vertex &vertex, const sf::Color &color) {
+    void Drawer::appendCustomPointShape(const sf::Vertex &vertex, const sf::Color &color, float size) {
         auto shape = _pointShape;
         shape.setPosition(vertex.position);
         shape.setFillColor(color);
+        if (size > 0) {
+            shape.setRadius(size);
+        }
         _coloredPointShapes.emplace_back(std::move(shape));
     }
 }

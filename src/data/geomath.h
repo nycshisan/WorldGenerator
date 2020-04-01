@@ -11,7 +11,7 @@
 
 namespace wg {
 
-    class Point : public sf::Vector2f {
+    class Point {
         constexpr static float _Error = 1e-4f;
 
     public:
@@ -24,12 +24,27 @@ namespace wg {
         [[nodiscard]] float squareDistance(const Point &anoPoint) const;
 
         bool operator == (const Point &anoP);
-
         bool operator != (const Point &anoP);
 
-        sf::Vertex vertex;
+        Point operator + (const Point &ano) const;
+        Point operator - (const Point &ano) const;
+        Point operator * (float f) const;
+        Point operator / (float f) const;
 
-        void resetUIPosition();
+        void operator += (const Point &ano);
+        void operator -= (const Point &ano);
+        void operator *= (float f);
+        void operator /= (float f);
+
+        float dot(const Point &ano);
+
+        static Point Lerp(const Point &a, const Point &b, float t);
+
+        sf::Vertex vertexUI;
+        float x{}, y{};
+
+    private:
+        void _resetUIPosition();
     };
 
     std::ostream &operator<<(std::ostream &os, const Point &p);

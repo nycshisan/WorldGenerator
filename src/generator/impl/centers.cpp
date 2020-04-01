@@ -39,7 +39,7 @@ namespace wg {
 
     void Centers::prepareVertexes(Drawer &drawer) {
         for (auto &point : _centers) {
-            drawer.appendPointShape(point.vertex);
+            drawer.appendPointShape(point.vertexUI);
         }
     }
 

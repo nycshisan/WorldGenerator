@@ -26,6 +26,11 @@ float wg::Random::RandFloat(float fx, float fy) {
     return dist(*SharedInstance()._gen);
 }
 
+bool wg::Random::RandBinary() {
+    std::uniform_int_distribution<int> dist(0, 1);
+    return bool(dist(*SharedInstance()._gen));
+}
+
 void wg::Random::ResetRandomEngine() {
     delete SharedInstance()._gen;
     SharedInstance()._gen = new std::mt19937(SharedInstance()._randomSeed);

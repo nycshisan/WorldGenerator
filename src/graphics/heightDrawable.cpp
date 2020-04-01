@@ -35,7 +35,7 @@ namespace wg {
         for (const auto &block : blockInfos) {
             for (const auto &edge : block->edges) {
                 for (const auto &point : edge->vertexes) {
-                    auto v = point->point.vertex;
+                    auto v = point->point.vertexUI;
                     v.color = sf::Color::Blue;
                     drawer.appendVertex(sf::Lines, v);
                 }

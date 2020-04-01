@@ -33,7 +33,7 @@ namespace wg {
         void clear();
         void appendVertex(sf::PrimitiveType type, const sf::Vertex &vertex);
         void appendPointShape(const sf::Vertex &vertex);
-        void appendColoredPointShape(const sf::Vertex &vertex, const sf::Color &color);
+        void appendCustomPointShape(const sf::Vertex &vertex, const sf::Color &color, float size = -1);
         void drawThickLine(const std::shared_ptr<EdgeInfo> &edgeInfo, float thickness);
         void addSprite(const sf::Sprite &s);
         void commit();

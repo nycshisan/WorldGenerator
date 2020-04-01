@@ -106,12 +106,12 @@ namespace wg {
         bool showBoundingTriangles = CONF.getDelaunayShowBoundingTriangles();
         for (auto &tri: allocatedNodes) {
             if (!tri->_isBoundingTriangle || showBoundingTriangles) {
-                drawer.appendVertex(sf::Lines, tri->points[0].vertex);
-                drawer.appendVertex(sf::Lines, tri->points[1].vertex);
-                drawer.appendVertex(sf::Lines, tri->points[1].vertex);
-                drawer.appendVertex(sf::Lines, tri->points[2].vertex);
-                drawer.appendVertex(sf::Lines, tri->points[2].vertex);
-                drawer.appendVertex(sf::Lines, tri->points[0].vertex);
+                drawer.appendVertex(sf::Lines, tri->points[0].vertexUI);
+                drawer.appendVertex(sf::Lines, tri->points[1].vertexUI);
+                drawer.appendVertex(sf::Lines, tri->points[1].vertexUI);
+                drawer.appendVertex(sf::Lines, tri->points[2].vertexUI);
+                drawer.appendVertex(sf::Lines, tri->points[2].vertexUI);
+                drawer.appendVertex(sf::Lines, tri->points[0].vertexUI);
             }
         }
     }

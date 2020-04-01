@@ -11,14 +11,12 @@
 
 namespace wg {
 
-    Point::Point(float x, float y) : sf::Vector2f(x, y) {
-        this->vertex = sf::Vertex(*this);
-        resetUIPosition();
+    Point::Point(float x, float y) {
+        this->x = x; this->y = y;
+        _resetUIPosition();
     }
 
-    Point::Point(const sf::Vector2f &v) : sf::Vector2f(v) {
-        this->vertex = sf::Vertex(v);
-    }
+    Point::Point(const sf::Vector2f &v) : Point(v.x, v.y) {}
 
     float Point::squareDistance(const Point &anoPoint) const {
         float xDist = x - anoPoint.x, yDist = y - anoPoint.y;
@@ -33,10 +31,57 @@ namespace wg {
         return !((*this) == anoP);
     }
 
-    void Point::resetUIPosition() {
+    Point Point::operator+(const Point &ano) const {
+        return Point(x + ano.x, y + ano.y);
+    }
+
+    Point Point::operator-(const Point &ano) const {
+        return Point(x - ano.x, y - ano.y);
+    }
+
+    Point Point::operator*(float f) const {
+        return Point(x * f, y * f);
+    }
+
+    Point Point::operator/(float f) const {
+        return Point(x / f, y / f);
+    }
+
+    void Point::operator+=(const Point &ano) {
+        x += ano.x;
+        y += ano.y;
+        vertexUI.position += ano.vertexUI.position;
+    }
+
+    void Point::operator-=(const Point &ano) {
+        x -= ano.x;
+        y -= ano.y;
+        vertexUI.position -= ano.vertexUI.position;
+    }
+
+    void Point::operator*=(float f) {
+        x *= f;
+        y *= f;
+        vertexUI.position *= f;
+    }
+
+    void Point::operator/=(float f) {
+        x /= f;
+        y /= f;
+        vertexUI.position /= f;
+    }
+
+    void Point::_resetUIPosition() {
         int mapScaleInversion = CONF.getUIMapScaleConversion();
-        this->vertex.position.x = x / float(mapScaleInversion);
-        this->vertex.position.y = y / float(mapScaleInversion);
+        this->vertexUI = sf::Vertex(sf::Vector2f(x / float(mapScaleInversion), y / float(mapScaleInversion)));
+    }
+
+    float Point::dot(const Point &ano) {
+        return x * ano.x + y * ano.y;
+    }
+
+    Point Point::Lerp(const Point &a, const Point &b, float t) {
+        return a * (1.f - t) + b * t;
     }
 
     std::ostream &operator<<(std::ostream &os, const Point &p) {
@@ -174,11 +219,11 @@ namespace wg {
 
     Point Rectangle::intersectRay(const Point &pa, const Point &pb) {
         Line lab(pa, pb);
-        sf::Vector2f vab = pa - pb;
+        const auto &vab = pa - pb;
         for (auto edge: _edges) {
             Point intersection = lab.intersect(edge);
             if (contains(intersection)) {
-                sf::Vector2f vai = pa - intersection;
+                const auto &vai = pa - intersection;
                 float dot = vab.x * vai.x + vab.y * vai.y;
                 if (dot >= -_Error) {
                     return intersection;
@@ -195,8 +240,8 @@ namespace wg {
         for (auto edge: _edges) {
             Point intersection = lab.intersect(edge);
             if (contains(intersection)) {
-                sf::Vector2f vai = pa - intersection;
-                sf::Vector2f vbi = pb - intersection;
+                const auto &vai = pa - intersection;
+                const auto &vbi = pb - intersection;
                 float dot = vai.x * vbi.x + vai.y * vbi.y;
                 if (dot <= _Error) {
                     intersections[n++] = intersection;
