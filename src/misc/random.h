@@ -19,7 +19,9 @@ namespace wg {
     public:
         static void ResetRandomEngine();
         static int RandInt(int x, int y);
+        static int RandInt(const std::pair<int, int> &pair);
         static float RandFloat(float fx, float fy);
+        static float RandFloat(const std::pair<float, float> &pair);
         static bool RandBinary();
     };
 

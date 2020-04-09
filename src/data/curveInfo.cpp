@@ -10,66 +10,47 @@
 
 namespace wg {
 
-//    void CurveInfo::setEndPoints(const Point &pa, const Point &pb) {
-//        controlPoints[0] = pa; controlPoints[ControlPointsNum + 1] = pb;
-//        auto dp = pa - pb;
-//        _vx = dp.y; _vy = -dp.x;
-//        float cs = CONF.getBlockEdgesCurveScale();
-//        _vx *= cs;
-//        _vy *= cs;
-//        _minCurveSpanScale = CONF.getBlockEdgesMinCurveScale();
-//    }
-//
-//    Point CurveInfo::randomControlPoints(float begin, float end) {
-//        auto h = Random::RandFloat(begin, end);
-//
-//        auto hp = controlPoints[0] * (1.f - h) + controlPoints[ControlPointsNum + 1] * h;
-//        float v = Random::RandFloat(_minCurveSpanScale, 1.f);
-//        int sign = Random::RandInt(0, 1);
-//        if (sign == 0) v = -v;
-//        hp.x += _vx * v;
-//        hp.y += _vy * v;
-//        auto p = Point(hp);
-//        p._resetUIPosition();
-//        return p;
-//    }
-//
-//    sf::Vector2f CurveInfo::getCurvePointForDraw(float t) {
-//    }
-
     void CurveInfo::generateSegments(const std::shared_ptr<EdgeInfo> &edge) {
         segments.clear();
+        endPoints.clear();
         const auto &segmentNumberRange = CONF.getBlockEdgesSegmentNumberRange();
         const auto &spanRange = CONF.getBlockEdgesCurveSpanRange();
-        const auto &segmentDistRange = CONF.getBlockEdgesSegmentDistRange();
+        auto segmentDistRange = CONF.getBlockEdgesSegmentDistRange();
         const auto &controlPointSpanRange = CONF.getBlockEdgesControlPointSpanRange();
+        const float minSegmentInterval = CONF.getBlockEdgesMinSegmentInterval();
         int sn = Random::RandInt(segmentNumberRange.first, segmentNumberRange.second);
 
         const Point &pa = (*edge->vertexes.begin())->point, &pb = (*edge->vertexes.rbegin())->point;
+        const Point &pm = (pa + pb) / 2.f;
         const Point &bca = edge->relatedBlocks.begin()->lock()->center, &bcb = edge->relatedBlocks.rbegin()->lock()->center;
         const auto &pd = pb - pa;
         float vx = pd.y, vy = -pd.x;
         Point v(vx, vy);
         Triangle ta(pa, pb, bca), tb(pa, pb, bcb);
-        if (v.dot(bca) < 0) {
+        if (v.dot(bca - pm) < 0) {
             std::swap(ta, tb); // make sure the the first triangle is corresponding to positive v
         }
 
-
+        // generate the t points
         std::vector<float> t(sn - 1);
+        segmentDistRange.second -= float(sn - 1) * minSegmentInterval;
         for (int i = 0; i < sn - 1; ++i) {
-            t[i] = Random::RandFloat(0.2f, 0.8f);
+            t[i] = Random::RandFloat(segmentDistRange);
         }
         sort(t.begin(), t.end());
+        for (int i = 0; i < t.size(); ++i) {
+            t[i] += float(i) * minSegmentInterval;
+        }
 
-        Point endPoints[sn + 1];
+        // generate endpoints
+        endPoints.resize(sn + 1);
         endPoints[0] = pa; endPoints[sn] = pb;
         Triangle *tris[sn + 1]; tris[0] = tris[sn] = nullptr;
         for (int i = 1; i < sn; ++i) {
             auto range = spanRange;
             bool positive = Random::RandBinary();
             while (true) {
-                float span = Random::RandFloat(range.first, range.second);
+                float span = Random::RandFloat(range);
                 if (positive) {
                     endPoints[i] = pa + pd * t[i - 1] + v * span;
                     tris[i] = &ta;
@@ -86,6 +67,7 @@ namespace wg {
             }
         }
 
+        // generate segments
         segments.resize(sn);
         for (int i = 0; i < sn; ++i) {
             segments[i].controlPoints[0] = endPoints[i];
@@ -94,7 +76,7 @@ namespace wg {
         for (int i = 0; i < sn - 1; ++i) {
             auto range = controlPointSpanRange;
             while (true) {
-                float span = Random::RandFloat(range.first, range.second);
+                float span = Random::RandFloat(range);
                 const auto &cp = endPoints[i + 1] - pd * span;
                 if (tris[i + 1]->contains(cp)) {
                     segments[i].controlPoints[CurveSegment::ControlPointNumber - 2] = cp;
@@ -106,7 +88,7 @@ namespace wg {
             }
             range = controlPointSpanRange;
             while (true) {
-                float span = Random::RandFloat(range.first, range.second);
+                float span = Random::RandFloat(range);
                 const auto &cp = endPoints[i + 1] + pd * span;
                 if (tris[i + 1]->contains(cp)) {
                     segments[i + 1].controlPoints[1] = cp;

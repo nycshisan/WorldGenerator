@@ -8,8 +8,8 @@
 
 #include "blocks.h"
 
-bool DrawStraightEdge = true;
-bool DrawControlPoints = true;
+bool DrawStraightEdge = false;
+bool DrawControlPoints = false;
 
 namespace wg {
 
@@ -53,6 +53,9 @@ namespace wg {
                     for (const auto &p : segment.controlPoints) {
                         drawer.appendCustomPointShape(p.vertexUI, sf::Color::Red, 1.5);
                     }
+                }
+                for (const auto &p : edge->curveInfo.endPoints) {
+                    drawer.appendCustomPointShape(p.vertexUI, sf::Color::Yellow, 2);
                 }
             }
             for (const auto &segment : edge->curveInfo.segments) {

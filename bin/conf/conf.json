@@ -19,7 +19,7 @@
         "target": "../../EliGame/Assets/Resources/"
     },
     "centers": {
-        "number": 20,
+        "number": 500,
         "padding": 50,
         "span": 50,
         "outputPath": "Map/centers.txt"
@@ -35,10 +35,11 @@
         "outputPath": "Map/blocks.bytes"
     },
     "blockEdges": {
-        "segmentNumber": [3, 3],
-        "curveSpan": [0.1, 0.15],
-        "segmentDist": [0.2, 0.8],
-        "controlPointSpan": [0.2, 0.3],
+        "segmentNumber": [3, 6],
+        "curveSpan": [0.05, 0.15],
+        "segmentDist": [0.1, 0.9],
+        "minSegmentInterval": 0.15,
+        "controlPointSpan": [0.05, 0.15],
         "curveStep": 0.03
     },
     "distField": {

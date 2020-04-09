@@ -18,10 +18,12 @@ namespace wg {
 
         Point controlPoints[ControlPointNumber];
 
-        Point getCurvePoint(float t) const;
+        [[nodiscard]] Point getCurvePoint(float t) const;
     };
 
     struct CurveInfo {
+        std::vector<Point> endPoints;
+
         std::vector<CurveSegment> segments;
 
         void generateSegments(const std::shared_ptr<EdgeInfo> &edge);

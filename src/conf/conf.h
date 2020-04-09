@@ -82,13 +82,15 @@ namespace wg {
 
         NO_DISCARD int getLloydIteration() const;
 
-        NO_DISCARD std::pair<int, int> getBlockEdgesSegmentNumberRange();
+        NO_DISCARD std::pair<int, int> getBlockEdgesSegmentNumberRange() const;
 
-        NO_DISCARD std::pair<float, float> getBlockEdgesCurveSpanRange();
+        NO_DISCARD std::pair<float, float> getBlockEdgesCurveSpanRange() const;
 
-        NO_DISCARD std::pair<float, float> getBlockEdgesSegmentDistRange();
+        NO_DISCARD std::pair<float, float> getBlockEdgesSegmentDistRange() const;
 
-        NO_DISCARD std::pair<float, float> getBlockEdgesControlPointSpanRange();
+        NO_DISCARD float getBlockEdgesMinSegmentInterval() const;
+
+        NO_DISCARD std::pair<float, float> getBlockEdgesControlPointSpanRange() const;
 
         NO_DISCARD float getBlockEdgesCurveStep() const;
 
