@@ -166,6 +166,23 @@ void CMJFAIterate(float *dfx, float *dfy, float *dfx_tgt, float *dfy_tgt, float 
 	cudaDeviceSynchronize();
 }
 
+__global__ void CMJFARemoveSignKernel(float *dfx, float *dfy, int size) {
+	int index = blockIdx.x * blockDim.x + threadIdx.x;
+
+	if (index >= size * size) {
+		return;
+	}
+
+	dfx[index] = abs(dfx[index]);
+	dfy[index] = abs(dfy[index]);
+}
+
+void CMJFARemoveSign(float *dfx, float *dfy, int size) {
+	int cellSize = size * size;
+	CUDA_KERNAL_CALL(CMJFARemoveSignKernel, cellSize)(dfx, dfy, size);
+	cudaDeviceSynchronize();
+}
+
 float CMJFACalcMax(float *df, int size) {
 	int cellSize = size * size;
 	thrust::device_ptr<float> dfdp = thrust::device_pointer_cast(df);
@@ -187,7 +204,7 @@ __global__ void CMJFACalcTextureRGBAKernel(float *df, unsigned char *rgba, float
 
 	int ri = index * 4;
 
-	float rd = df[index] / m;
+	float rd = 1.f - df[index] / m;
 	unsigned char c = lround(rd * 255.f);
 	rgba[ri] = rgba[ri + 1] = rgba[ri + 2] = c;
 	rgba[ri + 3] = 255;

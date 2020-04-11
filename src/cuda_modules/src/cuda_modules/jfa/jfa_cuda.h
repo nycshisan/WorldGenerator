@@ -4,6 +4,8 @@ void CMJFAInitDF(float *dfx, float *dfy, CMJFAInitPoint *points, int pointNum, i
 
 void CMJFAIterate(float *dfx, float *dfy, float *dfx_tgt, float *dfy_tgt, float *df, int step, int size);
 
+void CMJFARemoveSign(float *dfx, float *dfy, int size);
+
 float CMJFACalcMax(float *df, int size);
 
 void CMJFACalcTextureRGBA(float *df, unsigned char *rgba, int size, float m);

@@ -53,27 +53,26 @@ namespace wg {
     }
 
     void DistField::_initJFA(CMJFAHandle *handle) {
-        std::unordered_set<std::shared_ptr<EdgeInfo>> edges;
+        std::unordered_set<std::shared_ptr<EdgeInfo>> edges{};
 
         for (const auto &block: _blockInfos) {
             for (const auto &edge: block->edges) {
                 edges.emplace(edge);
             }
         }
-
-        float sx = (float) CONF.getDistFieldSize() / CONF.getMapWidth(),
-                sy = (float) CONF.getDistFieldSize() / CONF.getMapHeight();
-
-        Point a(888, 6999), b(5120, 1178);
-
-        int stepNum = 10000;
-        float step = 1.f / (float) stepNum, crt = 0;
-        while (crt < 1) {
-            auto p = a * crt + b * (1 - crt);
-            p.x *= sx;
-            p.y *= sy;
-            CMJFASetInitPoint(handle, p.x, p.y);
-            crt += step;
+    
+        int size = CONF.getDistFieldSize();
+        float SDFScaleX = float(size) / CONF.getMapWidth(), SDFScaleY = float(size) / CONF.getMapHeight();
+        
+        for (const auto &edge : edges) {
+            for (const auto &segment : edge->curveInfo.segments) {
+                float crt = 0.f, step = 0.01f;
+                while (crt < 1) {
+                    const auto &p = segment.getCurvePoint(crt);
+                    CMJFASetInitPoint(handle, p.x * SDFScaleX, p.y * SDFScaleY);
+                    crt += step;
+                }
+            }
         }
     }
 

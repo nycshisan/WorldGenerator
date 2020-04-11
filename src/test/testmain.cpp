@@ -52,6 +52,6 @@ void testIO(int target) {
 }
 
 int main() {
-    testStates(Generator::State::BlockEdges, true);
+    testStates(Generator::State::DistField, true);
     return 0;
 }

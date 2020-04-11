@@ -4,11 +4,11 @@
 
 #include "jfa_cuda.h"
 
-#define CMJFA_PROFILE_MEM
-#define CMJFA_PROFILE_INIT
-#define CMJFA_PROFILE_ITERATION
-#define CMJFA_PROFILE_STAT
-#define CMJFA_PROFILE_GENTEX
+//#define CMJFA_PROFILE_MEM
+//#define CMJFA_PROFILE_INIT
+//#define CMJFA_PROFILE_ITERATION
+//#define CMJFA_PROFILE_STAT
+//#define CMJFA_PROFILE_GENTEX
 //#define CMJFA_DUMP
 
 DLLEXPORT CMJFAHandle *CMJFAHandleAlloc(int size) {
@@ -78,6 +78,7 @@ DLLEXPORT void CMJFACalculate(CMJFAHandle *handle, float *dfx_tgt, float *dfy_tg
 
 		step >>= 1;
 	}
+	CMJFARemoveSign(handle->dfx_gpu, handle->dfy_gpu, size);
 
 #ifdef CMJFA_PROFILE_MEM
 	CMGetClockSecond();
